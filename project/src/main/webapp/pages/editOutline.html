@@ -47,11 +47,20 @@
         </div>
 
         <div id="upperLeft"> Click the upper left corner of answer box </div>
+            
+            <!-- also not sure if this works: -->
+            <form action="/manageBox" method="POST" id="comment-form">
+            <!-- <input type="text" id="comment-submission" name="comment-submission" value="(ie: Hello!)" onload="login()"><br><br> -->
+            <input id="lx" name="lx"></div>
+            <input id="ly" name="ly"></div>
+            <input type="submit" value="Submit">
+            </form>
+
         <div id="lowerRight"> Click the lower right corner of answer box </div>
         <br>
         <div id="setCorner"> </div>
 
-        <button id="submit" onclick="crop()"> Submit Box </button>
+        <button id="submit" onclick="cropAllPDFs()"> Submit Box </button>
 
         <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
     </div>    
