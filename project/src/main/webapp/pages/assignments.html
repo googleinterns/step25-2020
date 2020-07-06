@@ -4,36 +4,57 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
+
+        <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 <body>
-	<h1>AutoGrader Demo Class | Summer 2020</h1>
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+        <img src="../images/GC_logo.png" class="nav-wrapper">
+        <a id="logo-container" href="#" class="brand-logo">   gClassroom AutoGrader</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+            <li><a href="/pages/assignments.html">Assignments</a></li>
+        </ul>
 
-	<h2>Description</h2>
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
 
-	<p>A demo course to show how AutoGrader works</p>
+    <div class="container page-container">
+        <h1>AutoGrader Demo Class | Summer 2020</h1>
+        <h2>Description</h2>
 
-	<table>
-		<tr>
-			<th>Assignments</th>
-			<th>Submissions</th>
-			<th>% Graded</th>
-		</tr>
-		
-		<tr>
-			<td>
-				<a href="/pages/assignment.html">Demo Midterm</a>
-			</td>
-			<td>3</td>
-			<td>0%</td>
-		</tr>
+        <p>A demo course to show how AutoGrader works</p>
 
-		<tr>
-			<td>Demo Test 1</td>
-			<td>3</td>
-			<td>100%</td>
-		</tr>
-	</table>
+        <table>
+            <tr>
+                <th>Assignments</th>
+                <th>Submissions</th>
+                <th>% Graded</th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="/pages/assignment.html">Demo Midterm</a>
+                </td>
+                <td>3</td>
+                <td>0%</td>
+            </tr>
+            <tr>
+                <td>Demo Test 1</td>
+                <td>3</td>
+                <td>100%</td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 
 </html>
