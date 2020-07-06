@@ -118,37 +118,54 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
+<<<<<<< HEAD
+=======
     var lxDiv = document.getElementById('lx');
     var lyDiv = document.getElementById('ly');
     var rxDiv = document.getElementById('rx');
     var ryDiv = document.getElementById('ry');
+>>>>>>> master
 
     if (corner == "left") {
       lx = x;
       ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
+<<<<<<< HEAD
+      corner = "right";
+      setCorner.innerHTML = "Click Lower Right corner"
+=======
       lxDiv.innerHTML = lx;
       lyDiv.innerHTML = ly;
     //   lxDiv.style.display = "none";
     //   lyDiv.style.display = "none";
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
+>>>>>>> master
     } else {
       rx = x;
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
+<<<<<<< HEAD
+      corner = "left";
+      setCorner.innerHTML = "Click Upper Left corner if it's inaccurate"
+=======
       rxDiv.innerHTML = rx;
       ryDiv.innerHTML = ry;
     //   rxDiv.style.display = "none";
     //   ryDiv.style.display = "none";
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
+>>>>>>> master
       crop(lx, ly, rx, ry);
     }
 
   }
 }
 
+<<<<<<< HEAD
+// still need to scale the cropped canvas
+=======
+>>>>>>> master
 function crop(lx, ly, rx, ry) {
   var cropX = lx;
   var cropY = ly;
@@ -163,6 +180,150 @@ function crop(lx, ly, rx, ry) {
   cropCanvas = document.getElementById("cropCanvas").getContext('2d');
 
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+<<<<<<< HEAD
+
+}
+
+
+// function drawRect(canvas) {
+//     function setMousePosition(e) {
+//         var ev = e || window.event; //Moz || IE
+//         if (ev.pageX) { //Moz
+//             mouse.x = ev.pageX + window.pageXOffset;
+//             mouse.y = ev.pageY + window.pageYOffset;
+//         } else if (ev.clientX) { //IE
+//             mouse.x = ev.clientX + document.body.scrollLeft;
+//             mouse.y = ev.clientY + document.body.scrollTop;
+//         }
+//     };
+
+//     var mouse = {
+//         x: 0,
+//         y: 0,
+//         startX: 0,
+//         startY: 0
+//     };
+//     var element = null;
+
+//     canvas.onmousemove = function (e) {
+//         setMousePosition(e);
+//         if (element !== null) {
+//             element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
+//             element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
+//             element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
+//             element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
+//         }
+//     }
+
+//     canvas.onclick = function (e) {
+//         if (element !== null) {
+//             element = null;
+//             canvas.style.cursor = "default";
+//             console.log("finsihed.");
+//         } else {
+//             console.log("begun.");
+//             mouse.startX = mouse.x;
+//             mouse.startY = mouse.y;
+//             element = document.createElement('div');
+//             element.className = 'rectangle'
+//             element.style.left = mouse.x + 'px';
+//             element.style.top = mouse.y + 'px';
+//             canvas.appendChild(element)
+//             canvas.style.cursor = "crosshair";
+//         }
+//     }
+// }
+
+
+
+// function notworking() {
+//   var canvas = document.getElementById("canvas");
+// var ctx = canvas.getContext("2d");
+
+// var canvasOffset = $("#canvas").offset();
+// var offsetX = canvasOffset.left;
+// var offsetY = canvasOffset.top;
+
+// var isDrawing = false;
+// var startX;
+// var startY;
+
+//     mouseX = parseInt(e.clientX - offsetX);
+//     mouseY = parseInt(e.clientY - offsetY);
+//     $("#downlog").html("Down: " + mouseX + " / " + mouseY);
+
+//     // Put your mousedown stuff here
+//     if (isDrawing) {
+//         isDrawing = false;
+//         ctx.beginPath();
+//         ctx.rect(startX, startY, mouseX - startX, mouseY - startY);
+//         ctx.fill();
+//         canvas.style.cursor = "default";
+//     } else {
+//         isDrawing = true;
+//         startX = mouseX;
+//         startY = mouseY;
+//         canvas.style.cursor = "crosshair";
+//     }
+// }
+
+// $("#canvas").mousedown(function (e) {
+//     handleMouseDown(e);
+// });
+
+
+
+// initDraw(document.getElementById('canvas'));
+
+// function initDraw(canvas) {
+//     function setMousePosition(e) {
+//         var ev = e || window.event; //Moz || IE
+//         if (ev.pageX) { //Moz
+//             mouse.x = ev.pageX + window.pageXOffset;
+//             mouse.y = ev.pageY + window.pageYOffset;
+//         } else if (ev.clientX) { //IE
+//             mouse.x = ev.clientX + document.body.scrollLeft;
+//             mouse.y = ev.clientY + document.body.scrollTop;
+//         }
+//     };
+
+//     var mouse = {
+//         x: 0,
+//         y: 0,
+//         startX: 0,
+//         startY: 0
+//     };
+//     var element = null;
+
+//     canvas.onmousemove = function (e) {
+//         setMousePosition(e);
+//         if (element !== null) {
+//             element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
+//             element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
+//             element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
+//             element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
+//         }
+//     }
+
+//     canvas.onclick = function (e) {
+//         if (element !== null) {
+//             element = null;
+//             canvas.style.cursor = "default";
+//             console.log("finsihed.");
+//         } else {
+//             console.log("begun.");
+//             mouse.startX = mouse.x;
+//             mouse.startY = mouse.y;
+//             element = document.createElement('div');
+//             element.className = 'rectangle'
+//             element.style.left = mouse.x + 'px';
+//             element.style.top = mouse.y + 'px';
+//             canvas.appendChild(element)
+//             canvas.style.cursor = "crosshair";
+//         }
+//     }
+// }
+=======
 }
 
 function cropAllPDFs() {
@@ -172,3 +333,4 @@ function cropAllPDFs() {
     });
 
 }
+>>>>>>> master
