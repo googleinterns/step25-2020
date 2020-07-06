@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<script src="/scripts/editQuestionOutlinesScripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+
+
+<body onload="loadPDF()"> 
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+        <img src="../images/GC_logo.png" class="nav-wrapper">
+        <a id="logo-container" href="#" class="brand-logo">   gClassroom AutoGrader</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <h1>Q1 student assignment</h1>
+        
+        <div id="pdfButtons">
+                <button id="pdf-prev" onclick="prevButton()">Previous</button>
+                <button id="pdf-next" onclick="nextButton()">Next</button>
+            </div>
+
+        <div id="pageNum"> </div>
+
+        <div id="pdfContent">
+            the pdf:
+            <canvas id="pdfCanvas" width="300" height="400" style="border:1px solid #000000;" ></canvas>
+        </div>
+
+        <div id="upperLeft"> Click the upper left corner of answer box </div>
+            
+
+            <form action="/manageBox" method="GET" id="comment-form">
+            <input type="text" id="comment-submission" name="comment-submission" value="(ie: Hello!)" ><br><br>
+            <input type="submit" value="Submit">
+            </form>
+
+
+
+        <div id="lowerRight"> Click the lower right corner of answer box </div>
+        <br>
+        <div id="setCorner"> </div>
+
+        <button id="submit" onclick="cropAllPDFs()"> Submit Box </button>
+
+        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+    </div>    
+</body>
+
+</html>
