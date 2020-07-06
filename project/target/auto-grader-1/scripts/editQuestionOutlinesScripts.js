@@ -118,26 +118,54 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
+<<<<<<< HEAD
+=======
+    var lxDiv = document.getElementById('lx');
+    var lyDiv = document.getElementById('ly');
+    var rxDiv = document.getElementById('rx');
+    var ryDiv = document.getElementById('ry');
+>>>>>>> master
 
     if (corner == "left") {
       lx = x;
       ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
+<<<<<<< HEAD
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner"
+=======
+      lxDiv.innerHTML = lx;
+      lyDiv.innerHTML = ly;
+    //   lxDiv.style.display = "none";
+    //   lyDiv.style.display = "none";
+      corner = "right";
+      setCorner.innerHTML = "Click Lower Right corner";
+>>>>>>> master
     } else {
       rx = x;
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
+<<<<<<< HEAD
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate"
+=======
+      rxDiv.innerHTML = rx;
+      ryDiv.innerHTML = ry;
+    //   rxDiv.style.display = "none";
+    //   ryDiv.style.display = "none";
+      corner = "left";
+      setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
+>>>>>>> master
       crop(lx, ly, rx, ry);
     }
 
   }
 }
 
+<<<<<<< HEAD
 // still need to scale the cropped canvas
+=======
+>>>>>>> master
 function crop(lx, ly, rx, ry) {
   var cropX = lx;
   var cropY = ly;
@@ -152,6 +180,7 @@ function crop(lx, ly, rx, ry) {
   cropCanvas = document.getElementById("cropCanvas").getContext('2d');
 
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+<<<<<<< HEAD
 
 }
 
@@ -294,3 +323,14 @@ function crop(lx, ly, rx, ry) {
 //         }
 //     }
 // }
+=======
+}
+
+function cropAllPDFs() {
+    fetch('/manageBox').then(response => response.json()).then(data => {
+
+        // crop all the pdfs based off the coordinates
+    });
+
+}
+>>>>>>> master
