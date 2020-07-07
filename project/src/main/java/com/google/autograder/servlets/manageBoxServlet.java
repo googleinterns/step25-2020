@@ -62,12 +62,13 @@ public class manageBoxServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    String lx = request.getParameter("lxDiv");
-    String ly = request.getParameter("lyDiv");
-    String rx = request.getParameter("rxDiv");
-    String ry = request.getParameter("ryDiv");
+    String lx = request.getParameter("lx");
+    String ly = request.getParameter("ly");
+    String rx = request.getParameter("rx");
+    String ry = request.getParameter("ry");
 
-    System.out.println("fuck"+lx+ly+rx+ry);
+    System.out.println("fuck");
+    System.out.println(lx+ly+rx+ry);
 
     Entity messageEntity = new Entity("Coordinates");
     messageEntity.setProperty("lx", lx);
