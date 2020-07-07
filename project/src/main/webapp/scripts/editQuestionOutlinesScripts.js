@@ -88,7 +88,6 @@ function nextButton() {
 }
 
 
-
 function mousePositions() {
 
   function getMousePos(canvas, evt) {
@@ -118,35 +117,37 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
-    var lxDiv = document.getElementById('lx');
-    var lyDiv = document.getElementById('ly');
-    var rxDiv = document.getElementById('rx');
-    var ryDiv = document.getElementById('ry');
+    // var lxDiv = document.getElementById('lxDiv');
+    // var lyDiv = document.getElementById('lyDiv');
+    // var rxDiv = document.getElementById('rxDiv');
+    // var ryDiv = document.getElementById('ryDiv');
 
     if (corner == "left") {
       lx = x;
       ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
-      lxDiv.innerHTML = lx;
-      lyDiv.innerHTML = ly;
-    //   lxDiv.style.display = "none";
-    //   lyDiv.style.display = "none";
+    //   lxDiv.innerHTML = lx;
+    //   lyDiv.innerHTML = ly;
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
     } else {
       rx = x;
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
-      rxDiv.innerHTML = rx;
-      ryDiv.innerHTML = ry;
-    //   rxDiv.style.display = "none";
-    //   ryDiv.style.display = "none";
+    //   rxDiv.innerHTML = rx;
+    //   ryDiv.innerHTML = ry;
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
       crop(lx, ly, rx, ry);
     }
 
   }
+// lx, ly, rx, ry;
+  var submitCoordinates = document.getElementById('submit');
+  submitCoordinates.addEventListener('click', function(evt) {
+    var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
+    fetch(url, {method:"POST"});
+  });
 }
 
 function crop(lx, ly, rx, ry) {
@@ -165,10 +166,13 @@ function crop(lx, ly, rx, ry) {
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 }
 
-function cropAllPDFs() {
-    fetch('/manageBox').then(response => response.json()).then(data => {
 
-        // crop all the pdfs based off the coordinates
-    });
+// function cropAllPDFs() {
+//     fetch('/manageBox').then(response => response.json()).then(data => {
 
-}
+//         console.log(data);
+
+//         // crop all the pdfs based off the coordinates
+//     });
+
+// }
