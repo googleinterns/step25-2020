@@ -106,9 +106,6 @@ function mousePositions() {
     var x = mousePos.x.toFixed(0);
     var y = mousePos.y.toFixed(0);
     writePos(x, y);
-    // var message = 'Corner Position: ' + mousePos.x.toFixed(1) + ',  ' + mousePos.y.toFixed(1);
-    // writePos(message);
-
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
@@ -117,11 +114,6 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
-
-    var lxDiv = document.getElementById('lx');
-    var lyDiv = document.getElementById('ly');
-    var rxDiv = document.getElementById('rx');
-    var ryDiv = document.getElementById('ry');
 
     if (corner == "left") {
       lx = x;
@@ -134,15 +126,11 @@ function mousePositions() {
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
       corner = "left";
-      setCorner.innerHTML = "Click Upper Left corner if it's inaccurate"
-      corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
-
       crop(lx, ly, rx, ry);
     }
 
   }
-// lx, ly, rx, ry;
   var submitCoordinates = document.getElementById('submit');
   submitCoordinates.addEventListener('click', function(evt) {
     var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
@@ -164,9 +152,15 @@ function crop(lx, ly, rx, ry) {
   cropCanvas = document.getElementById("cropCanvas").getContext('2d');
 
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-
 }
 
 
+// function cropAllPDFs() {
+//     fetch('/manageBox').then(response => response.json()).then(data => {
 
+//         console.log(data);
 
+//         // crop all the pdfs based off the coordinates
+//     });
+
+// }

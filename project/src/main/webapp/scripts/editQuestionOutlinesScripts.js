@@ -106,9 +106,6 @@ function mousePositions() {
     var x = mousePos.x.toFixed(0);
     var y = mousePos.y.toFixed(0);
     writePos(x, y);
-    // var message = 'Corner Position: ' + mousePos.x.toFixed(1) + ',  ' + mousePos.y.toFixed(1);
-    // writePos(message);
-
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
@@ -117,32 +114,23 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
-    // var lxDiv = document.getElementById('lxDiv');
-    // var lyDiv = document.getElementById('lyDiv');
-    // var rxDiv = document.getElementById('rxDiv');
-    // var ryDiv = document.getElementById('ryDiv');
 
     if (corner == "left") {
       lx = x;
       ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
-    //   lxDiv.innerHTML = lx;
-    //   lyDiv.innerHTML = ly;
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
     } else {
       rx = x;
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
-    //   rxDiv.innerHTML = rx;
-    //   ryDiv.innerHTML = ry;
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
       crop(lx, ly, rx, ry);
     }
 
   }
-// lx, ly, rx, ry;
   var submitCoordinates = document.getElementById('submit');
   submitCoordinates.addEventListener('click', function(evt) {
     var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
