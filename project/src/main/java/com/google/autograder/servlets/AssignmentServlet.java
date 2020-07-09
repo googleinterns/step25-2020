@@ -46,13 +46,12 @@ public final class AssignmentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Assignment");
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<Assignment> assignments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       String name = (String) entity.getProperty("name");
-      int points = (int) entity.getProperty("points");
+      int points = Integer.parseInt((String) entity.getProperty("points"));
       String status = (String) entity.getProperty("status");
       Assignment currAssignment = new Assignment(name, points, status);
       assignments.add(currAssignment);
