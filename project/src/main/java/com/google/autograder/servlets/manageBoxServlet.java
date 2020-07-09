@@ -43,19 +43,23 @@ public class manageBoxServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     
-    String coordinates = "lx: ly: rx: ry:";
     Map<String, String> mapCoordinates = new HashMap<>();
+    // TODO: put coordinates and points as fields for questionName
 
     for (Entity entity : results.asIterable()) {
         String lx = (String) entity.getProperty("lx");
         String ly = (String) entity.getProperty("ly");
         String rx = (String) entity.getProperty("ry");
         String ry = (String) entity.getProperty("ry");
+        // String questionName = (String) entity.getProperty("questionName");
+        // String points = (String) entity.getProperty("question-points");
 
         mapCoordinates.put("lx", lx);
         mapCoordinates.put("ly", ly);
         mapCoordinates.put("rx", rx);
         mapCoordinates.put("ry", ry);
+        // mapCoordinates.put("questionName", questionName);
+        // mapCoordinates.put("points", points);
     }
 
     Gson gson = new Gson();
@@ -72,15 +76,19 @@ public class manageBoxServlet extends HttpServlet {
     String ly = request.getParameter("ly");
     String rx = request.getParameter("rx");
     String ry = request.getParameter("ry");
+    String questionName = request.getParameter("question-name");
+    String pts = request.getParameter("question-points");
 
-    Entity messageEntity = new Entity("Coordinates");
-    messageEntity.setProperty("lx", lx);
-    messageEntity.setProperty("ly", ly);
-    messageEntity.setProperty("rx", rx);
-    messageEntity.setProperty("ry", ry);
+    Entity questionEntity = new Entity("Coordinates");
+    questionEntity.setProperty("lx", lx);
+    questionEntity.setProperty("ly", ly);
+    questionEntity.setProperty("rx", rx);
+    questionEntity.setProperty("ry", ry);
+    // questionEntity.setProperty("questionName", questionName);
+    // questionEntity.setProperty("question-points", pts);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(messageEntity);
+    datastore.put(questionEntity);
 
     response.sendRedirect("/manageBox");
   }
