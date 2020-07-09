@@ -1,3 +1,95 @@
-<script>
-	window.location.replace("/pages/courses.html");
-</script>
+<!DOCTYPE html>
+<html>
+
+<!-- Landing Page -->
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/pages/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/pages/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+
+<body>
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+            <img src="../images/GC_logo.png" class="nav-wrapper">
+            <a id="logo-container" href="#" class="white-text brand-logo"> gClassroom AutoGrader</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="white-text" href="/pages/courses.html">Login</a></li>
+            </ul>
+
+            <ul id="nav-mobile" class="sidenav">
+                <li><a href="/pages/courses.html">Login</a></li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
+    <div id="index-banner" class="parallax-container">
+        <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+            <h1 class="header center white-text text-lighten-2">Google Classroom AutoGrader</h1>
+            <div class="row center">
+                <!-- TODO: fix this login button to use OAuth-->
+                <a href="/pages/courses.html" id="login" class="btn-large waves-effect waves-light white lighten-1 black-text">
+                    <div class="left">
+                        <img class="responsive-img google-icon" alt="Google sign-in" src="/images/rsz_google-logo.png">
+                        <div id="google-login-button-text" class="right login-button-text">
+                            Sign in with Google
+                        </div>
+                    </div>                
+                </a>
+            </div>
+            <br><br>
+        </div>
+        </div>
+    <div class="parallax"><img src="/pages/rsz_classroom.jpg" alt="Unsplashed background img 1"></div>
+    </div>
+    
+    <div class="container center page-container">
+        </br>
+    <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
+            <h5 class="center">Speeds up Teacher Grading</h5>
+
+            <p class="light">We did most of the heavy lifting for you . something something lets you do grouping and grad faster reduces time speedy teachers.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
+            <h5 class="center">User Experience Focused</h5>
+
+            <p class="light">Even if you're a teacher thats 60 years old you will have an easy time navigating our page and dont need additional trainings just to learn how this works.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
+            <h5 class="center">Easy to work with</h5>
+
+            <p class="light">we care about children and tehir education and simply want to make sure you are enabled to deliver the best quality education you can. students cant see other students etc privacy something.</p>
+          </div>
+        </div>
+      </div>
+
+        info about the product
+    </div>
+
+</body>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="/pages/js/materialize.js"></script>
+  <script src="/pages/js/init.js"></script>
+
+</html>
