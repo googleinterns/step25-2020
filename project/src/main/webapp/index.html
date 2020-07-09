@@ -34,7 +34,15 @@
             <br><br>
             <h1 class="header center white-text text-lighten-2">Google Classroom AutoGrader</h1>
             <div class="row center">
-                <a href="/pages/courses.html" id="login" class="btn-large waves-effect waves-light white lighten-1 black-text">login button</a>
+                <!-- TODO: fix this login button to use OAuth-->
+                <a href="/pages/courses.html" id="login" class="btn-large waves-effect waves-light white lighten-1 black-text">
+                    <div class="left">
+                        <img class="responsive-img google-icon" alt="Google sign-in" src="/images/rsz_google-logo.png">
+                        <div id="google-login-button-text" class="right login-button-text">
+                            Sign in with Google
+                        </div>
+                    </div>                
+                </a>
             </div>
             <br><br>
         </div>
