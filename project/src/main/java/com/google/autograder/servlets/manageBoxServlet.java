@@ -16,6 +16,8 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +30,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
@@ -42,20 +44,24 @@ public class manageBoxServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     
     String coordinates = "lx: ly: rx: ry:";
+    Map<String, String> mapCoordinates = new HashMap<>();
+
     for (Entity entity : results.asIterable()) {
         String lx = (String) entity.getProperty("lx");
         String ly = (String) entity.getProperty("ly");
         String rx = (String) entity.getProperty("ry");
         String ry = (String) entity.getProperty("ry");
 
-        coordinates = "lx:"+lx+" ly:"+ly+" rx:"+rx+" ry:"+ry;       
+        mapCoordinates.put("lx", lx);
+        mapCoordinates.put("ly", ly);
+        mapCoordinates.put("rx", rx);
+        mapCoordinates.put("ry", ry);
     }
 
     Gson gson = new Gson();
 
-    // its a string instead of a json for now
     response.setContentType("application/json");
-    response.getWriter().println(gson.toJson(coordinates));
+    response.getWriter().println(gson.toJson(mapCoordinates));
 
   }
 
@@ -66,8 +72,6 @@ public class manageBoxServlet extends HttpServlet {
     String ly = request.getParameter("ly");
     String rx = request.getParameter("rx");
     String ry = request.getParameter("ry");
-
-    System.out.println(lx+ly+rx+ry);
 
     Entity messageEntity = new Entity("Coordinates");
     messageEntity.setProperty("lx", lx);

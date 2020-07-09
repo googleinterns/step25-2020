@@ -117,27 +117,27 @@ function mousePositions() {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
     var setCorner = document.getElementById('setCorner');
-
-    var lxDiv = document.getElementById('lx');
-    var lyDiv = document.getElementById('ly');
-    var rxDiv = document.getElementById('rx');
-    var ryDiv = document.getElementById('ry');
+    // var lxDiv = document.getElementById('lxDiv');
+    // var lyDiv = document.getElementById('lyDiv');
+    // var rxDiv = document.getElementById('rxDiv');
+    // var ryDiv = document.getElementById('ryDiv');
 
     if (corner == "left") {
       lx = x;
       ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
+    //   lxDiv.innerHTML = lx;
+    //   lyDiv.innerHTML = ly;
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
     } else {
       rx = x;
       ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
-      corner = "left";
-      setCorner.innerHTML = "Click Upper Left corner if it's inaccurate"
+    //   rxDiv.innerHTML = rx;
+    //   ryDiv.innerHTML = ry;
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
-
       crop(lx, ly, rx, ry);
     }
 
@@ -164,9 +164,15 @@ function crop(lx, ly, rx, ry) {
   cropCanvas = document.getElementById("cropCanvas").getContext('2d');
 
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-
 }
 
 
+// function cropAllPDFs() {
+//     fetch('/manageBox').then(response => response.json()).then(data => {
 
+//         console.log(data);
 
+//         // crop all the pdfs based off the coordinates
+//     });
+
+// }
