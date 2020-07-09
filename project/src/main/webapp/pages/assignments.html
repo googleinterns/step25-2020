@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <script src="/scripts/editQuestionOutlinesScripts.js"></script>
+    <script src="/scripts/assignments.js"></script>
 </head>
 
 <body>
@@ -40,6 +42,7 @@
                 <th>Submissions</th>
                 <th>% Graded</th>
             </tr>
+            <div class="assignments-container"></div>
             <tr>
                 <td>
                     <a href="/pages/assignment.html">Demo Midterm</a>
@@ -53,6 +56,14 @@
                 <td>100%</td>
             </tr>
         </table>
+        <form action="/assignment" method="POST">
+            <p>Name:</p>
+            <input type="text" id="name" name="name" required minlength="4" size="20"><br><br>
+            <p>Total points:</p>
+            <input type="number" id="total-points" required name="total-points" min="1"><br><br>
+            <script>getAssignments();</script>
+            <input type="submit">
+        </form>
     </div>
 
 </body>
