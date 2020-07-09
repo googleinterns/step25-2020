@@ -106,7 +106,6 @@ function mousePositions() {
     var x = mousePos.x.toFixed(0);
     var y = mousePos.y.toFixed(0);
     writePos(x, y);
-
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
