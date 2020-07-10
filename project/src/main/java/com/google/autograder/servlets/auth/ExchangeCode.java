@@ -46,17 +46,19 @@ import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizatio
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
 
-@WebServlet("/exchangeCode")
+@WebServlet("/exchangeAuthCode")
 public final class ExchangeCode extends HttpServlet {
 
     private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
     private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
 
-    private static String BASE_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev";
-    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly";
-    private static String TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
-    private static String REDIRECT_URI = "/pages/courses.html";
+    private static String HOST_URL = "http://localhost:8080";
+    private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
+
+    private static String ACCESS_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
     private static String GRANT_TYPE = "authorization_code";
+
+    private static String CHAR_SET = StandardCharsets.UTF_8.name();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -64,94 +66,77 @@ public final class ExchangeCode extends HttpServlet {
 
         String requestURL = (String) request.getHeader("Referer");
 
-        String authCode = requestURL.substring (requestURL.indexOf("?code=") + 6, requestURL.indexOf("&"));
+        String tempAuthCode = requestURL.substring (requestURL.indexOf("&code=") + 6, requestURL.indexOf("&scope="));
 
-        boolean receivedValidAuthCode = API.setAPIAuthCode(authCode);
-
-        System.out.println("\n" + "START");
-
-        System.out.println("\n" + "AUTH CODE : " + API.getAPIAuthCode());
+        boolean receivedValidAuthCode = API.setAPIAuthCode(tempAuthCode);
 
         if (receivedValidAuthCode) {
+            System.out.println("\n" + "START");
 
-            String charset = StandardCharsets.UTF_8.name();
+            System.out.println("\n" + "REQUEST ORIGIN : " + requestURL);
 
-            // String postBody = String.format("code=" + API.getAPIAuthCode() + "&client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&redirect_uri=%s&grant_type=%s",
-            //     // URLEncoder.encode(CLIENT_ID, charset), 
-            //     // URLEncoder.encode(CLIENT_SECRET, charset),
-            //     URLEncoder.encode((BASE_URL + REDIRECT_URI), charset),
-            //     URLEncoder.encode(GRANT_TYPE, charset)
-            // );
+            System.out.println("\n" + "AUTH CODE : " + API.getAPIAuthCode());
 
-            // StringBuilder postBodyBuffer = new StringBuilder();
-            // postBodyBuffer.append("code=" + API.getAPIAuthCode());
-            // postBodyBuffer.append("&client_id=" + CLIENT_ID);
-            // postBodyBuffer.append("&client_secret=" + CLIENT_SECRET);
-            // postBodyBuffer.append("&redirect_uri=" + (BASE_URL + REDIRECT_URI));
-            // postBodyBuffer.append("&grant_type=" + GRANT_TYPE);
+            StringBuilder postBodyBuffer = new StringBuilder();
+            postBodyBuffer.append("code=" + API.getAPIAuthCode());
+            postBodyBuffer.append("&client_id=" + URLEncoder.encode(CLIENT_ID, CHAR_SET));
+            postBodyBuffer.append("&client_secret=" + URLEncoder.encode(CLIENT_SECRET, CHAR_SET));
+            postBodyBuffer.append("&redirect_uri=" + URLEncoder.encode((HOST_URL + REDIRECT_URI), CHAR_SET));
+            postBodyBuffer.append("&grant_type=" + URLEncoder.encode(GRANT_TYPE, CHAR_SET));
 
-            // String postBody = postBodyBuffer.toString();
-
-            HashMap parameters = new HashMap<String, String>();
-            parameters.put("code", API.getAPIAuthCode());
-            parameters.put("client_id", CLIENT_ID);
-            parameters.put("client_secret", CLIENT_SECRET);
-            parameters.put("redirect_uri", BASE_URL + REDIRECT_URI);
-            parameters.put("grant_type", GRANT_TYPE);
-        
-            ObjectMapper objectMapper = new ObjectMapper();
-            String postBody = objectMapper.writeValueAsString(parameters);
+            String postBody = postBodyBuffer.toString();
 
             byte[] postBodyData = postBody.getBytes(StandardCharsets.UTF_8);
-            int postBodyLength = postBodyData.length;
+            int postBodyDataLength = postBodyData.length;
 
-            HttpURLConnection connection = (HttpURLConnection) new URL(TOKEN_ENDPOINT).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(ACCESS_TOKEN_ENDPOINT).openConnection();
 
-            connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setUseCaches(false);
             connection.setRequestMethod("POST");
-            connection.setInstanceFollowRedirects(true);
-            connection.setRequestProperty("charset", charset);
-            connection.setRequestProperty("Accept-Charset", charset);
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Content-Length", String.valueOf(postBodyLength));
-            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Content-Length", String.valueOf(postBodyDataLength));
 
-            DataOutputStream output = new DataOutputStream(connection.getOutputStream());
-            output.write(postBodyData);
-            output.close();
+            connection.getOutputStream().write(postBodyData);
 
-            System.out.println("\n" + "ENDPOINT : " + TOKEN_ENDPOINT);
+            System.out.println("\n" + "ENDPOINT : " + ACCESS_TOKEN_ENDPOINT);
+
             System.out.println("\n" + "BODY : " + postBody);
 
-            int responseCode = connection.getResponseCode();
+            try {
 
-            // Initiate the post request
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), charset));
+                int responseCode = connection.getResponseCode();
 
-            if (responseCode == 200) {
+                if (responseCode == 200) {
 
-                StringBuilder jsonBuffer = new StringBuilder();
-                String line;
+                    // Initiate the post request
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), CHAR_SET));
+                    StringBuilder jsonBuffer = new StringBuilder();
+                    String line;
 
-                while ((line = bufferedReader.readLine()) != null) {
-                    jsonBuffer.append(line);
-                    jsonBuffer.append(System.lineSeparator());
-                }
+                    while ((line = bufferedReader.readLine()) != null) {
+                        jsonBuffer.append(line);
+                        jsonBuffer.append(System.lineSeparator());
+                    }
 
-                bufferedReader.close();
+                    bufferedReader.close();
 
-                String json = jsonBuffer.toString();
+                    String json = jsonBuffer.toString();
 
-                System.out.println("\n" + "JSON: " + json);
-                System.out.println("\n" + "REQUEST SUCCESS");
+                    System.out.println("\n" + "JSON: " + json);
+                    System.out.println("\n" + "REQUEST SUCCESS");
             
-            } else {
-                System.out.println("\n" + "FAILED OUT : INVALID RESPONSE CODE : " + responseCode);
-            } 
+                } else {
+                    System.out.println("\n" + "FAILED OUT : INVALID RESPONSE CODE : " + responseCode);
+                } 
 
-            connection.disconnect();
+                connection.disconnect();
+
+            } catch(Exception e) {
+
+                System.out.println(e);
+                e.printStackTrace();
+
+            }
 
         } else {
             
@@ -159,9 +144,9 @@ public final class ExchangeCode extends HttpServlet {
 
         }
 
-        System.out.println("\n" + "STOP" + "\n");
+        response.setHeader("next-page", (HOST_URL + "/pages/courses.html"));
 
-        response.setHeader("next-page", (BASE_URL + REDIRECT_URI));
+        System.out.println("\n" + "STOP" + "\n");
 
         //     HashMap params = new HashMap<String, String>();
         //     params.put("code", API.getAPIAuthCode());
