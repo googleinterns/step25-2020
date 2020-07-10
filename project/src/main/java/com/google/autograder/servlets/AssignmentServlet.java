@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import com.google.autograder.data.Database;
+import com.google.autograder.data.Assignment;
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +26,8 @@ public final class AssignmentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from form
     String name = request.getParameter("name");
-    int totalPoints = Integer.parseInt(request.getParameter("total-points"));
+    String totalPointsString = request.getParameter("total-points");
+    int totalPoints = Integer.parseInt(totalPointsString);
     System.out.println(name);
 
     d.addAssignment(name, totalPoints);
@@ -35,14 +38,21 @@ public final class AssignmentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Assignment").addSort("name", SortDirection.DESCENDING);
+    Query query = new Query("Assignment");
     PreparedQuery results = d.queryDatabase(query);
 
-    List<String> assignments = new ArrayList<>();
+    List<Assignment> assignments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       String name = (String) entity.getProperty("name");
+      String pointsString = (String) entity.getProperty("points");
+      int points = Integer.parseInt(pointsString);
+      String status = (String) entity.getProperty("status");
+      Assignment currAssignment = new Assignment(name, points, status);
+      assignments.add(currAssignment);
     }
-
-    response.getWriter().println(assignments);
+    response.setContentType("application/json;");
+    String json = new Gson().toJson(assignments);
+    System.out.println(json);
+    response.getWriter().println(json);
   }
 }

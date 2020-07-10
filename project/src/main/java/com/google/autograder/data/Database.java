@@ -12,10 +12,15 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 
 /** Class containing basic database functionalities. */
 public class Database {
+
+  public final DatastoreService datastore;
+  public final List<String> answerGradingStatuses;
+
+  public Database() {
+      this.datastore = DatastoreServiceFactory.getDatastoreService();
+      this.answerGradingStatuses = Arrays.asList("NOT_GRADED", "GRADED");
+  }
     
-  //connect to database
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  List<String> answerGradingStatuses = Arrays.asList("NOT_GRADED", "GRADED");
 
   //create operations for all entities (with pk and fk restraints)
   //FOR FUTURE: ensure new objects have diff main names
