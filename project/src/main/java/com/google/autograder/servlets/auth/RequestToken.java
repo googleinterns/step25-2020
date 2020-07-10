@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.http.HttpTransport;
-import com.google.autograder.servlets.auth.Utils;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserService;
 import com.google.api.client.json.gson.GsonFactory;
@@ -34,15 +33,13 @@ import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizatio
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
 
-import com.google.autograder.servlets.auth.API;
-
 @WebServlet("/requestAccessToken")
 public final class RequestToken extends HttpServlet {
 
     private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
     private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
 
-    private static String HOST_URL = "http://localhost:8080";
+    private static String HOST_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev";
     private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
 
     private static String AUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -67,7 +64,7 @@ public final class RequestToken extends HttpServlet {
         authEndpointBuffer.append("&scope=" + URLEncoder.encode(SCOPE, CHAR_SET));
 
         authEndpointBuffer.append("&access_type=" + URLEncoder.encode(ACCESS_TYPE, CHAR_SET));
-        
+
         authEndpointBuffer.append("&state=" + URLEncoder.encode(STATE, CHAR_SET));
 
         response.setHeader("next-page", authEndpointBuffer.toString());
