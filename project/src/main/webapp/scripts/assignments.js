@@ -6,7 +6,7 @@ async function getAssignments() {
 	assignmentsList.innerHTML = '';
 	assignments.forEach(assignment => {
 
-		const content = `[${assignments.name}]`;
+		const content = `[${assignment.name}]`;
 		assignmentsList.appendChild(createListElement(content));
     });
 }

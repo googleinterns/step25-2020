@@ -29,7 +29,7 @@ public class Database {
     System.out.println("ENTERED ADD ASSIGNMENT");
     Entity assignmentEntity = new Entity("Assignment");
     assignmentEntity.setProperty("name", name);
-    assignmentEntity.setProperty("totalPoints", totalPoints);
+    assignmentEntity.setProperty("points", totalPoints);
     assignmentEntity.setProperty("status", "SAMPLE_PENDING");
     this.datastore.put(assignmentEntity);
   }

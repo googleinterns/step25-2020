@@ -27,7 +27,7 @@ public final class AssignmentServlet extends HttpServlet {
     // Get the input from form
     String name = request.getParameter("name");
     String totalPointsString = request.getParameter("total-points");
-    if (name != null && totalPointsString != null) {
+    if (name != null && totalPointsString != null && totalPointsString != "") {
         int totalPoints = Integer.parseInt(totalPointsString);
         System.out.println(name);
         System.out.println(totalPoints);
@@ -47,15 +47,15 @@ public final class AssignmentServlet extends HttpServlet {
     List<Assignment> assignments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       String name = (String) entity.getProperty("name");
-      String pointsString = (String) entity.getProperty("points");
-      int points = Integer.parseInt(pointsString);
+      System.out.println(name);
+      Long pointsLong = (Long) entity.getProperty("points");
+      int points = Math.toIntExact(pointsLong);
       String status = (String) entity.getProperty("status");
       Assignment currAssignment = new Assignment(name, points, status);
       assignments.add(currAssignment);
     }
     response.setContentType("application/json;");
     String json = new Gson().toJson(assignments);
-    System.out.println(json);
     response.getWriter().println(json);
   }
 }
