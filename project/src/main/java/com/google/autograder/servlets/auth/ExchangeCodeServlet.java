@@ -1,55 +1,24 @@
 package com.google.autograder.servlets.auth;
 
 import java.net.URL;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Scanner;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
-import java.io.OutputStream;
-import java.util.Collections;
 import java.io.BufferedReader;
 import java.net.URLConnection;
 import java.lang.StringBuilder;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.MalformedURLException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.ServletException;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
 import java.io.UnsupportedEncodingException;
-import com.google.api.client.http.GenericUrl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.http.HttpTransport;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserService;
-import com.google.api.client.json.gson.GsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.BearerToken;
-import com.google.api.client.http.BasicAuthentication;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.api.services.classroom.ClassroomScopes;
-import com.google.api.client.auth.oauth2.CredentialStore;
-import com.google.api.client.auth.oauth2.StoredCredential;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.autograder.servlets.auth.AccessTokenResponse;
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactory;
-import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
-import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
-import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
 
 @WebServlet("/exchangeAuthCode")
-public final class ExchangeCode extends HttpServlet {
+public final class ExchangeCodeServlet extends HttpServlet {
 
     private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
     private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
