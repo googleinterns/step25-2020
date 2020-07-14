@@ -2,6 +2,7 @@ package com.google.autograder.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
 import java.util.Arrays;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -26,7 +27,6 @@ public class Database {
   //FOR FUTURE: ensure new objects have diff main names
 
   public void addAssignment(String name, int totalPoints) {
-    System.out.println("ENTERED ADD ASSIGNMENT");
     Entity assignmentEntity = new Entity("Assignment");
     assignmentEntity.setProperty("name", name);
     assignmentEntity.setProperty("points", totalPoints);
@@ -92,6 +92,22 @@ public class Database {
 
   public PreparedQuery queryDatabase(Query query) {
       return this.datastore.prepare(query);
+  }
+
+  public String getAssignmentJSON() {
+    Query query = new Query("Assignment");
+    PreparedQuery results = this.queryDatabase(query);
+    List<Assignment> assignments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      String name = (String) entity.getProperty("name");
+      Long pointsLong = (Long) entity.getProperty("points");
+      int points = Math.toIntExact(pointsLong);
+      String status = (String) entity.getProperty("status");
+      Assignment currAssignment = new Assignment(name, points, status);
+      assignments.add(currAssignment);
+    }
+    String json = new Gson().toJson(assignments);
+    return json;
   }
 
 

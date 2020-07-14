@@ -29,33 +29,15 @@ public final class AssignmentServlet extends HttpServlet {
     String totalPointsString = request.getParameter("total-points");
     if (name != null && totalPointsString != null && totalPointsString != "") {
         int totalPoints = Integer.parseInt(totalPointsString);
-        System.out.println(name);
-        System.out.println(totalPoints);
-
         d.addAssignment(name, totalPoints);
-
-        // Redirect back to the HTML page.
         response.sendRedirect("/pages/assignments.html");
     }
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Assignment");
-    PreparedQuery results = d.queryDatabase(query);
-
-    List<Assignment> assignments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      String name = (String) entity.getProperty("name");
-      System.out.println(name);
-      Long pointsLong = (Long) entity.getProperty("points");
-      int points = Math.toIntExact(pointsLong);
-      String status = (String) entity.getProperty("status");
-      Assignment currAssignment = new Assignment(name, points, status);
-      assignments.add(currAssignment);
-    }
+    String json = d.getAssignmentJSON();
     response.setContentType("application/json;");
-    String json = new Gson().toJson(assignments);
     response.getWriter().println(json);
   }
 }
