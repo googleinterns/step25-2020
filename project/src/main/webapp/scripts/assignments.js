@@ -1,9 +1,7 @@
 async function getAssignments() {
     var servletURL = "/assignment";
     const response = await fetch(servletURL);
-    const assignments = await response.json();
-	//const assignmentsList = document.getElementById('assignments-container');
-    
+    const assignments = await response.json();    
     var myTableDiv = document.getElementById("assignments-container");
 
     var table = document.createElement('TABLE');
@@ -26,31 +24,31 @@ async function getAssignments() {
     assignments.forEach(assignment => {
         var tr = document.createElement('TR');
         tableBody.appendChild(tr);
-        var td1 = document.createElement('TD');
-        td1.innerHTML = assignment.name;
-        var td2 = document.createElement('TD');
-        td2.innerHTML = assignment.status;
-        var td3 = document.createElement('TD');
-        td3.innerHTML = assignment.points;
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tr.appendChild(td3);
+
+        var link = document.createElement('A');
+        var tdName = document.createElement('TD');
+        tdName.innerHTML = assignment.name;
+        link.appendChild(tdName);
+        link.href = goToQuestionsPage(assignment);
+        var tdStatus = document.createElement('TD');
+        tdStatus.innerHTML = assignment.status;
+        var tdPoints = document.createElement('TD');
+        tdPoints.innerHTML = assignment.points;
+        tr.appendChild(link);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdPoints);
     });
     myTableDiv.appendChild(table);
-
-	//assignmentsList.innerHTML = '';
-	//assignments.forEach(assignment => {
-
-//		const content = `[${assignment.name}]`;
-//		assignmentsList.appendChild(createListElement(content));
-
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('tr');
-  const name = document.createElement('td');
-  const status = document.createElement('td');
-  liElement.innerHTML = "- " + text;
-  return liElement;
+async function goToQuestionsPage(assignment) {
+    var key = assignment.key;
+    var servletURL = '/question?assignment-key=${key}';
+    const response = await fetch(servletURL);
+    const questions = await response.json();    
+    var myTableDiv = document.getElementById("questions-container");
+
 }
+// goToNextPage(assignment)
+// go to questions page 
+// getQuestions?assignment=${assignmentKey}

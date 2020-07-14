@@ -10,6 +10,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+
 
 /** Class containing basic database functionalities. */
 public class Database {
@@ -22,7 +29,6 @@ public class Database {
       this.answerGradingStatuses = Arrays.asList("NOT_GRADED", "GRADED");
   }
     
-
   //create operations for all entities (with pk and fk restraints)
   //FOR FUTURE: ensure new objects have diff main names
 
@@ -34,12 +40,12 @@ public class Database {
     this.datastore.put(assignmentEntity);
   }
 
-  public void addQuestion(Entity assignmentEntity, String questionName, String questionType, int questionPoints) {
+  public void addQuestion(String questionName, String questionType, int questionPoints, int assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
       questionEntity.setProperty("points", questionPoints);
-      questionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
+      questionEntity.setProperty("assignmentKey", assignmentKey);
       this.datastore.put(questionEntity);
   }
 
@@ -94,7 +100,7 @@ public class Database {
       return this.datastore.prepare(query);
   }
 
-  public String getAssignmentJSON() {
+  public String getAllAssignmentJSON() {
     Query query = new Query("Assignment");
     PreparedQuery results = this.queryDatabase(query);
     List<Assignment> assignments = new ArrayList<>();
@@ -103,17 +109,36 @@ public class Database {
       Long pointsLong = (Long) entity.getProperty("points");
       int points = Math.toIntExact(pointsLong);
       String status = (String) entity.getProperty("status");
-      Assignment currAssignment = new Assignment(name, points, status);
+      Key key = entity.getKey();
+      Assignment currAssignment = new Assignment(name, points, status, key);
       assignments.add(currAssignment);
     }
     String json = new Gson().toJson(assignments);
     return json;
   }
 
-
-  //get all assignments
-
-  //get all questions for an assignment
+  public String getAllQuestionJSON(String key) {
+    // query all questions with this key at assignment_id key
+    int keyInt = Integer.parseInt(key);
+    if (keyInt != null) {
+        Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, keyInt);
+        Query query = new Query("Question").setFilter(propertyFilter);
+        PreparedQuery results = this.queryDatabase(query);
+        List<Question> questions = new ArrayList<>();
+        for (Entity entity : results.asIterable()) {
+            String name = (String) entity.getProperty("name");
+            Long pointsLong = (Long) entity.getProperty("points");
+            int points = Math.toIntExact(pointsLong);
+            String status = (String) entity.getProperty("status");
+            Long assignmentKeyLong = (Long) entity.getProperty("assignmentKey");
+            int assignmentKey = Math.toIntExact(assignmentKeyLong);
+            Assignment currQuestion = new Question(name, points, status, assignmentKey);
+            questions.add(currQuestion);
+        }
+        String json = new Gson().toJson(questions);
+        return json;
+    }
+  }
 
   //get all submissions for an assignment
 

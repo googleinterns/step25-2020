@@ -16,7 +16,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-/** Servlet that encapsulates the subtraction game. */
 @WebServlet("/assignment")
 public final class AssignmentServlet extends HttpServlet {
 
@@ -36,7 +35,7 @@ public final class AssignmentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = d.getAssignmentJSON();
+    String json = d.getAllAssignmentJSON();
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
