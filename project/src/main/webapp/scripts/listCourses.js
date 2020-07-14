@@ -6,8 +6,6 @@ async function getCourses() {
         method: "GET",
         mode: "no-cors"
     });
-
-    
 }
 
 getCourses();
