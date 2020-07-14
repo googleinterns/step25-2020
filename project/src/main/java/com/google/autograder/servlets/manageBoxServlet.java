@@ -67,7 +67,6 @@ public class manageBoxServlet extends HttpServlet {
     String rx = request.getParameter("rx");
     String ry = request.getParameter("ry");
 
-    System.out.println("fuck");
     System.out.println(lx+ly+rx+ry);
 
     Entity messageEntity = new Entity("Coordinates");
