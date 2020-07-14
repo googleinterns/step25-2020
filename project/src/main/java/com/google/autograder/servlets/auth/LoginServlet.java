@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.autograder.servlets.Services;
+import com.google.autograder.servlets.helpers.Services;
 
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {

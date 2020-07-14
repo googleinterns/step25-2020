@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.autograder.servlets.Services;
+import com.google.autograder.servlets.helpers.Services;
 
 @WebServlet("/listCourses")
 public final class ListCoursesServlet extends HttpServlet {
@@ -20,7 +20,7 @@ public final class ListCoursesServlet extends HttpServlet {
             // Query query = new Query("Course");
             // PreparedQuery results = Services.DATA_STORE.prepare(query);
 
-            System.out.println("\n\n" + "BANG BANG BANG ! ! !" + "\n\n");
+            System.out.println("\n\n" + "Ready to list courses" + "\n\n");
 
         } else {
             response.sendRedirect("/index.html");

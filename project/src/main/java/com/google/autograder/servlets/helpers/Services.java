@@ -1,4 +1,4 @@
-package com.google.autograder.servlets;
+package com.google.autograder.servlets.helpers;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
