@@ -62,15 +62,11 @@ public final class AccessTokenResponse {
         if (entity.getProperty("access_token") == null) {
             return null;
         }
-
-        String access_token = (String) entity.getProperty("access_token");
-        
-        String token_type = (String) entity.getProperty("token_type");
         
         String scope = (String) entity.getProperty("scope");
-
         long expires_in = (long) entity.getProperty("expires_in");
-        
+        String token_type = (String) entity.getProperty("token_type");
+        String access_token = (String) entity.getProperty("access_token");
         return new AccessTokenResponse(access_token, token_type, scope, expires_in);
     }
 

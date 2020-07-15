@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Entity;
+import com.google.autograder.servlets.helpers.API;
 import com.google.autograder.servlets.helpers.Services;
 
 
@@ -31,8 +32,6 @@ public final class ExchangeCodeServlet extends HttpServlet {
     private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
     private static String GRANT_TYPE = "authorization_code";
 
-    private static String UTF_8 = StandardCharsets.UTF_8.name();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String requestURL = (String) request.getHeader("Referer");
@@ -46,11 +45,9 @@ public final class ExchangeCodeServlet extends HttpServlet {
                 int responseCode = connection.getResponseCode();
 
                 if (responseCode == 200) {        
-                    String json = getJSON(connection);
+                    String json = API.getJSON(connection);
 
                     AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObjectFromJSON(json);
-
-                    System.out.println("\n" + json);
 
                     String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
 
@@ -76,11 +73,12 @@ public final class ExchangeCodeServlet extends HttpServlet {
 
     private String buildPostBody(String authCode) throws UnsupportedEncodingException {
         StringBuilder postBody = new StringBuilder();
+        
         postBody.append("code=" + authCode);
-        postBody.append("&client_id=" + URLEncoder.encode(CLIENT_ID, UTF_8));
-        postBody.append("&client_secret=" + URLEncoder.encode(CLIENT_SECRET, UTF_8));
-        postBody.append("&redirect_uri=" + URLEncoder.encode((HOST_URL + REDIRECT_URI), UTF_8));
-        postBody.append("&grant_type=" + URLEncoder.encode(GRANT_TYPE, UTF_8));
+        postBody.append("&client_id=" + URLEncoder.encode(CLIENT_ID, API.UTF_8));
+        postBody.append("&client_secret=" + URLEncoder.encode(CLIENT_SECRET, API.UTF_8));
+        postBody.append("&redirect_uri=" + URLEncoder.encode((HOST_URL + REDIRECT_URI), API.UTF_8));
+        postBody.append("&grant_type=" + URLEncoder.encode(GRANT_TYPE, API.UTF_8));
 
         return postBody.toString();
     }
@@ -94,21 +92,6 @@ public final class ExchangeCodeServlet extends HttpServlet {
         connection.setRequestProperty("Content-Length", String.valueOf(postBodyDataLength));
 
         return connection;
-    }
-    
-    private String getJSON(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), UTF_8));
-        StringBuilder jsonBuffer = new StringBuilder();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            jsonBuffer.append(line);
-            jsonBuffer.append(System.lineSeparator());
-        }
-
-        bufferedReader.close();
-
-        return jsonBuffer.toString();
     }
 
 }
