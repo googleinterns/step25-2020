@@ -16,6 +16,9 @@ import javax.servlet.annotation.WebServlet;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.Entity;
+import com.google.autograder.servlets.helpers.Services;
+
 
 @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
@@ -45,11 +48,15 @@ public final class ExchangeCodeServlet extends HttpServlet {
                 if (responseCode == 200) {        
                     String json = getJSON(connection);
 
-                    AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObject(json);
+                    AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObjectFromJSON(json);
 
                     System.out.println("\n" + json);
 
-                    System.out.println("\n" + accessTokenResponse.toString());
+                    String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+
+                    Entity accessTokenResponseEntity = AccessTokenResponse.createDatastoreAccessTokenResponseEntity(accessTokenResponse, userEmail);
+                    
+                    Services.DATA_STORE.put(accessTokenResponseEntity);
 
                 } else {
                     System.out.println("\n" + "INVALID RESPONSE CODE : " + responseCode);
