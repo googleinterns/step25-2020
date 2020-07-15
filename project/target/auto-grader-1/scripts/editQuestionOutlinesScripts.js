@@ -110,6 +110,7 @@ function mousePositions() {
 
   let corner = "left"; // variable to alternate which corner's location is being registered
   var lx, ly, rx, ry;
+  var questionName, questionPoints;
   function writePos(x, y) {
     var upperLeft = document.getElementById('upperLeft');
     var lowerRight = document.getElementById('lowerRight');
@@ -131,6 +132,8 @@ function mousePositions() {
     }
 
   }
+
+  // listener to send post request with coordinates for datastore
   var submitCoordinates = document.getElementById('submit');
   submitCoordinates.addEventListener('click', function(evt) {
     var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
