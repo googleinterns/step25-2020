@@ -1,14 +1,15 @@
 package com.google.autograder.servlets.auth;
 
 import com.google.gson.Gson;
+import com.google.appengine.api.datastore.Entity;
 
 public final class AccessTokenResponse {
     private String access_token;
     private String token_type;
-    private int expires_in;
+    private long expires_in;
     private String scope;
 
-    public AccessTokenResponse(String access_token, String token_type, String scope, int expires_in) {
+    public AccessTokenResponse(String access_token, String token_type, String scope, long expires_in) {
         this.access_token = access_token;
         this.token_type = token_type;
         this.expires_in = expires_in;
@@ -23,7 +24,7 @@ public final class AccessTokenResponse {
         return token_type;
     }
 
-    public int getExpires_In() {
+    public long getExpires_In() {
         return expires_in;
     }
 
@@ -39,7 +40,7 @@ public final class AccessTokenResponse {
         this.token_type = token_type;
     }
 
-    public void setExpires_In(int expires_in) {
+    public void setExpires_In(long expires_in) {
         this.expires_in = expires_in;
     }
 
@@ -47,7 +48,33 @@ public final class AccessTokenResponse {
         this.scope = scope;
     }
 
-    public static AccessTokenResponse getAccessTokenResponseObject(String json) {
+    public static Entity createDatastoreAccessTokenResponseEntity(AccessTokenResponse accessTokenResponse, String userEmail) {
+        Entity accessTokenResponseEntity = new Entity("AccessTokenResponse");
+        accessTokenResponseEntity.setProperty("access_token", accessTokenResponse.access_token);
+        accessTokenResponseEntity.setProperty("token_type", accessTokenResponse.token_type);
+        accessTokenResponseEntity.setProperty("expires_in", accessTokenResponse.expires_in);
+        accessTokenResponseEntity.setProperty("scope", accessTokenResponse.scope);
+        accessTokenResponseEntity.setProperty("user_email", userEmail);
+        return accessTokenResponseEntity;
+    }
+    
+    public static AccessTokenResponse buildAccessTokenResponseFromDatastoreEntity(Entity entity) {
+        if (entity.getProperty("access_token") == null) {
+            return null;
+        }
+
+        String access_token = (String) entity.getProperty("access_token");
+        
+        String token_type = (String) entity.getProperty("token_type");
+        
+        String scope = (String) entity.getProperty("scope");
+
+        long expires_in = (long) entity.getProperty("expires_in");
+        
+        return new AccessTokenResponse(access_token, token_type, scope, expires_in);
+    }
+
+    public static AccessTokenResponse getAccessTokenResponseObjectFromJSON(String json) {
         return new Gson().fromJson(json, AccessTokenResponse.class);
     } 
 

@@ -6,6 +6,20 @@ async function getCourses() {
         method: "GET",
         mode: "no-cors"
     });
+
+    let redirect = response.headers.get("redirect");
+
+    if (redirect != null) {
+        window.location.replace(redirect);
+    } else {
+
+        let coursesJSON = await response.json();
+
+        console.log(coursesJSON);
+        
+    }
+
+
 }
 
 getCourses();

@@ -31,7 +31,8 @@ public final class RequestTokenServlet extends HttpServlet {
     private static String ACCESS_TYPE = "offline";
     private static String RESPONSE_TYPE = "code";
 
-    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly";
+    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly "
+                                + "";
 
     private static String CHAR_SET = StandardCharsets.UTF_8.name();
 
