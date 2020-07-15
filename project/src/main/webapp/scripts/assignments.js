@@ -29,7 +29,8 @@ async function getAssignments() {
         var tdName = document.createElement('TD');
         tdName.innerHTML = assignment.name;
         link.appendChild(tdName);
-        link.href = goToQuestionsPage(assignment);
+        link.href = "/pages/assignment.html?assignment-key=" + assignment.key;
+
         var tdStatus = document.createElement('TD');
         tdStatus.innerHTML = assignment.status;
         var tdPoints = document.createElement('TD');
@@ -38,17 +39,6 @@ async function getAssignments() {
         tr.appendChild(tdStatus);
         tr.appendChild(tdPoints);
     });
+
     myTableDiv.appendChild(table);
 }
-
-async function goToQuestionsPage(assignment) {
-    var key = assignment.key;
-    var servletURL = '/question?assignment-key=${key}';
-    const response = await fetch(servletURL);
-    const questions = await response.json();    
-    var myTableDiv = document.getElementById("questions-container");
-
-}
-// goToNextPage(assignment)
-// go to questions page 
-// getQuestions?assignment=${assignmentKey}

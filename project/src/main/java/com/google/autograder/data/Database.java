@@ -40,7 +40,7 @@ public class Database {
     this.datastore.put(assignmentEntity);
   }
 
-  public void addQuestion(String questionName, String questionType, int questionPoints, int assignmentKey) {
+  public void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
@@ -100,7 +100,7 @@ public class Database {
       return this.datastore.prepare(query);
   }
 
-  public String getAllAssignmentJSON() {
+  public String getAllAssignmentsJSON() {
     Query query = new Query("Assignment");
     PreparedQuery results = this.queryDatabase(query);
     List<Assignment> assignments = new ArrayList<>();
@@ -117,11 +117,10 @@ public class Database {
     return json;
   }
 
-  public String getAllQuestionJSON(String key) {
+  public String getAllQuestionsJSON(String key) {
     // query all questions with this key at assignment_id key
-    int keyInt = Integer.parseInt(key);
-    if (keyInt != null) {
-        Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, keyInt);
+    if (key != null) {
+        Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
         Query query = new Query("Question").setFilter(propertyFilter);
         PreparedQuery results = this.queryDatabase(query);
         List<Question> questions = new ArrayList<>();
@@ -130,14 +129,14 @@ public class Database {
             Long pointsLong = (Long) entity.getProperty("points");
             int points = Math.toIntExact(pointsLong);
             String status = (String) entity.getProperty("status");
-            Long assignmentKeyLong = (Long) entity.getProperty("assignmentKey");
-            int assignmentKey = Math.toIntExact(assignmentKeyLong);
-            Assignment currQuestion = new Question(name, points, status, assignmentKey);
+            String assignmentKey = (String) entity.getProperty("assignmentKey");
+            Question currQuestion = new Question(name, points, status, assignmentKey);
             questions.add(currQuestion);
         }
         String json = new Gson().toJson(questions);
         return json;
     }
+    return new Gson().toJson("");
   }
 
   //get all submissions for an assignment

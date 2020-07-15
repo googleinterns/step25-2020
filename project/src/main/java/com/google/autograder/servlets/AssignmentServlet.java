@@ -35,7 +35,7 @@ public final class AssignmentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = d.getAllAssignmentJSON();
+    String json = d.getAllAssignmentsJSON();
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
