@@ -31,7 +31,8 @@ public final class RequestTokenServlet extends HttpServlet {
     private static String ACCESS_TYPE = "offline";
     private static String RESPONSE_TYPE = "code";
 
-    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly";
+    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses "
+                                + "https://www.googleapis.com/auth/classroom.coursework.students";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

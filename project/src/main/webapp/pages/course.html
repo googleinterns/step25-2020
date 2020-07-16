@@ -30,32 +30,24 @@
     </nav>
 
     <div class="container page-container">
-        <h1>AutoGrader Demo Class | Summer 2020</h1>
-        <h2>Description</h2>
+        <h1 id="course-name">Course Name</h1>
+        <h2>Description:</h2>
 
-        <p>A demo course to show how AutoGrader works</p>
+        <p id="course-description">description</p>
 
-        <table>
-            <tr>
-                <th>Assignments</th>
-                <th>Submissions</th>
-                <th>% Graded</th>
-            </tr>
-            <tr>
-                <td>
-                    <a href="/pages/assignment.html">Demo Midterm</a>
-                </td>
-                <td>3</td>
-                <td>0%</td>
-            </tr>
-            <tr>
-                <td>Demo Test 1</td>
-                <td>3</td>
-                <td>100%</td>
-            </tr>
+        <table id="assignments-table">
+            <tbody id="assignments-table-body">
+                <tr>
+                    <th>Assignments</th>
+                    <th>Submissions</th>
+                    <th>% Graded</th>
+                </tr>
+            </tbody>    
         </table>
     </div>
 
 </body>
+
+<script src="/scripts/listAssignments.js"></script>
 
 </html>
