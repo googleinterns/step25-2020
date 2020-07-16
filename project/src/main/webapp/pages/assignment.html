@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <script src="/scripts/assignment.js"></script>
 </head>
 
 <body>
@@ -45,20 +46,9 @@
     <div class="container page-container">
         <h1>Demo Midterm</h1>
         <h2>A demo midterm</h2>
-
-        <p>
-            <a href="/pages/editOutline.html">Edit Question Outlines</a>
-        </p>
-        <p>
-            <a href="/pages/viewSubmissions.html">Manage Submissions</a>
-        </p>
-        <p>
-            <a href="/pages/gradeSubmissions.html">Grade Submissions</a>
-        </p>
-        <p>
-            <a href="/pages/reviewGrades.html">Review Grades</a>
-    	</p>
+        <div id="question-functions"><script>getQuestionFunctions();</script></div>
     </div>
+
 
 </body>
 

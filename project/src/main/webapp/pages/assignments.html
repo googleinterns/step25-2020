@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <script src="/scripts/editQuestionOutlinesScripts.js"></script>
+    <script src="/scripts/assignments.js"></script>
 </head>
 
 <body>
@@ -34,7 +36,8 @@
 
         <p>A demo course to show how AutoGrader works</p>
 
-        <table>
+        <div id="assignments-container"></div>
+        <table id="assignments-container">
             <tr>
                 <th>Assignments</th>
                 <th>Submissions</th>
@@ -53,6 +56,15 @@
                 <td>100%</td>
             </tr>
         </table>
+        All assignments:
+        <form action="/assignment" method="POST">
+            <p>Name:</p>
+            <input type="text" id="name" name="name" required minlength="4" size="20"><br><br>
+            <p>Total points:</p>
+            <input type="number" id="total-points" required name="total-points" min="1" default="10"><br><br>
+            <script>getAssignments();</script>
+            <input type="submit" onclick="getAssignments()">
+        </form>
     </div>
 
 </body>

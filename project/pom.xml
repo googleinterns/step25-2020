@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.google.sps</groupId>
+  <groupId>com.google.autograder</groupId>
   <artifactId>auto-grader</artifactId>
   <version>1</version>
   <packaging>war</packaging>
@@ -24,25 +24,21 @@
       <version>4.0.1</version>
       <scope>provided</scope>
     </dependency>
-<!-- GSON   -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.8.6</version>
-    </dependency>
-
-<!-- datastore -->
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
       <version>1.9.59</version>
     </dependency>
-
 <!-- users login -->
     <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
         <version>1.9.59</version>
+    </dependency>
+  <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.6</version>
     </dependency>
 
 <!-- for json -->
@@ -63,8 +59,7 @@
         <artifactId>appengine-maven-plugin</artifactId>
         <version>2.2.0</version>
         <configuration>
-          <!-- TODO: set project ID. -->
-          <deploy.projectId>YOUR_PROJECT_ID_HERE</deploy.projectId>
+          <deploy.projectId>step25-2020</deploy.projectId>
           <deploy.version>1</deploy.version>
         </configuration>
       </plugin>

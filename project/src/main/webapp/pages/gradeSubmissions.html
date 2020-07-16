@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <script src="/scripts/gradeSubmissions.js"></script>
 </head>
 
 <body>
@@ -31,15 +32,7 @@
 
         <h1>Grading Options</h1>
 
-        <p>
-            <a href="/pages/gradeIndividualSubmissions.html">Grade Individual Submissions</a>
-        </p>
-        <p>
-            <a href="/pages/questionGroups.html">Grade Question Groups</a>
-        </p>
-        <p>
-            <a href="/pages/editOutline.html">Review Question Outlines</a>
-        </p>
+        <div id="grading-options"><script>getOptions();</script></div>
     </div>
 </body>
 
