@@ -2,15 +2,21 @@
 <html>
 
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <meta charset="utf-8">
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-</head>
 
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="/scripts/materialize.js"></script>
+    <script src="/scripts/listCourses.js"></script>
+    <script src="/scripts/init.js"></script>
+</head>
+  
 <body>
     <nav class="green" role="navigation">
         <div class="nav-wrapper container">
@@ -35,19 +41,14 @@
                 <br><br>
             </div>
         </div>
-        <div class="parallax"><img src="/images/rsz_classroom.jpg" alt="Unsplashed background img 1"></div>
-    </div>
+      
+        <div class="parallax"><img src="/images/rsz_classroom.jpg" alt="Unsplashed background img 1"></div> 
+     </div>
 
     <div class="container page-container">
         <h1>Your Courses</h1>
         <table id="courses-table"></table>
     </div>
 </body>
-
-<!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/scripts/materialize.js"></script>
-<script src="/scripts/listCourses.js"></script>
-<script src="/scripts/init.js"></script>
 
 </html>

@@ -4,10 +4,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
-        <!-- CSS  -->
+    
+    <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <!-- JS  -->
+    <script src="/scripts/assignment.js"></script>
 </head>
 
 <body>
@@ -45,21 +49,8 @@
     <div class="container page-container">
         <h1>Demo Midterm</h1>
         <h2>A demo midterm</h2>
-
-        <p>
-            <a href="/pages/editOutline.html">Edit Question Outlines</a>
-        </p>
-        <p>
-            <a href="/pages/viewSubmissions.html">Manage Submissions</a>
-        </p>
-        <p>
-            <a href="/pages/gradeSubmissions.html">Grade Submissions</a>
-        </p>
-        <p>
-            <a href="/pages/reviewGrades.html">Review Grades</a>
-    	</p>
+        <div id="question-functions"><script>getQuestionFunctions();</script></div>
     </div>
-
 </body>
 
 </html>
