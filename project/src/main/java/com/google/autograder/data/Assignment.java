@@ -16,7 +16,7 @@ public class Assignment {
     this.points = points;
     this.status = status;
     this.key = KeyFactory.keyToString(key);
-  }
+   }
 
   public String getKeyString() {
       return this.key;
