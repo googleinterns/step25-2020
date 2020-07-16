@@ -8,7 +8,7 @@ async function getOptions() {
 
     var questionGroups = document.createElement('a');
     questionGroups.innerHTML = "Grade Question Groups<br><br>";
-    questionGroups.href = "/pages/questionGroups.html?assignment-key=" + assignmentKey;
+    questionGroups.href = "/pages/questionPage.html?assignment-key=" + assignmentKey;
 
     var editOutline = document.createElement('a');
     editOutline.innerHTML = "Review Question Outlines<br><br>";
