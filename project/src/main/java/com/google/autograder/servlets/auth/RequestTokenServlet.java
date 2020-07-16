@@ -2,7 +2,6 @@ package com.google.autograder.servlets.auth;
 
 import java.net.URL;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.io.BufferedReader;
 import java.net.URLConnection;
 import java.lang.StringBuilder;
@@ -16,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.servlets.helpers.API;
 
 @WebServlet("/requestAccessToken")
 public final class RequestTokenServlet extends HttpServlet {
@@ -31,26 +31,24 @@ public final class RequestTokenServlet extends HttpServlet {
     private static String ACCESS_TYPE = "offline";
     private static String RESPONSE_TYPE = "code";
 
-    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses.readonly "
-                                + "";
-
-    private static String CHAR_SET = StandardCharsets.UTF_8.name();
+    private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses "
+                                + "https://www.googleapis.com/auth/classroom.coursework.students";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         StringBuilder authEndpointBuffer = new StringBuilder(AUTH_CODE_ENDPOINT);
 
-        authEndpointBuffer.append("?client_id=" + URLEncoder.encode(CLIENT_ID, CHAR_SET));
+        authEndpointBuffer.append("?client_id=" + API.urlEncode(CLIENT_ID));
 
-        authEndpointBuffer.append("&redirect_uri=" + URLEncoder.encode((HOST_URL + REDIRECT_URI), CHAR_SET));
+        authEndpointBuffer.append("&redirect_uri=" + API.urlEncode((HOST_URL + REDIRECT_URI)));
 
-        authEndpointBuffer.append("&response_type=" + URLEncoder.encode(RESPONSE_TYPE, CHAR_SET));
+        authEndpointBuffer.append("&response_type=" + API.urlEncode(RESPONSE_TYPE));
 
-        authEndpointBuffer.append("&scope=" + URLEncoder.encode(SCOPE, CHAR_SET));
+        authEndpointBuffer.append("&scope=" + API.urlEncode(SCOPE));
 
-        authEndpointBuffer.append("&access_type=" + URLEncoder.encode(ACCESS_TYPE, CHAR_SET));
+        authEndpointBuffer.append("&access_type=" + API.urlEncode(ACCESS_TYPE));
 
-        authEndpointBuffer.append("&state=" + URLEncoder.encode(STATE, CHAR_SET));
+        authEndpointBuffer.append("&state=" + API.urlEncode(STATE));
 
         response.setHeader("next-page", authEndpointBuffer.toString());
     }

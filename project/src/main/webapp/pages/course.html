@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+        <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+
+<body>
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+            <img src="/images/GC_logo.png" class="nav-wrapper">
+            <a id="logo-container" href="#" class="brand-logo">   gClassroom AutoGrader</a>
+            
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/pages/courses.html">Courses</a></li>
+            </ul>
+
+            <ul id="nav-mobile" class="sidenav">
+                <li><a href="/pages/courses.html">Your Courses</a></li>
+            </ul>
+            
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
+    <div class="container page-container">
+        <h1 id="course-name">Course Name</h1>
+        <h2>Description:</h2>
+
+        <p id="course-description">description</p>
+
+        <table id="assignments-table">
+            <tbody id="assignments-table-body">
+                <tr>
+                    <th>Assignments</th>
+                    <th>Submissions</th>
+                    <th>% Graded</th>
+                </tr>
+            </tbody>    
+        </table>
+    </div>
+
+</body>
+
+<script src="/scripts/listAssignments.js"></script>
+
+</html>

@@ -22,11 +22,11 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.autograder.servlets.auth.AccessTokenResponse;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-@WebServlet("/listCourses")
-public final class ListCoursesServlet extends HttpServlet {
+@WebServlet("/listAssignments")
+public final class ListAssignmentsServlet extends HttpServlet {
 
-    private static String END_POINT = "https://classroom.googleapis.com/v1/courses";
-    
+    private static String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (Services.USER_SERVICE.isUserLoggedIn()) {
@@ -35,14 +35,24 @@ public final class ListCoursesServlet extends HttpServlet {
             String authorization = API.getCurrentUserAPIAuthorization();
 
             if (authorization != null) {
-                HttpURLConnection connection = (HttpURLConnection) new URL(END_POINT + "?key=" + API.API_KEY).openConnection();
+
+                String requestURL = (String) request.getHeader("Referer");
+                String courseID = requestURL.substring (requestURL.indexOf("?courseID=") + 10);
+
+                END_POINT = END_POINT.replace("{courseId}", courseID);
+
+                System.out.println("\n\nBANG\n\n");
+
+                URL url = new URL(END_POINT + "?key=" + API.API_KEY);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 connection.setRequestMethod("GET");
-                connection.setRequestProperty("courseStates", "ACTIVE");
                 connection.setRequestProperty("Accept", "application/json");
                 connection.setRequestProperty("Authorization", authorization);
 
                 String json = API.getJSON(connection);
+
+                System.out.println("\n\n" + json + "\n\n");
 
                 response.getWriter().println(json);
             } else {
