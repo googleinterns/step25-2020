@@ -1,2 +1,5 @@
-com/google/sps/servlets/DataServlet.class
+com/google/autograder/data/Database.class
+com/google/autograder/data/Question.class
+com/google/autograder/data/Assignment.class
+com/google/autograder/servlets/AssignmentServlet.class
 com/google/sps/servlets/manageBoxServlet.class

@@ -87,6 +87,7 @@ function nextButton() {
   }
 }
 
+var lx, ly, rx, ry;
 
 function mousePositions() {
 
@@ -109,7 +110,6 @@ function mousePositions() {
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
-  var lx, ly, rx, ry;
   var questionName, questionPoints;
   function writePos(x, y) {
     var upperLeft = document.getElementById('upperLeft');
@@ -133,12 +133,6 @@ function mousePositions() {
 
   }
 
-  // listener to send post request with coordinates for datastore
-  var submitCoordinates = document.getElementById('submit');
-  submitCoordinates.addEventListener('click', function(evt) {
-    var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
-    fetch(url, {method:"POST"});
-  });
 }
 
 function crop(lx, ly, rx, ry) {
@@ -157,13 +151,14 @@ function crop(lx, ly, rx, ry) {
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 }
 
-
-// function cropAllPDFs() {
-//     fetch('/manageBox').then(response => response.json()).then(data => {
-
-//         console.log(data);
-
-//         // crop all the pdfs based off the coordinates
-//     });
-
-// }
+// onclick called when "Add Question" button is clicked
+function submitBoxButton() {
+  var qName = document.getElementById('question-name').value;
+  var qPoints = document.getElementById('question-points').value;
+  
+  // idk if this is the most secure
+  if (lx != undefined){
+    var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry+"&qName"+qName+"&qPoints"+qPoints; 
+    fetch(url, {method:"POST"});
+  }
+}

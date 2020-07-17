@@ -76,19 +76,10 @@ public class manageBoxServlet extends HttpServlet {
     String ly = request.getParameter("ly");
     String rx = request.getParameter("rx");
     String ry = request.getParameter("ry");
-    String questionName = request.getParameter("question-name");
-    String pts = request.getParameter("question-points");
+    String questionName = request.getParameter("qName");
+    String questionPoints = request.getParameter("qPoints");
 
-    Entity questionEntity = new Entity("Coordinates");
-    questionEntity.setProperty("lx", lx);
-    questionEntity.setProperty("ly", ly);
-    questionEntity.setProperty("rx", rx);
-    questionEntity.setProperty("ry", ry);
-    // questionEntity.setProperty("questionName", questionName);
-    // questionEntity.setProperty("question-points", pts);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(questionEntity);
+    // addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
 
     response.sendRedirect("/manageBox");
   }
