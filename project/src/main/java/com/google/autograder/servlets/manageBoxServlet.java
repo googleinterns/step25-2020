@@ -14,10 +14,11 @@
 
 package com.google.sps.servlets;
 
+import com.google.autograder.data.Database;
+import com.google.autograder.data.Question;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,19 +37,18 @@ import java.util.HashMap;
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
   
+  private Database database = new Database(); // should this be an existing database from elsewhere?
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
       
 // TODO: rewrite with database class
-    Query query = new Query("Coordinates");
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-    
-    Map<String, String> mapCoordinates = new HashMap<>();
-    // TODO: put coordinates and points as fields for questionName
-
-    for (Entity entity : results.asIterable()) {
+    // Query query = new Query("Coordinates");
+    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    // PreparedQuery results = datastore.prepare(query);
+    // Map<String, String> mapCoordinates = new HashMap<>();
+// TODO: put coordinates and points as fields for questionName
+    // for (Entity entity : results.asIterable()) {
         // String lx = (String) entity.getProperty("lx");
         // String ly = (String) entity.getProperty("ly");
         // String rx = (String) entity.getProperty("ry");
@@ -62,29 +62,27 @@ public class manageBoxServlet extends HttpServlet {
         // mapCoordinates.put("ry", ry);
         // mapCoordinates.put("questionName", questionName);
         // mapCoordinates.put("points", points);
-    }
+    // }
 
-    Gson gson = new Gson();
-
-    response.setContentType("application/json");
-    response.getWriter().println(gson.toJson(mapCoordinates));
-
+    // Gson gson = new Gson();
+    response.setContentType("text/html");
+    response.getWriter().println("hello world");
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
     String lx = request.getParameter("lx");
     String ly = request.getParameter("ly");
     String rx = request.getParameter("rx");
     String ry = request.getParameter("ry");
     String questionName = request.getParameter("qName");
-    String questionPoints = request.getParameter("qPoints");
+    String questionType = request.getParameter("qType");
+    int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
     String assignmentKey = request.getParameter("assignment-key");
 
-    // addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+    database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
 
-    response.sendRedirect("/manageBox");
+    // response.sendRedirect("/manageBox");
   }
 
 }

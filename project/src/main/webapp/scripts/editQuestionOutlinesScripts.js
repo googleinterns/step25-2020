@@ -166,7 +166,7 @@ function submitBoxButton() {
   }
 
   if (lx!=undefined && rx!=undefined && qName!=""){
-    var url = '/manageBox?'+"&qName="+qName+"&qType="+qType+"&qPoints="+qPoints+'assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
+    var url = '/manageBox?'+"&qName="+qName+"&qType="+qType+"&qPoints="+qPoints+'&assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
     fetch(url, {method:"POST"});
   }
 }
