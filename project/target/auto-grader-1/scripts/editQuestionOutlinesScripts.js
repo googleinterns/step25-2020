@@ -153,14 +153,30 @@ function crop(lx, ly, rx, ry) {
 
 // onclick called when "Add Question" button is clicked
 function submitBoxButton() {
+  const assignmentKey = getUrlVars()['assignment-key'];
   var qName = document.getElementById('question-name').value;
   var qPoints = document.getElementById('question-points').value;
+  var qType = document.getElementById('question-type').value;
+
+    console.log(qType);
+
+//   for(i = 0; i < qType.length; i++) { 
+    // if(qType[i].checked) {
+        // console.log(qType[i].value);
+    // }
+//   } 
+    // console.log(qType);
+
   if (lx != undefined){
-  var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry+"&qName"+qName+"&qPoints"+qPoints; 
-  } else {
-      url = "peepoo"
+    var url = '/manageBox?'+'assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry+"&qName"+qName+"&qPoints"+qPoints; 
+    fetch(url, {method:"POST"});
   }
-  // idk if this is the most secure
-  
-  fetch(url, {method:"POST"});
+}
+
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    vars[key] = value;
+  });
+  return vars;
 }

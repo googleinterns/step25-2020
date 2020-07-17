@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 
-<script src="/scripts/editQuestionOutlinesScripts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- CSS  -->
+    
+    <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-</head>
+    <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/style.css" type="text/styles//styles//styls" rel="stylesheet" media="screen,projection"/>
 
+    <!-- JS  -->
+    <script src="/scripts/editQuestionOutlinesScripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+</head>
 
 <body onload="loadPDF()"> 
     <nav class="green" role="navigation">
@@ -53,20 +54,39 @@
 
         <div id="setCorner"> </div>
 
+        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+
         <form id="question-identity">
-            Question name
+            Question Name:
             <input type="text" id="question-name" name="question-name" value=""><br>
-            Question total points
+            Question Total Points:
             <input type="number" id="question-points" name="question-points" value=""><br>
+
+            
+            Question Type
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="multiple-choice" checked />
+                <span>Multiple Choice</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="short-answer"/>
+                <span>Short Answer</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="other" />
+                <span>Other</span>
+            </label>
+            </p>
 
             <input type="button" value="Add Question" onclick="submitBoxButton()">
         </form>
-
-        <!-- <button id="submit"> Submit Box </button> -->
-
-        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+    
     </div>    
 </body>
 
 </html>
-

@@ -54,18 +54,38 @@
 
         <div id="setCorner"> </div>
 
+        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+
         <form id="question-identity">
-            Question name
+            Question Name:
             <input type="text" id="question-name" name="question-name" value=""><br>
-            Question total points
+            Question Total Points:
             <input type="number" id="question-points" name="question-points" value=""><br>
+
+            
+            Question Type
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="multiple-choice" checked />
+                <span>Multiple Choice</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="short-answer"/>
+                <span>Short Answer</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="question-type" name="question-type" value="other" />
+                <span>Other</span>
+            </label>
+            </p>
 
             <input type="button" value="Add Question" onclick="submitBoxButton()">
         </form>
-
-        <!-- <button id="submit"> Submit Box </button> -->
-
-        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+    
     </div>    
 </body>
 

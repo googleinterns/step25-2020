@@ -38,6 +38,8 @@ public class manageBoxServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
+      
+// TODO: rewrite with database class
     Query query = new Query("Coordinates");
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -47,17 +49,17 @@ public class manageBoxServlet extends HttpServlet {
     // TODO: put coordinates and points as fields for questionName
 
     for (Entity entity : results.asIterable()) {
-        String lx = (String) entity.getProperty("lx");
-        String ly = (String) entity.getProperty("ly");
-        String rx = (String) entity.getProperty("ry");
-        String ry = (String) entity.getProperty("ry");
+        // String lx = (String) entity.getProperty("lx");
+        // String ly = (String) entity.getProperty("ly");
+        // String rx = (String) entity.getProperty("ry");
+        // String ry = (String) entity.getProperty("ry");
         // String questionName = (String) entity.getProperty("questionName");
         // String points = (String) entity.getProperty("question-points");
 
-        mapCoordinates.put("lx", lx);
-        mapCoordinates.put("ly", ly);
-        mapCoordinates.put("rx", rx);
-        mapCoordinates.put("ry", ry);
+        // mapCoordinates.put("lx", lx);
+        // mapCoordinates.put("ly", ly);
+        // mapCoordinates.put("rx", rx);
+        // mapCoordinates.put("ry", ry);
         // mapCoordinates.put("questionName", questionName);
         // mapCoordinates.put("points", points);
     }
@@ -78,6 +80,7 @@ public class manageBoxServlet extends HttpServlet {
     String ry = request.getParameter("ry");
     String questionName = request.getParameter("qName");
     String questionPoints = request.getParameter("qPoints");
+    String assignmentKey = request.getParameter("assignment-key");
 
     // addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
 
