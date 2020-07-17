@@ -87,7 +87,7 @@ function nextButton() {
   }
 }
 
-var lx, ly, rx, ry;
+var leftXCoord, topYCoord, rightXCoord, lowerYCoord;
 
 function mousePositions() {
 
@@ -117,29 +117,29 @@ function mousePositions() {
     var setCorner = document.getElementById('setCorner');
 
     if (corner == "left") {
-      lx = x;
-      ly = y;
+      leftXCoord = x;
+      topYCoord = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
     } else {
-      rx = x;
-      ry = y;
+      rightXCoord = x;
+      lowerYCoord = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
-      crop(lx, ly, rx, ry);
+      crop(leftXCoord, topYCoord, rightXCoord, lowerYCoord);
     }
 
   }
 
 }
 
-function crop(lx, ly, rx, ry) {
-  var cropX = lx;
-  var cropY = ly;
-  var cropWidth = rx-lx;
-  var cropHeight = ry-ly;
+function crop(leftXCoord, topYCoord, rightXCoord, lowerYCoord) {
+  var cropX = leftXCoord;
+  var cropY = topYCoord;
+  var cropWidth = rightXCoord-leftXCoord;
+  var cropHeight = lowerYCoord-topYCoord;
   var pdfCanvas = document.getElementById("pdfCanvas");
 
   var cropCanvas = document.querySelector('#cropCanvas');
@@ -165,8 +165,8 @@ function submitBoxButton() {
       qType="other";
   }
 
-  if (lx!=undefined && rx!=undefined && qName!=""){
-    var url = '/manageBox?'+"&qName="+qName+"&qType="+qType+"&qPoints="+qPoints+'&assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
+  if (leftXCoord != undefined && rightXCoord != undefined && qName != ""){
+    var url = `/manageBox?qName=${qName}&qType=${qType}&qPoints=${qPoints}&assignment-key=${assignmentKey}&leftXCoord=${leftXCoord}&topYCoord=${topYCoord}&rightXCoord=${rightXCoord}&lowerYCoord=${lowerYCoord}`;
     fetch(url, {method:"POST"});
   }
 }

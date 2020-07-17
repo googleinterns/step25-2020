@@ -71,10 +71,11 @@ public class manageBoxServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String lx = request.getParameter("lx");
-    String ly = request.getParameter("ly");
-    String rx = request.getParameter("rx");
-    String ry = request.getParameter("ry");
+    String leftXCoord = request.getParameter("leftXCoord");
+    String topYCoord = request.getParameter("topYCoord");
+    String rightXCoord = request.getParameter("rightXCoord");
+    String lowerYCoord = request.getParameter("lowerYCoord");
+
     String questionName = request.getParameter("qName");
     String questionType = request.getParameter("qType");
     int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
