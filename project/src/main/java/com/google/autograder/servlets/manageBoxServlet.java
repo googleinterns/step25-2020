@@ -82,7 +82,7 @@ public class manageBoxServlet extends HttpServlet {
 
     database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
 
-    // response.sendRedirect("/manageBox");
+    response.sendRedirect("/manageBox");
   }
 
 }
