@@ -156,19 +156,17 @@ function submitBoxButton() {
   const assignmentKey = getUrlVars()['assignment-key'];
   var qName = document.getElementById('question-name').value;
   var qPoints = document.getElementById('question-points').value;
-  var qType = document.getElementById('question-type').value;
+  var qType;
+  if (document.getElementById('multiple-choice').checked){
+      qType="multiple-choice";
+  } else if (document.getElementById('short-answer').checked){
+      qType="short-answer";
+  } else {
+      qType="other";
+  }
 
-    console.log(qType);
-
-//   for(i = 0; i < qType.length; i++) { 
-    // if(qType[i].checked) {
-        // console.log(qType[i].value);
-    // }
-//   } 
-    // console.log(qType);
-
-  if (lx != undefined){
-    var url = '/manageBox?'+'assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry+"&qName"+qName+"&qPoints"+qPoints; 
+  if (lx!=undefined && rx!=undefined && qName!=""){
+    var url = '/manageBox?'+"&qName="+qName+"&qType="+qType+"&qPoints="+qPoints+'assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
     fetch(url, {method:"POST"});
   }
 }
