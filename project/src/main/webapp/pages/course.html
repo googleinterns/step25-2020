@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
 
-        <!-- CSS  -->
+    <!-- CSS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -30,10 +30,8 @@
     </nav>
 
     <div class="container page-container">
-        <h1 id="course-name">Course Name</h1>
-        <h2>Description:</h2>
-
-        <p id="course-description">description</p>
+        <div id="course-name-container"></div>
+        <div id="course-description-container"></div>
 
         <table id="assignments-table">
             <tbody id="assignments-table-body">
@@ -48,6 +46,8 @@
 
 </body>
 
+<!-- JS  -->
+<script src="/scripts/getCourseDetails.js"></script>
 <script src="/scripts/listAssignments.js"></script>
 
 </html>

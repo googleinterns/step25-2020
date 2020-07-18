@@ -11,9 +11,6 @@ async function getAssignments() {
     if (redirect != null) {
         window.location.replace(redirect);
     } else {
-
-        getCourseDetails();
-
         let assignmentsJSON = await response.json();
         let assignmentList = assignmentsJSON["courseWork"];
         let assignmentTable = document.getElementById("assignments-table-body");
@@ -22,18 +19,6 @@ async function getAssignments() {
             addAssignmentTableRow(assignmentTable, assignment.title, assignment.id, 3, 100);
         });
     }
-}
-
-function getCourseDetails() {
-    let courseName = document.getElementById("course-name");
-    let courseDescription = document.getElementById("course-description");
-
-    let servletURL = "/courseDetails";
-
-    // let response = await fetch(servletURL, {
-    //     method: "GET",
-    //     mode: "no-cors"
-    // });
 }
 
 function addAssignmentTableRow(assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
