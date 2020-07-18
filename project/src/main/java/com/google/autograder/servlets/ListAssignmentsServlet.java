@@ -48,9 +48,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
                 connection.setRequestProperty("Authorization", authorization);
 
                 String json = API.getJSON(connection);
-
-                System.out.println("\n\n" + json + "\n\n");
-
+                
                 response.getWriter().println(json);
             } else {
                 response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
