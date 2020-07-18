@@ -9,9 +9,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-    <!-- JS  -->
-    <script src="/scripts/assignment.js"></script>
 </head>
 
 <body>
@@ -47,10 +44,14 @@
     </ul> -->
 
     <div class="container page-container">
-        <h1>Demo Midterm</h1>
-        <h2>A demo midterm</h2>
-        <div id="question-functions"><script>getQuestionFunctions();</script></div>
+        <div id="assignment-title-container"></div>
+        <div id="assignment-description-container"></div>
+        <div id="question-functions"><script src="/scripts/assignment.js">getQuestionFunctions();</script></div>
     </div>
 </body>
+
+<!-- JS  -->
+<script src="/scripts/assignment.js"></script>
+<script src="/scripts/getAssignmentDetails.js"></script>
 
 </html>
