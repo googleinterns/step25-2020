@@ -15,13 +15,16 @@ async function getAssignments() {
         let assignmentList = assignmentsJSON["courseWork"];
         let assignmentTable = document.getElementById("assignments-table-body");
 
+        let url = window.location.href;
+        let courseID = url.substring(url.indexOf("?courseID=") + 10);
+
         assignmentList.forEach(assignment => {
-            addAssignmentTableRow(assignmentTable, assignment.title, assignment.id, 3, 100);
+            addAssignmentTableRow(courseID, assignmentTable, assignment.title, assignment.id, 3, 100);
         });
     }
 }
 
-function addAssignmentTableRow(assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
+function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
     let assignmentLink = document.createElement("a");
     let row = document.createElement("tr");
 
@@ -41,7 +44,7 @@ function addAssignmentTableRow(assignmentTable, assignmentName, assignmentID, nu
     submissionsCell.appendChild(submissionsText);
     percentageGradedCell.appendChild(percentageGradedText);
 
-    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}`;
+    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}`;
 
     assignmentLink.appendChild(assignmentNameCell);
 

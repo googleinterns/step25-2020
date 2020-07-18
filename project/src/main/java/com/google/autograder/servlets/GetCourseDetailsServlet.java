@@ -19,9 +19,6 @@ public final class GetCourseDetailsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        response.setContentType("application/json");
-
         String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
         String userID = Services.USER_SERVICE.getCurrentUser().getUserId();
 
@@ -37,7 +34,7 @@ public final class GetCourseDetailsServlet extends HttpServlet {
         
         String name = (String) course.getProperty("name");
         String description = (String) course.getProperty("description");
-        String courseDetails = "{ \"course\" : { \"name\": \"" + name +"\" , \"description\": \"" + description + "\" }}";
+        String courseDetails = "{ \"course\" : { \"name\": \"" + name + "\" , \"description\": \"" + description + "\" }}";
 
         response.setContentType("application/json");
         response.getWriter().println(courseDetails);
