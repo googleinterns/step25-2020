@@ -14,11 +14,10 @@
 
 package com.google.sps.servlets;
 
-import com.google.autograder.data.Database;
-import com.google.autograder.data.Question;
-
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,51 +36,59 @@ import java.util.HashMap;
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
   
-  private Database database = new Database(); // should this be an existing database from elsewhere?
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
-      
-// TODO: rewrite with database class
-    // Query query = new Query("Coordinates");
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // PreparedQuery results = datastore.prepare(query);
-    // Map<String, String> mapCoordinates = new HashMap<>();
-// TODO: put coordinates and points as fields for questionName
-    // for (Entity entity : results.asIterable()) {
-        // String lx = (String) entity.getProperty("lx");
-        // String ly = (String) entity.getProperty("ly");
-        // String rx = (String) entity.getProperty("ry");
-        // String ry = (String) entity.getProperty("ry");
+    Query query = new Query("Coordinates");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+    
+    Map<String, String> mapCoordinates = new HashMap<>();
+    // TODO: put coordinates and points as fields for questionName
+
+    for (Entity entity : results.asIterable()) {
+        String lx = (String) entity.getProperty("lx");
+        String ly = (String) entity.getProperty("ly");
+        String rx = (String) entity.getProperty("ry");
+        String ry = (String) entity.getProperty("ry");
         // String questionName = (String) entity.getProperty("questionName");
         // String points = (String) entity.getProperty("question-points");
 
-        // mapCoordinates.put("lx", lx);
-        // mapCoordinates.put("ly", ly);
-        // mapCoordinates.put("rx", rx);
-        // mapCoordinates.put("ry", ry);
+        mapCoordinates.put("lx", lx);
+        mapCoordinates.put("ly", ly);
+        mapCoordinates.put("rx", rx);
+        mapCoordinates.put("ry", ry);
         // mapCoordinates.put("questionName", questionName);
         // mapCoordinates.put("points", points);
-    // }
+    }
 
-    // Gson gson = new Gson();
-    response.setContentType("text/html");
-    response.getWriter().println("hello world");
+    Gson gson = new Gson();
+
+    response.setContentType("application/json");
+    response.getWriter().println(gson.toJson(mapCoordinates));
+
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String leftXCoord = request.getParameter("leftXCoord");
-    String topYCoord = request.getParameter("topYCoord");
-    String rightXCoord = request.getParameter("rightXCoord");
-    String lowerYCoord = request.getParameter("lowerYCoord");
 
-    String questionName = request.getParameter("qName");
-    String questionType = request.getParameter("qType");
-    int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
-    String assignmentKey = request.getParameter("assignment-key");
+    String lx = request.getParameter("lx");
+    String ly = request.getParameter("ly");
+    String rx = request.getParameter("rx");
+    String ry = request.getParameter("ry");
+    String questionName = request.getParameter("question-name");
+    String pts = request.getParameter("question-points");
 
-    database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
+    Entity questionEntity = new Entity("Coordinates");
+    questionEntity.setProperty("lx", lx);
+    questionEntity.setProperty("ly", ly);
+    questionEntity.setProperty("rx", rx);
+    questionEntity.setProperty("ry", ry);
+    // questionEntity.setProperty("questionName", questionName);
+    // questionEntity.setProperty("question-points", pts);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(questionEntity);
 
     response.sendRedirect("/manageBox");
   }

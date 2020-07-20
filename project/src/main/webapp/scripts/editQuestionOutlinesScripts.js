@@ -87,7 +87,6 @@ function nextButton() {
   }
 }
 
-var leftXCoord, topYCoord, rightXCoord, lowerYCoord;
 
 function mousePositions() {
 
@@ -110,6 +109,7 @@ function mousePositions() {
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
+  var lx, ly, rx, ry;
   var questionName, questionPoints;
   function writePos(x, y) {
     var upperLeft = document.getElementById('upperLeft');
@@ -117,29 +117,35 @@ function mousePositions() {
     var setCorner = document.getElementById('setCorner');
 
     if (corner == "left") {
-      leftXCoord = x;
-      topYCoord = y;
+      lx = x;
+      ly = y;
       upperLeft.innerHTML = "Upper Left Corner: " + x + ", " + y;
       corner = "right";
       setCorner.innerHTML = "Click Lower Right corner";
     } else {
-      rightXCoord = x;
-      lowerYCoord = y;
+      rx = x;
+      ry = y;
       lowerRight.innerHTML = "Lower Right Corner: " + x + ", " + y;
       corner = "left";
       setCorner.innerHTML = "Click Upper Left corner if it's inaccurate";
-      crop(leftXCoord, topYCoord, rightXCoord, lowerYCoord);
+      crop(lx, ly, rx, ry);
     }
 
   }
 
+  // listener to send post request with coordinates for datastore
+  var submitCoordinates = document.getElementById('submit');
+  submitCoordinates.addEventListener('click', function(evt) {
+    var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
+    fetch(url, {method:"POST"});
+  });
 }
 
-function crop(leftXCoord, topYCoord, rightXCoord, lowerYCoord) {
-  var cropX = leftXCoord;
-  var cropY = topYCoord;
-  var cropWidth = rightXCoord-leftXCoord;
-  var cropHeight = lowerYCoord-topYCoord;
+function crop(lx, ly, rx, ry) {
+  var cropX = lx;
+  var cropY = ly;
+  var cropWidth = rx-lx;
+  var cropHeight = ry-ly;
   var pdfCanvas = document.getElementById("pdfCanvas");
 
   var cropCanvas = document.querySelector('#cropCanvas');
@@ -151,30 +157,13 @@ function crop(leftXCoord, topYCoord, rightXCoord, lowerYCoord) {
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 }
 
-// onclick called when "Add Question" button is clicked
-function submitBoxButton() {
-  const assignmentKey = getUrlVars()['assignment-key'];
-  var qName = document.getElementById('question-name').value;
-  var qPoints = document.getElementById('question-points').value;
-  var qType;
-  if (document.getElementById('multiple-choice').checked){
-      qType="multiple-choice";
-  } else if (document.getElementById('short-answer').checked){
-      qType="short-answer";
-  } else {
-      qType="other";
-  }
 
-  if (leftXCoord != undefined && rightXCoord != undefined && qName != ""){
-    var url = `/manageBox?qName=${qName}&qType=${qType}&qPoints=${qPoints}&assignment-key=${assignmentKey}&leftXCoord=${leftXCoord}&topYCoord=${topYCoord}&rightXCoord=${rightXCoord}&lowerYCoord=${lowerYCoord}`;
-    fetch(url, {method:"POST"});
-  }
-}
+// function cropAllPDFs() {
+//     fetch('/manageBox').then(response => response.json()).then(data => {
 
-function getUrlVars() {
-  var vars = {};
-  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-    vars[key] = value;
-  });
-  return vars;
-}
+//         console.log(data);
+
+//         // crop all the pdfs based off the coordinates
+//     });
+
+// }

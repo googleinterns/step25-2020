@@ -1,14 +1,2 @@
-com/google/autograder/servlets/auth/ExchangeCodeServlet.class
-com/google/sps/servlets/LoginServlet.class
-com/google/autograder/servlets/auth/RequestTokenServlet.class
-com/google/autograder/data/Database.class
-com/google/autograder/data/Question.class
-com/google/autograder/servlets/helpers/Services.class
-com/google/autograder/servlets/AssignmentServlet.class
-com/google/autograder/servlets/auth/AccessTokenResponse.class
-com/google/autograder/data/Assignment.class
-Course.class
-com/google/autograder/servlets/helpers/API.class
-com/google/autograder/servlets/ListAssignmentsServlet.class
-com/google/autograder/servlets/ListCoursesServlet.class
+com/google/sps/servlets/DataServlet.class
 com/google/sps/servlets/manageBoxServlet.class
