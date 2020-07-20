@@ -87,6 +87,7 @@ function nextButton() {
   }
 }
 
+var lx, ly, rx, ry;
 
 function mousePositions() {
 
@@ -109,7 +110,6 @@ function mousePositions() {
   }, false);
 
   let corner = "left"; // variable to alternate which corner's location is being registered
-  var lx, ly, rx, ry;
   var questionName, questionPoints;
   function writePos(x, y) {
     var upperLeft = document.getElementById('upperLeft');
@@ -133,12 +133,6 @@ function mousePositions() {
 
   }
 
-  // listener to send post request with coordinates for datastore
-  var submitCoordinates = document.getElementById('submit');
-  submitCoordinates.addEventListener('click', function(evt) {
-    var url = '/manageBox?lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
-    fetch(url, {method:"POST"});
-  });
 }
 
 function crop(lx, ly, rx, ry) {
@@ -157,13 +151,30 @@ function crop(lx, ly, rx, ry) {
   cropCanvas.drawImage(pdfCanvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 }
 
+// onclick called when "Add Question" button is clicked
+function submitBoxButton() {
+  const assignmentKey = getUrlVars()['assignment-key'];
+  var qName = document.getElementById('question-name').value;
+  var qPoints = document.getElementById('question-points').value;
+  var qType;
+  if (document.getElementById('multiple-choice').checked){
+      qType="multiple-choice";
+  } else if (document.getElementById('short-answer').checked){
+      qType="short-answer";
+  } else {
+      qType="other";
+  }
 
-// function cropAllPDFs() {
-//     fetch('/manageBox').then(response => response.json()).then(data => {
+  if (lx!=undefined && rx!=undefined && qName!=""){
+    var url = '/manageBox?'+"&qName="+qName+"&qType="+qType+"&qPoints="+qPoints+'&assignment-key='+assignmentKey+'&lx='+lx+'&ly='+ly+'&rx='+rx+'&ry='+ry; 
+    fetch(url, {method:"POST"});
+  }
+}
 
-//         console.log(data);
-
-//         // crop all the pdfs based off the coordinates
-//     });
-
-// }
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    vars[key] = value;
+  });
+  return vars;
+}

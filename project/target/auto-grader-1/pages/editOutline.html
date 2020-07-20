@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 
-<script src="/scripts/editQuestionOutlinesScripts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- CSS  -->
+    
+    <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-</head>
+    <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/style.css" type="text/styles//styles//styls" rel="stylesheet" media="screen,projection"/>
 
+    <!-- JS  -->
+    <script src="/scripts/editQuestionOutlinesScripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+</head>
 
 <body onload="loadPDF()"> 
     <nav class="green" role="navigation">
@@ -33,7 +34,7 @@
     </nav>
 
     <div class="container page-container">
-        <h1>Q1 student assignment</h1>
+        <h1>Student Assignment Question Submissions</h1>
         
         <div id="pdfButtons">
                 <button id="pdf-prev" onclick="prevButton()">Previous</button>
@@ -49,26 +50,52 @@
 
         <div id="upperLeft"> Click the upper left corner of answer box </div>
         <div id="lowerRight"> Click the lower right corner of answer box </div>
-        <br> <br>
-
+        <br>
         <div id="setCorner"> </div>
-<<<<<<< HEAD
+        <br>
+        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+        <br>
 
         <form id="question-identity">
-            Question name
-            <input type="text" id="question-name" name="question-name" value=""><br>
-            Question total points
-            <input type="number" id="question-points" name="question-points" value=""><br>
-            <!-- <input type="submit" value="Submit Box"> -->
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <input class="validate" type="text" id="question-name" name="question-name" placeholder="Question Name">
+                    <label for="question-name" class="active">Question Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <input class="validate" type="number" id="question-points" name="question-points" placeholder="Question Total Points" ><br>
+                    <label for="question-points" class="active">Question Points</label>
+                </div>
+            </div>
+            
+            Question Type
+            <p>
+            <label>
+                <input type="radio" id="multiple-choice" name="question-type" value="multiple-choice" checked />
+                <span>Multiple Choice</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="short-answer" name="question-type" value="short-answer"/>
+                <span>Short Answer</span>
+            </label>
+            </p>
+            <p>
+            <label>
+                <input type="radio" id="other" name="question-type" value="other" />
+                <span>Other</span>
+            </label>
+            </p>
+
+            <input type="button" value="Add Question" onclick="submitBoxButton()">
         </form>
-=======
->>>>>>> 5aecd3a6d4d4b54b6f62656893bf73214d145d4d
-
-        <button id="submit"> Submit Box </button>
-
-        <canvas id="cropCanvas" width="0" height="0" style="border:1px solid #000000;"></canvas>
+    
     </div>    
 </body>
 
 </html>
-
