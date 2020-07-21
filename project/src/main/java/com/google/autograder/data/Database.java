@@ -185,7 +185,7 @@ public final class Database {
             e.printStackTrace();
         }
     }
-    
+
     // Retrives the current user's assignments for a course data as JSON.
 
     public static String getAssignmentsData(String courseID) {
@@ -217,7 +217,7 @@ public final class Database {
     }
 
     // Create operations for all entities (with pk and fk restraints)
-    // TODO: ensure new objects have diff main names
+    // TODO: Ensure new objects have diff main names
     
     public static void addAssignment(String name, int totalPoints) {
         Entity assignmentEntity = new Entity("Assignment");
