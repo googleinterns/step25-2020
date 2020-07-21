@@ -13,12 +13,12 @@ import java.net.MalformedURLException;
 import javax.servlet.http.HttpServlet;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
+import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
-import com.google.autograder.servlets.helpers.Services;
 
 @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
@@ -48,11 +48,11 @@ public final class ExchangeCodeServlet extends HttpServlet {
 
                     AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObjectFromJSON(json);
 
-                    String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+                    String userEmail = Database.getCurrentUserEmail();
 
                     Entity accessTokenResponseEntity = AccessTokenResponse.createDatastoreAccessTokenResponseEntity(accessTokenResponse, userEmail);
                     
-                    Services.DATA_STORE.put(accessTokenResponseEntity);
+                    Database.getDataStore().put(accessTokenResponseEntity);
 
                 } else {
                     System.out.println("\n" + "INVALID RESPONSE CODE : " + responseCode);

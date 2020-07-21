@@ -8,10 +8,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
-import com.google.autograder.servlets.helpers.Services;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -26,13 +26,13 @@ public final class API {
     public static Gson GSON = new Gson();
 
     public static String getCurrentUserAPIAuthorization() {
-        String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+        String userEmail = Database.getCurrentUserEmail();
 
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
 
         Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
-        PreparedQuery results = Services.DATA_STORE.prepare(query);
+        PreparedQuery results = Database.query(query);
 
         AccessTokenResponse accessTokenResponse = null;
 

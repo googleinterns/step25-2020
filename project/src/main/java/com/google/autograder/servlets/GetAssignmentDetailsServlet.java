@@ -4,11 +4,11 @@ import java.net.URL;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
+import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
-import com.google.autograder.servlets.helpers.Services;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -27,7 +27,7 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
         Filter courseIDFilter = new FilterPredicate("courseId", FilterOperator.EQUAL, courseID);
 
         Query query = new Query("Assignment").setFilter(courseIDFilter).setFilter(assignmentIDFilter);
-        PreparedQuery results = Services.DATA_STORE.prepare(query);
+        PreparedQuery results = Database.query(query);
         Entity assignment = results.asIterable().iterator().next();
 
         String title = (String) assignment.getProperty("title");
