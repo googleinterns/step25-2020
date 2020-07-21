@@ -43,7 +43,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
 
                 String requestURL = (String) request.getHeader("Referer");
                 String courseID = requestURL.substring (requestURL.indexOf("?courseID=") + 10);
-                String endpoint = END_POINT.replace("{courseId}", courseID) + "?key=" + API.API_KEY;
+                String endpoint = END_POINT.replace("{courseId}", courseID) + "?courseWorkStates=PUBLISHED&courseWorkStates=DRAFT&key=" + API.API_KEY;
 
                 URL url = new URL(endpoint);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -57,8 +57,6 @@ public final class ListAssignmentsServlet extends HttpServlet {
                 storeAssignmentsDataInDatastore(json, courseID);
 
                 String assignmentsData = getAssignmentsDataFromDatastore(courseID);
-
-                System.out.println("\n\n" + assignmentsData + "\n\n");
                 
                 response.getWriter().println(assignmentsData);
             } else {
