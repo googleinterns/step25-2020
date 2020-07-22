@@ -16,6 +16,8 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 
 /** Class containing basic database functionalities. */
@@ -47,6 +49,7 @@ public class Database {
       questionEntity.setProperty("points", questionPoints);
       questionEntity.setProperty("assignmentKey", assignmentKey);
       this.datastore.put(questionEntity);
+      System.out.println("Question " + questionName + " has been added.");
   }
 
   public void addSubmission(Entity assignmentEntity) {
@@ -111,6 +114,13 @@ public class Database {
       String status = (String) entity.getProperty("status");
       Key key = entity.getKey();
       Assignment currAssignment = new Assignment(name, points, status, key);
+      boolean test = (currAssignment.key).equals(KeyFactory.keyToString(KeyFactory.stringToKey(currAssignment.key)));
+      if (test == true) {
+          System.out.println("sanity check passes");
+      }
+      else {
+          System.out.println("sanity check fails");
+      }
       assignments.add(currAssignment);
     }
     String json = new Gson().toJson(assignments);
@@ -119,9 +129,14 @@ public class Database {
 
   public String getAllQuestionsJSON(String key) {
     // query all questions with this key at assignment_id key
-    if (key != null) {
+    System.out.println("key is " + key);
+    try {
+        // Key aKey = KeyFactory.stringToKey(key);
+        //Entity assignment = this.datastore.get(aKey);
         Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
         Query query = new Query("Question").setFilter(propertyFilter);
+
+        //Query query = new Query("Question").setFilter(propertyFilter);
         PreparedQuery results = this.queryDatabase(query);
         List<Question> questions = new ArrayList<>();
         for (Entity entity : results.asIterable()) {
@@ -134,9 +149,14 @@ public class Database {
             questions.add(currQuestion);
         }
         String json = new Gson().toJson(questions);
+        System.out.println(json);
         return json;
     }
-    return new Gson().toJson("");
+    catch (Exception e) {
+        System.out.println("assignment wasn't found");
+        return "error";
+    }
+    
   }
 
   //get all submissions for an assignment
