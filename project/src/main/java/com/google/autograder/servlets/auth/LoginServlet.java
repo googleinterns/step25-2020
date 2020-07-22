@@ -1,4 +1,4 @@
-package com.google.sps.servlets;
+package com.google.autograder.servlets.auth;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;

@@ -29,21 +29,18 @@ public final class API {
 
     public static String getCurrentUserAPIAuthorization() {
         String userEmail = UserHandler.getCurrentUserEmail();
-
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
-
         Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
         Iterator<Entity> results = Database.query(query).iterator();
         AccessTokenResponse accessTokenResponse = null;
+        String authorization = null;
 
-        Entity entity = (results.hasNext() ? results.next() : null); ;
+        Entity entity = (results.hasNext() ? results.next() : null);
 
         if (entity != null) {
             accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(entity);
         }
-
-        String authorization = null;
 
         if (accessTokenResponse != null) {
             authorization = (accessTokenResponse.getToken_Type() + " " + accessTokenResponse.getAccess_Token());
