@@ -15,7 +15,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-@WebServlet("/getAssignmentDetails")
+// @WebServlet("/getAssignmentDetails")
 public final class GetAssignmentDetailsServlet extends HttpServlet {
 
     @Override

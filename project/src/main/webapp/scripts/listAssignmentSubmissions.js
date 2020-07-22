@@ -10,3 +10,5 @@ async function listAssignmentSubmissions() {
     console.log("\n\nBING\tBANG\tBONG\n\n");
 
 }
+
+listAssignmentSubmissions();

@@ -16,7 +16,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-@WebServlet("/assignment")
+// @WebServlet("/assignment")
 public final class AssignmentServlet extends HttpServlet {
 
   private Database d = new Database();

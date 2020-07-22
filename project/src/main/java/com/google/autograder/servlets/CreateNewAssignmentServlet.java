@@ -20,7 +20,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-@WebServlet("/createNewAssignment")
+// @WebServlet("/createNewAssignment")
 public final class CreateNewAssignmentServlet extends HttpServlet {
 
     private static final String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork";
