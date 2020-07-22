@@ -7,7 +7,7 @@ import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/login")
+// @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
 
     @Override
