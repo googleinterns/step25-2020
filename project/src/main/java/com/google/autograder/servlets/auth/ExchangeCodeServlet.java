@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
 
-import com.google.autograder.servlets.helpers.Client;
-
 // @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
 
