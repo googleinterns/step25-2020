@@ -24,7 +24,6 @@ public final class QuestionServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String assignmentKey = request.getParameter("assignment-key");
-    System.out.println("assignment Key that is pulled is " + assignmentKey);
     String json = d.getAllQuestionsJSON(assignmentKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);

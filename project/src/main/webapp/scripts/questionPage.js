@@ -1,14 +1,11 @@
 async function getQuestions() {
     var servletURL = "/question?assignment-key=" + getUrlVars()['assignment-key'];
-    console.log(servletURL);
-    console.log("hi");
     const response = await fetch(servletURL);
     const questions = await response.json();    
     var myDiv = document.getElementById("questions-container");
     var listHolder = document.createElement('ul');
 
     questions.forEach(question => {
-        console.log(question.name);
         var li = document.createElement('LI');
         var a = document.createElement('A');
         

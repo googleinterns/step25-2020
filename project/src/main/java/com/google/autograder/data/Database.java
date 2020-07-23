@@ -51,7 +51,6 @@ public class Database {
       questionEntity.setProperty("points", questionPoints);
       questionEntity.setProperty("assignmentKey", assignmentKey);
       this.datastore.put(questionEntity);
-      System.out.println("Question " + questionName + " has been added.");
   }
 
   public void addSubmission(Entity assignmentEntity) {
@@ -123,12 +122,6 @@ public class Database {
       Key key = entity.getKey();
       Assignment currAssignment = new Assignment(name, points, status, key);
       boolean test = (currAssignment.key).equals(KeyFactory.keyToString(KeyFactory.stringToKey(currAssignment.key)));
-      if (test == true) {
-          System.out.println("sanity check passes");
-      }
-      else {
-          System.out.println("sanity check fails");
-      }
       assignments.add(currAssignment);
     }
     String json = new Gson().toJson(assignments);
@@ -137,7 +130,6 @@ public class Database {
 
   public String getAllQuestionsJSON(String key) {
     // query all questions with this key at assignment_id key
-    System.out.println("key is " + key);
     try {
         Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
         Query query = new Query("Question").setFilter(propertyFilter);
@@ -155,7 +147,6 @@ public class Database {
             questions.add(currQuestion);
         }
         String json = new Gson().toJson(questions);
-        System.out.println(json);
         return json;
     }
     catch (Exception e) {
@@ -185,7 +176,6 @@ public class Database {
             answers.add(currAnswer);
         }
         String json = new Gson().toJson(answers);
-        System.out.println(json);
         return json;
     }
     catch (Exception e) {

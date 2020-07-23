@@ -13,30 +13,22 @@ function drop(ev) {
   ev.target.appendChild(document.getElementById(data));
 }
 
-async function getGroups() {
+async function getAnswers() {
     var servletURL = "/answer?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
 
-    console.log(servletURL);
-    console.log("hi");
     const response = await fetch(servletURL);
-    const questions = await response.json(); 
-    console.log(questions)   
-    // var myDiv = document.getElementById("questions-container");
-    // var listHolder = document.createElement('ul');
+    const answers = await response.json(); 
+    return answers;
 
-    // questions.forEach(question => {
-    //     console.log(question.name);
-    //     var li = document.createElement('LI');
-    //     var a = document.createElement('A');
-        
-    //     var link = document.createTextNode(question.name); 
-    //     a.appendChild(link);
-    //     a.href = "groups.html?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + question.key;
-    //     li.append(a);
-    //     listHolder.append(li);
-    // });
+}
 
-    // myDiv.appendChild(listHolder);
+function generateGroups() {
+    const answers = getAnswers();
+    console.log(answers);
+    answers.forEach( answer => {
+        console.log(answer);
+    })
+
 }
 
 function getUrlVars() {
