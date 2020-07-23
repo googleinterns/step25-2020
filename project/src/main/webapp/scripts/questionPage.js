@@ -11,9 +11,10 @@ async function getQuestions() {
         console.log(question.name);
         var li = document.createElement('LI');
         var a = document.createElement('A');
+        
         var link = document.createTextNode(question.name); 
         a.appendChild(link);
-        a.href = "pages/groups.html?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + question.key;
+        a.href = "groups.html?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + question.key;
         li.append(a);
         listHolder.append(li);
     });

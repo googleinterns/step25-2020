@@ -18,6 +18,8 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 
 
 /** Class containing basic database functionalities. */
@@ -59,6 +61,7 @@ public class Database {
       this.datastore.put(submissionEntity);
   }
 
+  //unused right now
   public void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
       Entity locationEntity = new Entity("Location");
       locationEntity.setProperty("topLeft", topLeft);
@@ -67,33 +70,38 @@ public class Database {
       this.datastore.put(locationEntity);
   }
 
-  public void addAnswer(Entity questionEntity, Entity submissionEntity, String parsedAnswer, int points) {
+  // sample add Answer, will change in future
+  public void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
       Entity answerEntity = new Entity("Answer");
       answerEntity.setProperty("parsedAnswer", parsedAnswer);
-      answerEntity.setProperty("points", points);
-      answerEntity.setProperty("graded", "NOT_GRADED");
-      answerEntity.setProperty("questionKey", questionEntity.getKey());
-      answerEntity.setProperty("submissionKey", submissionEntity.getKey());
+      answerEntity.setProperty("score", score);
+      answerEntity.setProperty("filePath", filePath);
+      answerEntity.setProperty("questionKey", questionKey);
+      answerEntity.setProperty("assignmentKey", assignmentKey);
       this.datastore.put(answerEntity);
   }
 
+  //unused right now
   public void addGroup(Entity questionEntity) {
       Entity groupEntity = new Entity("Group");
       groupEntity.setProperty("questionKey", questionEntity.getKey());
       this.datastore.put(groupEntity);
   }
 
+  //unused right now
   public void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
       answerEntity.setProperty("groupKey", groupEntity.getKey());
       this.datastore.put(answerEntity);
   }
 
+  //unused right now
   public void updateGradedForAnswer(Entity answerEntity, String status) {
       if (this.answerGradingStatuses.contains(status)) {
         answerEntity.setProperty("graded", status);
         this.datastore.put(answerEntity); }
   }
 
+  //unused right now
   public void updateScoreForAnswer(Entity groupEntity, int score) {
       groupEntity.setProperty("score", score);
       this.datastore.put(groupEntity);
@@ -131,12 +139,9 @@ public class Database {
     // query all questions with this key at assignment_id key
     System.out.println("key is " + key);
     try {
-        // Key aKey = KeyFactory.stringToKey(key);
-        //Entity assignment = this.datastore.get(aKey);
         Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
         Query query = new Query("Question").setFilter(propertyFilter);
 
-        //Query query = new Query("Question").setFilter(propertyFilter);
         PreparedQuery results = this.queryDatabase(query);
         List<Question> questions = new ArrayList<>();
         for (Entity entity : results.asIterable()) {
@@ -145,7 +150,8 @@ public class Database {
             int points = Math.toIntExact(pointsLong);
             String status = (String) entity.getProperty("status");
             String assignmentKey = (String) entity.getProperty("assignmentKey");
-            Question currQuestion = new Question(name, points, status, assignmentKey);
+            Key questionKey = entity.getKey();
+            Question currQuestion = new Question(name, points, status, assignmentKey, questionKey);
             questions.add(currQuestion);
         }
         String json = new Gson().toJson(questions);
@@ -154,6 +160,36 @@ public class Database {
     }
     catch (Exception e) {
         System.out.println("assignment wasn't found");
+        return "error";
+    }
+    
+  }
+
+  public String getAllAnswersJSON(String assignmentKey, String questionKey) {
+    // query all answers with these keys
+    try {
+        Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+        CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
+        Query query = new Query("Answer").setFilter(propertyFilter);
+
+        PreparedQuery results = this.queryDatabase(query);
+        List<Answer> answers = new ArrayList<>();
+        for (Entity entity : results.asIterable()) {
+            String filePath = (String) entity.getProperty("filePath");
+            String parsedAnswer = (String) entity.getProperty("parsedAnswer");
+            Long scoreLong = (Long) entity.getProperty("score");
+            int score = Math.toIntExact(scoreLong);
+            Key answerKey = entity.getKey();
+            Answer currAnswer = new Answer(filePath, parsedAnswer, score, assignmentKey, questionKey, answerKey);
+            answers.add(currAnswer);
+        }
+        String json = new Gson().toJson(answers);
+        System.out.println(json);
+        return json;
+    }
+    catch (Exception e) {
+        System.out.println("answers weren't found");
         return "error";
     }
     

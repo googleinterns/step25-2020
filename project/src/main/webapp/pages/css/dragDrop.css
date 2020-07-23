@@ -1,0 +1,12 @@
+<style>
+    	#div1, #div2 {
+      		width: auto;
+      		height: auto;
+            min-width: 600px;
+            min height: 600px;
+      		display: block;
+      		padding: 10px;
+      		border: 1px solid #000 !important;
+    	}
+
+    </style>
