@@ -1,0 +1,23 @@
+indexes:
+
+# - kind:
+#   ancestor:
+#   properties:
+#   - name:
+#     direction:
+
+- kind: AccessTokenResponse
+  ancestor: no
+  properties:
+  - name: user_email
+    direction: asc
+  - name: expires_in
+    direction: desc
+
+- kind: Course
+  ancestor: no
+  properties:
+  - name: userEmail
+    direction: asc  
+  - name: creationTime
+    direction: desc
