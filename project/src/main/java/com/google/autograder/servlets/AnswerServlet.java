@@ -29,17 +29,26 @@ public final class AnswerServlet extends HttpServlet {
 
     //create hard-coded answer data right now
     //d.addAnswer(filePath, parsedAnswer, score, assignmentKey, questionKey);
-    d.addAnswer("images/eight1.jpeg", "", 0, assignmentKey, questionKey);
-    d.addAnswer("images/eight2.jpeg", "", 0, assignmentKey, questionKey);
-    d.addAnswer("images/eight3.jpeg", "", 0, assignmentKey, questionKey);
-    d.addAnswer("images/three1.jpeg", "", 0, assignmentKey, questionKey);
-    d.addAnswer("images/three2.jpeg", "", 0, assignmentKey, questionKey);
-    d.addAnswer("images/three3.jpeg", "", 0, assignmentKey, questionKey);
+    d.addAnswer("images/eight1.jpeg", parseAnswer("images/eight1.jpeg"), 0, assignmentKey, questionKey);
+    d.addAnswer("images/eight2.jpeg", parseAnswer("images/eight2.jpeg"), 0, assignmentKey, questionKey);
+    d.addAnswer("images/eight3.jpeg", parseAnswer("images/eight3.jpeg"), 0, assignmentKey, questionKey);
+    d.addAnswer("images/three1.jpeg", parseAnswer("images/three1.jpeg"), 0, assignmentKey, questionKey);
+    d.addAnswer("images/three2.jpeg", parseAnswer("images/three2.jpeg"), 0, assignmentKey, questionKey);
+    d.addAnswer("images/three3.jpeg", parseAnswer("images/three3.jpeg"), 0, assignmentKey, questionKey);
 
 
 
     String json = d.getAllAnswersJSON(assignmentKey, questionKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  public String parseAnswer(String filePath) {
+      if (filePath.startsWith("images/e")) {
+          return "8";
+      }
+      else {
+          return "3";
+      }
   }
 }
