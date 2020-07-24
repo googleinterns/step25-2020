@@ -40,27 +40,32 @@ public class Database {
     this.datastore.put(assignmentEntity);
   }
 
-  public void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+  public Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
       questionEntity.setProperty("points", questionPoints);
       questionEntity.setProperty("assignmentKey", assignmentKey);
       this.datastore.put(questionEntity);
+      return questionEntity;
   }
 
-  public void addSubmission(Entity assignmentEntity) {
+  public void addSubmission(Entity assignmentEntity, String blobKey) {
       Entity submissionEntity = new Entity("Submission");
       submissionEntity.setProperty("graded", "NOT_GRADED");
       submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
+      submissionEntity.setProperty("blobKey", blobKey);
       this.datastore.put(submissionEntity);
   }
 
-  public void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
+  public void addLocation(Entity questionEntity, int leftXCoord, int topYCoord, int rightXCoord, int lowerYCoord) {
       Entity locationEntity = new Entity("Location");
-      locationEntity.setProperty("topLeft", topLeft);
-      locationEntity.setProperty("bottomRight", bottomRight);
+      locationEntity.setProperty("leftXCoord", leftXCoord);
+      locationEntity.setProperty("topYCoord", topYCoord);
+      locationEntity.setProperty("rightXCoord", rightXCoord);
+      locationEntity.setProperty("lowerYCoord", lowerYCoord);
       locationEntity.setProperty("questionKey", questionEntity.getKey());
+
       this.datastore.put(locationEntity);
   }
 
