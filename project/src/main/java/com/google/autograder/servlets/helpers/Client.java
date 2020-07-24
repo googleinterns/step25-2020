@@ -12,7 +12,7 @@ public final class Client {
     public static final String CLIENT_ID = getClientID();
     public static final String CLIENT_SECRET = getClientSecret();
 
-    private static final String RESOURCES_PATH = "../../../project/src/main/resources";
+    private static final String RESOURCES_PATH = "../../../project/src/main/resources"; // "../classes"
     private static final String CREDENTIALS_PATH = "/auth/credentials.json";
 
     private static String getClientID() {
@@ -26,7 +26,7 @@ public final class Client {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
+        
         return client_id;
     }
 
