@@ -20,12 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
+import com.google.autograder.servlets.helpers.Client;
 
 // @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
-
-    private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
     
     private static String BASE_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev"; // "https://step25-2020.uc.r.appspot.com"; 
     private static String ACCESS_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
@@ -75,8 +73,8 @@ public final class ExchangeCodeServlet extends HttpServlet {
         StringBuilder postBody = new StringBuilder();
         
         postBody.append("code=" + authCode);
-        postBody.append("&client_id=" + URLEncoder.encode(CLIENT_ID, API.UTF_8));
-        postBody.append("&client_secret=" + URLEncoder.encode(CLIENT_SECRET, API.UTF_8));
+        postBody.append("&client_id=" + URLEncoder.encode(Client.CLIENT_ID, API.UTF_8));
+        postBody.append("&client_secret=" + URLEncoder.encode(Client.CLIENT_SECRET, API.UTF_8));
         postBody.append("&redirect_uri=" + URLEncoder.encode(BASE_URL + REDIRECT_URI, API.UTF_8));
         postBody.append("&grant_type=" + URLEncoder.encode(GRANT_TYPE, API.UTF_8));
 
