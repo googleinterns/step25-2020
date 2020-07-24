@@ -40,8 +40,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
             String authorization = API.getCurrentUserAPIAuthorization();
 
             if (authorization != null) {
-                String requestURL = (String) request.getHeader("Referer");
-                String courseID = requestURL.substring (requestURL.indexOf("?courseID=") + 10);
+                String courseID = request.getParameter("courseID");
                 String endpoint = END_POINT.replace("{courseId}", courseID) + "?courseWorkStates=PUBLISHED&courseWorkStates=DRAFT&key=" + API.API_KEY;
 
                 URL url = new URL(endpoint);

@@ -1,5 +1,6 @@
 async function getAssignments() {
-    let servletURL = "/listAssignments";
+    let courseID = new URLSearchParams(window.location.search).get("courseID");
+    let servletURL = `/listAssignments?courseID=${courseID}`;
 
     let response = await fetch(servletURL, {
         method: "GET",
@@ -22,6 +23,11 @@ async function getAssignments() {
             addAssignmentTableRow(courseID, assignmentTable, assignment.title, assignment.id, 3, 100);
         });
     }
+}
+
+function getCourseID() {
+    let url = window.location.href;
+    return url.substring(url.indexOf("?courseID=") + 10);
 }
 
 function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
