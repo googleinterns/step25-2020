@@ -2,6 +2,8 @@ package com.google.autograder.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import com.google.gson.Gson;
 import java.util.Arrays;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -149,7 +151,7 @@ public class Database {
  * this function takes the assignment Key and answer group key as parameters
  * returns list of blobKeys to submissions that fit in specified answer group for specific question
  */ 
-  public List blobkeysFromAnswerGroup(String assignKey, String groupKey) {
+  public String blobkeysFromAnswerGroup(String assignKey, String groupKey) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // query answer entities filtered only in group from parameter
@@ -165,23 +167,22 @@ public class Database {
     }  
 
     // query submissions filtered to the assignment
-    Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignKey);
-    Query submissionsQuery = new Query("Submission").setFilter(assignmentKeyFilter);
+    Query submissionsQuery = new Query("Submission");
     PreparedQuery submissionEntities = datastore.prepare(submissionsQuery);
-    // assignmentKeyFilter is unneeded. I'm unclear if adding this filter will speedup or slowdown the program
-    // by reducing the number of submissions that will be iterated through to check if the submission's key is
-    // in the answer group
 
     // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
-    // add the submission's blobKet to blobKeyList, which will be returned
-    List<String> blobKeyList = new ArrayList<>();
+    // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
+    Map<String, String> blobKeyMap = new HashMap<>();
     for (Entity submissionEntity : submissionEntities.asIterable()) {
         if (submissionKeys.contains(submissionEntity.getKey())) {
-            blobKeyList.add((String) submissionEntity.getProperty("blobKey"));
+            String blobKey = (String) submissionEntity.getProperty("blobKey");
+            String submissionKey = submissionEntity.getKey().toString();
+            blobKeyMap.put(submissionKey, blobKey);
         }
     }
 
-    return blobKeyList;
+    String blobKeyJson = new Gson().toJson(blobKeyMap);
+    return blobKeyJson;
   }
 
   //get all submissions for an assignment
