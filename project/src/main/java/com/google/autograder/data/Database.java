@@ -18,7 +18,7 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-
+import com.google.appengine.api.datastore.KeyFactory;
 
 /** Class containing basic database functionalities. */
 public class Database {
@@ -55,7 +55,7 @@ public class Database {
   public void addSubmission(Entity assignmentEntity, String blobKey) {
       Entity submissionEntity = new Entity("Submission");
       submissionEntity.setProperty("graded", "NOT_GRADED");
-      submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey().toString());
+      submissionEntity.setProperty("assignmentKey", KeyFactory.keyToString(assignmentEntity.getKey()));
       submissionEntity.setProperty("blobKey", blobKey);
     //   Contructor: new BlobKey(String blobKey)
       this.datastore.put(submissionEntity);
@@ -176,7 +176,7 @@ public class Database {
     for (Entity submissionEntity : submissionEntities.asIterable()) {
         if (submissionKeys.contains(submissionEntity.getKey())) {
             String blobKey = (String) submissionEntity.getProperty("blobKey");
-            String submissionKey = submissionEntity.getKey().toString();
+            String submissionKey = KeyFactory.keyToString(submissionEntity.getKey());
             blobKeyMap.put(submissionKey, blobKey);
         }
     }
