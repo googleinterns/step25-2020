@@ -1,6 +1,5 @@
 package com.google.autograder.servlets.helpers;
 
-
 import java.net.URLEncoder;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -31,7 +30,7 @@ public final class API {
 
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
 
-        Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);;
+        Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
         PreparedQuery results = Services.DATA_STORE.prepare(query);
 

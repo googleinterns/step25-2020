@@ -38,12 +38,9 @@ public final class ListAssignmentsServlet extends HttpServlet {
 
                 String requestURL = (String) request.getHeader("Referer");
                 String courseID = requestURL.substring (requestURL.indexOf("?courseID=") + 10);
+                String endpoint = END_POINT.replace("{courseId}", courseID) + "?key=" + API.API_KEY;
 
-                END_POINT = END_POINT.replace("{courseId}", courseID);
-
-                System.out.println("\n\nBANG\n\n");
-
-                URL url = new URL(END_POINT + "?key=" + API.API_KEY);
+                URL url = new URL(endpoint);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 connection.setRequestMethod("GET");
