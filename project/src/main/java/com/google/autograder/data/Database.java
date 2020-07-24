@@ -53,8 +53,9 @@ public class Database {
   public void addSubmission(Entity assignmentEntity, String blobKey) {
       Entity submissionEntity = new Entity("Submission");
       submissionEntity.setProperty("graded", "NOT_GRADED");
-      submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
+      submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey().toString());
       submissionEntity.setProperty("blobKey", blobKey);
+    //   Contructor: new BlobKey(String blobKey)
       this.datastore.put(submissionEntity);
   }
 
@@ -142,6 +143,40 @@ public class Database {
         return json;
     }
     return new Gson().toJson("");
+  }
+
+/* 
+* this function takes the assignment Key and answer group key as parameters
+ returns list of blobKeys to submissions that fit in specified answer group for specific question
+ */ 
+  public List blobkeysFromAnswerGroup(String assignKey, String groupKey) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    // query answer entities filtered only in group from parameter
+    Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+    Query answersQuery = new Query("Answer").setFilter(groupFilter);
+    PreparedQuery answerEntities = datastore.prepare(answersQuery);
+
+    // generate list of submissionKeys for the group
+    List<String> submissionKeys = new ArrayList<>();
+    for (Entity entity : answerEntities.asIterable()) {
+        String submissionKey = (String) entity.getProperty("submissionKey");
+        submissionKeys.add(submissionKey);
+    }  
+
+    // query submissions filtered to the assignment
+    Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignkey);
+    Query submissionsQuery = new Query("Submission").setFilter(assignmentKeyFilter);
+    PreparedQuery submissionEntities = datastore.prepare(submissionsQuery);
+
+    List<String> blobKeyList = new ArrayList<>();
+    for (Entity submissionEntity : submissionEntities.asIterable()) {
+        if (submissionKeys.contains(submissionEntity.getKey())) {
+            blobKeyList.add(entity.getProperty(blobKey));
+        }
+    }
+    
+    return blobKeysList;
   }
 
   //get all submissions for an assignment
