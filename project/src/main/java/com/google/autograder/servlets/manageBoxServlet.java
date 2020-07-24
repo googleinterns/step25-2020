@@ -37,18 +37,41 @@ import java.util.HashMap;
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
   
-  private Database database = new Database();
+
+  private Database database = new Database(); // should this be an existing database from elsewhere?
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
+      
+// TODO: rewrite with database class
+    // Query query = new Query("Coordinates");
+    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    // PreparedQuery results = datastore.prepare(query);
+    // Map<String, String> mapCoordinates = new HashMap<>();
+// TODO: put coordinates and points as fields for questionName
+    // for (Entity entity : results.asIterable()) {
+        // String lx = (String) entity.getProperty("lx");
+        // String ly = (String) entity.getProperty("ly");
+        // String rx = (String) entity.getProperty("ry");
+        // String ry = (String) entity.getProperty("ry");
+        // String questionName = (String) entity.getProperty("questionName");
+        // String points = (String) entity.getProperty("question-points");
+
+        // mapCoordinates.put("lx", lx);
+        // mapCoordinates.put("ly", ly);
+        // mapCoordinates.put("rx", rx);
+        // mapCoordinates.put("ry", ry);
+        // mapCoordinates.put("questionName", questionName);
+        // mapCoordinates.put("points", points);
+    // }
+
+    // Gson gson = new Gson();
     response.setContentType("text/html");
     response.getWriter().println("hello world");
-
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
     String leftXCoord = request.getParameter("leftXCoord");
     String topYCoord = request.getParameter("topYCoord");
     String rightXCoord = request.getParameter("rightXCoord");

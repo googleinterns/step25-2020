@@ -5,10 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
 
-        <!-- CSS  -->
+    <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <!-- JS  -->
     <script src="/scripts/editQuestionOutlinesScripts.js"></script>
     <script src="/scripts/assignments.js"></script>
 </head>
@@ -16,17 +18,16 @@
 <body>
     <nav class="green" role="navigation">
         <div class="nav-wrapper container">
-        <img src="../images/GC_logo.png" class="nav-wrapper">
-        <a id="logo-container" href="#" class="white-text brand-logo">   gClassroom AutoGrader</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a class="white-text" href="/pages/courses.html">Your Courses</a></li>
-            <li><a class="white-text" href="/pages/assignments.html">Assignments</a></li>
-        </ul>
-
-        <ul id="nav-mobile" class="sidenav">
-            <li><a href="/pages/courses.html">Your Courses</a></li>
-        </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <img src="/images/GC_logo.png" class="nav-wrapper">
+            <a id="logo-container" href="/index.html" class="white-text brand-logo">   gClassroom AutoGrader</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="white-text" href="/pages/courses.html">Your Courses</a></li>
+                <li><a class="white-text" href="/pages/assignments.html">Assignments</a></li>
+            </ul>
+            <ul id="nav-mobile" class="sidenav">
+                <li><a href="/pages/courses.html">Your Courses</a></li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
 
@@ -37,6 +38,7 @@
         <p>A demo course to show how AutoGrader works</p>
 
         <div id="assignments-container"></div>
+        
         <table id="assignments-container">
             <tr>
                 <th>Assignments</th>
@@ -56,6 +58,7 @@
                 <td>100%</td>
             </tr>
         </table>
+        
         All assignments:
         <form action="/assignment" method="POST">
             <p>Name:</p>
