@@ -12,6 +12,7 @@ public class Answer {
   public String assignmentKey;
   public String questionKey;
   public String key;
+  public String groupKey;
 
   public Answer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey, Key key) {
     this.filePath = filePath;
@@ -20,6 +21,7 @@ public class Answer {
     this.assignmentKey = assignmentKey;
     this.questionKey = questionKey;
     this.key = KeyFactory.keyToString(key);
+    this.groupKey = "";
   }
 
   public String getKeyString() {
@@ -28,6 +30,14 @@ public class Answer {
 
   public Key getKey() {
       return KeyFactory.stringToKey(this.key);
+  }
+
+  public void addGroup(Key newGroupKey) {
+      this.groupKey = KeyFactory.keyToString(newGroupKey);
+  }
+
+  public String getGroupKey() {
+      return this.groupKey;
   }
 
 }

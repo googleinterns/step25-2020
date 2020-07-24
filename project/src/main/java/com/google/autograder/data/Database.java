@@ -20,7 +20,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /** Class containing basic database functionalities. */
 public class Database {
@@ -80,11 +81,12 @@ public class Database {
       this.datastore.put(answerEntity);
   }
 
-  //unused right now
-  public void addGroup(Entity questionEntity) {
+  public Entity addGroup(int score, String questionKey) {
       Entity groupEntity = new Entity("Group");
-      groupEntity.setProperty("questionKey", questionEntity.getKey());
+      groupEntity.setProperty("score", score);
+      groupEntity.setProperty("questionKey", questionKey);
       this.datastore.put(groupEntity);
+      return groupEntity;
   }
 
   //unused right now
@@ -182,7 +184,55 @@ public class Database {
         System.out.println("answers weren't found");
         return "error";
     }
-    
+  }
+
+  public String createGroups(String assignmentKey, String questionKey) {
+    Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+    Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+    CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
+    Query query = new Query("Answer").setFilter(propertyFilter);
+    PreparedQuery results = this.queryDatabase(query);
+
+    Map<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
+    // loop through answers and see if parsed answer already exists. if so, add answer entity to arraylist. if not exists, init new array and add
+    for (Entity answer : results.asIterable()) {
+        String parsedAnswer = (String) answer.getProperty("parsedAnswer");
+        if (parsedAnswerGroups.get(parsedAnswer) == null) {
+            ArrayList<Entity> temp = new ArrayList<Entity>();
+            temp.add(answer);
+            parsedAnswerGroups.put(parsedAnswer, temp);
+        }
+        else {
+            parsedAnswerGroups.get(parsedAnswer).add(answer);
+        }
+    }
+    Map<Group, ArrayList<Answer>> groups = new HashMap<Group, ArrayList<Answer>>();
+    for (Map.Entry<String, ArrayList<Entity>> entry : parsedAnswerGroups.entrySet()) {
+        Entity groupEntity = this.addGroup((int) 0, questionKey);
+        int score = (int) groupEntity.getProperty("score");
+        Key groupKey = groupEntity.getKey();
+        Group group = new Group(score, questionKey, groupKey);
+        ArrayList<Answer> answerList = new ArrayList<Answer>();
+        // created group entity and class @ this point
+        // now we loop through all the answers and map them to a group
+        for (Entity answer : entry.getValue()) {
+            String filePath = (String) answer.getProperty("filePath");
+            String parsedAnswer = (String) answer.getProperty("parsedAnswer");
+            Long answerScoreLong = (Long) answer.getProperty("score");
+            int answerScore = Math.toIntExact(answerScoreLong);
+            Key answerKey = answer.getKey();
+            Answer currAnswer = new Answer(filePath, parsedAnswer, answerScore, assignmentKey, questionKey, answerKey);
+            currAnswer.addGroup(groupKey);
+            System.out.println(currAnswer.getGroupKey());
+            answer.setProperty("groupKey", currAnswer.getGroupKey());
+            this.datastore.put(answer);
+            answerList.add(currAnswer);
+        }
+        groups.put(group, answerList);
+    }
+    String json = new Gson().toJson(groups);
+    System.out.println(json);
+    return json;
   }
 
   //get all submissions for an assignment

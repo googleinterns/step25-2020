@@ -18,16 +18,15 @@ async function getAnswers() {
 
     const response = await fetch(servletURL);
     const answers = await response.json(); 
-    return answers;
+    // show them on the page
 
 }
 
-function generateGroups() {
-    const answers = getAnswers();
+async function computerGenerateGroups() {
+    var servletURL = "/group?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
+    const response = await fetch(servletURL);
+    const answers = await response.json();  
     console.log(answers);
-    answers.forEach( answer => {
-        console.log(answer);
-    })
 
 }
 
