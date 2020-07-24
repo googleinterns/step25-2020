@@ -165,7 +165,7 @@ public class Database {
     }  
 
     // query submissions filtered to the assignment
-    Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignkey);
+    Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignKey);
     Query submissionsQuery = new Query("Submission").setFilter(assignmentKeyFilter);
     PreparedQuery submissionEntities = datastore.prepare(submissionsQuery);
     // assignmentKeyFilter is unneeded. I'm unclear if adding this filter will speedup or slowdown the program
@@ -177,11 +177,11 @@ public class Database {
     List<String> blobKeyList = new ArrayList<>();
     for (Entity submissionEntity : submissionEntities.asIterable()) {
         if (submissionKeys.contains(submissionEntity.getKey())) {
-            blobKeyList.add(entity.getProperty(blobKey));
+            blobKeyList.add((String) submissionEntity.getProperty("blobKey"));
         }
     }
 
-    return blobKeysList;
+    return blobKeyList;
   }
 
   //get all submissions for an assignment
