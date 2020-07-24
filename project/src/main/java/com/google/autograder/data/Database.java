@@ -145,9 +145,9 @@ public class Database {
     return new Gson().toJson("");
   }
 
-/* 
-* this function takes the assignment Key and answer group key as parameters
- returns list of blobKeys to submissions that fit in specified answer group for specific question
+/** 
+ * this function takes the assignment Key and answer group key as parameters
+ * returns list of blobKeys to submissions that fit in specified answer group for specific question
  */ 
   public List blobkeysFromAnswerGroup(String assignKey, String groupKey) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -168,14 +168,19 @@ public class Database {
     Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignkey);
     Query submissionsQuery = new Query("Submission").setFilter(assignmentKeyFilter);
     PreparedQuery submissionEntities = datastore.prepare(submissionsQuery);
+    // assignmentKeyFilter is unneeded. I'm unclear if adding this filter will speedup or slowdown the program
+    // by reducing the number of submissions that will be iterated through to check if the submission's key is
+    // in the answer group
 
+    // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
+    // add the submission's blobKet to blobKeyList, which will be returned
     List<String> blobKeyList = new ArrayList<>();
     for (Entity submissionEntity : submissionEntities.asIterable()) {
         if (submissionKeys.contains(submissionEntity.getKey())) {
             blobKeyList.add(entity.getProperty(blobKey));
         }
     }
-    
+
     return blobKeysList;
   }
 
