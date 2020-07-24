@@ -25,11 +25,6 @@ async function getAssignments() {
     }
 }
 
-function getCourseID() {
-    let url = window.location.href;
-    return url.substring(url.indexOf("?courseID=") + 10);
-}
-
 function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
     let assignmentLink = document.createElement("a");
     let row = document.createElement("tr");
@@ -50,7 +45,7 @@ function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assign
     submissionsCell.appendChild(submissionsText);
     percentageGradedCell.appendChild(percentageGradedText);
 
-    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}`;
+    assignmentLink.href = `/pages/assignment.html?courseID=${courseID}&assignmentID=${assignmentID}`;
 
     assignmentLink.appendChild(assignmentNameCell);
 
