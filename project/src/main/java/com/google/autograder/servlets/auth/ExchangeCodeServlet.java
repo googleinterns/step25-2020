@@ -53,7 +53,7 @@ public final class ExchangeCodeServlet extends HttpServlet {
 
                     Entity accessTokenResponseEntity = AccessTokenResponse.createDatastoreAccessTokenResponseEntity(accessTokenResponse, userEmail);
                     
-                    Database.getDataStore().put(accessTokenResponseEntity);
+                    Database.save(accessTokenResponseEntity);
 
                 } else {
                     System.out.println("\n" + "INVALID RESPONSE CODE : " + responseCode);

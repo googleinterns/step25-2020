@@ -30,8 +30,8 @@ public final class Database {
 
     public static final List<String> ANSWER_GRADING_STATUSES = Arrays.asList("NOT_GRADED", "GRADED");
 
-    public static DatastoreService getDataStore() {
-        return DATA_STORE;
+    public static void save(Entity entity) {
+        DATA_STORE.put(entity);
     }
 
     public static PreparedQuery query(Query query) {
