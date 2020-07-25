@@ -37,19 +37,19 @@
 
         <form action="/createNewAssignment" method="POST">
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title"><br>
+            <input type="text" id="title" name="title" required="true"><br>
 
             <label for="description">Description:</label>
-            <input type="text" id="description" name="description"><br>
+            <input type="text" id="description" name="description" required="true"><br>
 
             <label for="maxPoints">Max Points:</label>
-            <input type="number" id="maxPoints" name="maxPoints"><br>
+            <input type="number" id="maxPoints" name="maxPoints" required="true"><br>
 
             <label for="dueDate">Due Date:</label>
-            <input type="date" id="dueDate" name="dueDate"><br>
+            <input type="date" id="dueDate" name="dueDate" required="true"><br>
 
             <label for="dueTime">Due Time:</label>
-            <input type="time" id="dueTime" name="dueTime"><br><br>
+            <input type="time" id="dueTime" name="dueTime" required="true"><br><br>
 
             <input type="submit" value="Create New Assignment">
         </form>

@@ -34,34 +34,24 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
 
         String authorization = API.getCurrentUserAPIAuthorization();
 
-        if (authorization != null) {
-            try {
-                byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
-                HttpURLConnection connection = buildHttpURLConnection(courseID, authorization, postBodyData.length);
-                connection.getOutputStream().write(postBodyData);
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-
-                if (responseCode == 200) {
-                
-                    System.out.println("\n\nBING\tBANG\tBONG\n\n");
-
-                } else {
-
-                    System.out.println("\n\nBAD\tRESPONSE\tCODE:\t" + responseCode + "\n\n");
-
-                }
-
-            } catch(Exception e) {
-                System.out.println(e);
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("\n" + "INVALID AUTH CODE : " + authorization);
+        if (authorization == null) {
+            // The user is not logged in. Redirect to login page.
+            response.sendRedirect("/pages/course.html?courseID=" + courseID);
         }
 
-        response.sendRedirect("/pages/course.html?courseID=" + courseID);
+        byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
+        HttpURLConnection connection = buildHttpURLConnection(courseID, authorization, postBodyData.length);
+        connection.getOutputStream().write(postBodyData);
+        connection.connect();
+
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == 200) {
+            response.sendRedirect("/pages/course.html?courseID=" + courseID);
+        } else {
+            // Handle error response
+            System.out.println("\n\nBAD\tRESPONSE\tCODE:\t" + responseCode + "\n\n");
+        }
     }
 
     private int[] getDayMonthYear(String date) {
