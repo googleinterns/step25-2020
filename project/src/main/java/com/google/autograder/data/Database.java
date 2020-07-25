@@ -2,8 +2,12 @@ package com.google.autograder.data;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
@@ -18,35 +22,6 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-
-
-import java.util.Iterator;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-// import java.net.URL;
-// import java.io.IOException;
-// import java.io.BufferedReader;
-// import java.io.InputStreamReader;
-// import java.net.HttpURLConnection;
-// import javax.servlet.http.HttpServlet;
-// import java.nio.charset.StandardCharsets;
-// import javax.servlet.annotation.WebServlet;
-// import java.io.UnsupportedEncodingException;
-// import org.json.simple.parser.ParseException;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.servlet.http.HttpServletResponse;
-// import com.google.appengine.api.datastore.Query;
-// import com.google.appengine.api.datastore.Entity;
-// import com.google.autograder.servlets.helpers.API;
-// import com.google.autograder.servlets.helpers.Services;
-// import com.google.appengine.api.datastore.Query.Filter;
-// import com.google.appengine.api.datastore.PreparedQuery;
-// import com.google.appengine.api.datastore.Query.SortDirection;
-// import com.google.appengine.api.datastore.Query.FilterOperator;
-// import com.google.autograder.servlets.auth.AccessTokenResponse;
-// import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 /** Class containing basic database functionalities. */
 public final class Database {
