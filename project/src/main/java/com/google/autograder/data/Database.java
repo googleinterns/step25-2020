@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
 import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
@@ -41,22 +42,30 @@ public final class Database {
     // Takes in a courses array in JSON format and then stores that courses data for the current user.
 
     public static void storeCoursesData(String coursesJSON) {
+        String userEmail = UserHandler.getCurrentUserEmail();
+        String userID = UserHandler.getCurrentUserID();
+
+        Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
+        Query query = new Query("Course").setFilter(userEmailFilter);
+        PreparedQuery results = DATA_STORE.prepare(query);
+
+        // TODO: Compare Datastore contents with the courses data from Google Classroom
+
+        for (Entity course : results.asIterable()) {
+            DATA_STORE.delete(course.getKey());
+        }
+
+        Iterator coursesIterator = null;
+
         try {
-            String userEmail = UserHandler.getCurrentUserEmail();
-            String userID = UserHandler.getCurrentUserID();
-
-            Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
-            Query query = new Query("Course").setFilter(userEmailFilter);
-            PreparedQuery results = DATA_STORE.prepare(query);
-
-            for (Entity course : results.asIterable()) {
-                DATA_STORE.delete(course.getKey());
-            }
-
             JSONObject coursesObject = (JSONObject) new JSONParser().parse(coursesJSON);
             JSONArray courses = (JSONArray) coursesObject.get("courses");
-            Iterator coursesIterator = courses.iterator();
+            coursesIterator = courses.iterator();
+        } catch(ParseException exception) {
+            System.out.println("\n\n" + "Error parsing JSON Course data from the Google Classroom API" + "\n\n");
+        }
 
+        if (coursesIterator != null) {
             while (coursesIterator.hasNext()) {
                 JSONObject course = (JSONObject) coursesIterator.next();
                 Entity courseEntity = new Entity("Course");
@@ -68,12 +77,9 @@ public final class Database {
                 courseEntity.setProperty("userEmail", userEmail);
                 courseEntity.setProperty("userID", userID);
 
-                DATA_STORE.put(courseEntity);            
+                DATA_STORE.put(courseEntity);
             }
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
-        }
+        }        
     }
 
     // Retrives the current user's courses data as JSON.
@@ -109,20 +115,28 @@ public final class Database {
 
     // Takes in a course work array in JSON format and then stores the assignments data for the current user.
 
-    public static void storeAssignmentsData(String courseWorkJSON, String courseID) {
+    public static void storeAssignmentsData(String courseWorkJSON, String courseID) {        
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Query query = new Query("Assignment").setFilter(courseIDFilter);
+        PreparedQuery results = DATA_STORE.prepare(query);
+
+        // TODO: Compare Datastore contents with the course work data from Google Classroom
+
+        for (Entity assignment : results.asIterable()) {
+            DATA_STORE.delete(assignment.getKey());
+        }
+
+        Iterator courseWorkIterator = null;
+
         try {
-            Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
-            Query query = new Query("Assignment").setFilter(courseIDFilter);
-            PreparedQuery results = DATA_STORE.prepare(query);
-
-            for (Entity assignment : results.asIterable()) {
-                DATA_STORE.delete(assignment.getKey());
-            }
-
             JSONObject courseWorkObject = (JSONObject) new JSONParser().parse(courseWorkJSON); 
             JSONArray courseWork = (JSONArray) courseWorkObject.get("courseWork");
-            Iterator courseWorkIterator = courseWork.iterator();
+            courseWorkIterator = courseWork.iterator();
+        } catch (ParseException exception) {
+            System.out.println("\n\n" + "Error parsing JSON Course Work data from the Google Classroom API" + "\n\n");
+        }
 
+        if (courseWorkIterator != null) {
             while (courseWorkIterator.hasNext()) {
                 JSONObject courseWorkTempObject = (JSONObject) courseWorkIterator.next();
                 String courseWorkType = (String) courseWorkTempObject.get("workType");
@@ -141,9 +155,6 @@ public final class Database {
                     DATA_STORE.put(assignmentEntity);
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
-            e.printStackTrace();
         }
     }
     
