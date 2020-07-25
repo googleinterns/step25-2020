@@ -9,12 +9,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import com.google.appengine.api.datastore.Key;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -26,7 +25,6 @@ import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 /** Class containing basic database functionalities. */
 public final class Database {
 
-    private static final UserService USER_SERVICE = UserServiceFactory.getUserService();
     private static final DatastoreService DATA_STORE = DatastoreServiceFactory.getDatastoreService();
     private static final Gson GSON = new Gson();
 
@@ -44,8 +42,8 @@ public final class Database {
 
     public static void storeCoursesData(String coursesJSON) {
         try {
-            String userEmail = USER_SERVICE.getCurrentUser().getEmail();
-            String userID = USER_SERVICE.getCurrentUser().getUserId();
+            String userEmail = UserHandler.getCurrentUserEmail();
+            String userID = UserHandler.getCurrentUserID();
 
             Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
             Query query = new Query("Course").setFilter(userEmailFilter);
@@ -81,7 +79,7 @@ public final class Database {
     // Retrives the current user's courses data as JSON.
 
     public static String getCoursesData() {
-        String userEmail = USER_SERVICE.getCurrentUser().getEmail();
+        String userEmail = UserHandler.getCurrentUserEmail();
 
         Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
         Query query = new Query("Course").setFilter(userEmailFilter).addSort("creationTime", SortDirection.DESCENDING);
