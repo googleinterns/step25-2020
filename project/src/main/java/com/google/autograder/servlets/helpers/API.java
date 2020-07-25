@@ -1,5 +1,6 @@
 package com.google.autograder.servlets.helpers;
 
+import java.util.Iterator;
 import java.net.URLEncoder;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -33,11 +34,10 @@ public final class API {
 
         Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
-        PreparedQuery results = Database.query(query);
-
+        Iterator<Entity> results = Database.query(query);
         AccessTokenResponse accessTokenResponse = null;
 
-        Entity entity = (results.asIterable().iterator().hasNext() ? results.asIterable().iterator().next() : null); ;
+        Entity entity = (results.hasNext() ? results.next() : null); ;
 
         if (entity != null) {
             accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(entity);

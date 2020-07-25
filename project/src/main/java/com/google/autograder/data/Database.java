@@ -34,8 +34,8 @@ public final class Database {
         DATA_STORE.put(entity);
     }
 
-    public static PreparedQuery query(Query query) {
-        return DATA_STORE.prepare(query);
+    public static Iterator<Entity> query(Query query) {
+        return DATA_STORE.prepare(query).asIterable().iterator();
     }
 
     // Takes in a courses array in JSON format and then stores that courses data for the current user.

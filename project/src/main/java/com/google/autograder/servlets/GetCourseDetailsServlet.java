@@ -1,6 +1,7 @@
 package com.google.autograder.servlets;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
@@ -30,8 +31,8 @@ public final class GetCourseDetailsServlet extends HttpServlet {
         Filter courseIDFilter = new FilterPredicate("id", FilterOperator.EQUAL, courseID);
 
         Query query = new Query("Course").setFilter(userEmailFilter).setFilter(courseIDFilter);
-        PreparedQuery results = Database.query(query);
-        Entity course = results.asIterable().iterator().next();
+        Iterator<Entity> results = Database.query(query); 
+        Entity course = results.next();
         
         String name = (String) course.getProperty("name");
         String description = (String) course.getProperty("description");
