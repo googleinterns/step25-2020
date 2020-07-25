@@ -25,7 +25,6 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 public final class CreateNewAssignmentServlet extends HttpServlet {
 
     private static final String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork";
-    private static final String HOST_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
