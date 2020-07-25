@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -19,8 +20,8 @@ public final class GetCourseDetailsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String userEmail = Database.getCurrentUserEmail();
-        String userID = Database.getCurrentUserID();
+        String userEmail = UserHandler.getCurrentUserEmail();
+        String userID = UserHandler.getCurrentUserID();
 
         String requestURL = (String) request.getHeader("Referer");
         String courseID = requestURL.substring (requestURL.indexOf("?courseID=") + 10);

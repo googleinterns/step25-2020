@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -26,7 +27,7 @@ public final class API {
     public static Gson GSON = new Gson();
 
     public static String getCurrentUserAPIAuthorization() {
-        String userEmail = Database.getCurrentUserEmail();
+        String userEmail = UserHandler.getCurrentUserEmail();
 
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
 

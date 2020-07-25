@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.data.UserHandler;
 
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
@@ -14,11 +15,11 @@ public final class LoginServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String urlToRedirectToAfterUserLogsIn = "/index.html";
         String urlToRedirectToAfterUserLogsOut = "/index.html";
-        String loginURL = Database.getUserService().createLoginURL(urlToRedirectToAfterUserLogsIn);
-        String logoutURL = Database.getUserService().createLogoutURL(urlToRedirectToAfterUserLogsOut);
+        String loginURL = UserHandler.createLoginURL(urlToRedirectToAfterUserLogsIn);
+        String logoutURL = UserHandler.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
-        if (Database.getUserService().isUserLoggedIn()) {
-            String userEmail = Database.getCurrentUserEmail();
+        if (UserHandler.isUserLoggedIn()) {
+            String userEmail = UserHandler.getCurrentUserEmail();
             response.setHeader("user-email", userEmail);
             response.setHeader("is-logged-in", "true");
         } else {

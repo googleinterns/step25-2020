@@ -17,6 +17,7 @@ import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
 
@@ -48,7 +49,7 @@ public final class ExchangeCodeServlet extends HttpServlet {
 
                     AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObjectFromJSON(json);
 
-                    String userEmail = Database.getCurrentUserEmail();
+                    String userEmail = UserHandler.getCurrentUserEmail();
 
                     Entity accessTokenResponseEntity = AccessTokenResponse.createDatastoreAccessTokenResponseEntity(accessTokenResponse, userEmail);
                     

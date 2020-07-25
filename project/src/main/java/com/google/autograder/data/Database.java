@@ -32,20 +32,8 @@ public final class Database {
 
     public static final List<String> ANSWER_GRADING_STATUSES = Arrays.asList("NOT_GRADED", "GRADED");
 
-    public static UserService getUserService() {
-        return USER_SERVICE;
-    }
-
     public static DatastoreService getDataStore() {
         return DATA_STORE;
-    }
-
-    public static String getCurrentUserEmail() {
-        return USER_SERVICE.getCurrentUser().getEmail();
-    }
-
-    public static String getCurrentUserID() {
-        return USER_SERVICE.getCurrentUser().getUserId();
     }
 
     public static PreparedQuery query(Query query) {

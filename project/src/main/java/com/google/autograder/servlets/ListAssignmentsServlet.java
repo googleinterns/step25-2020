@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import org.json.simple.parser.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
@@ -34,7 +35,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (Database.getUserService().isUserLoggedIn()) {
+        if (UserHandler.isUserLoggedIn()) {
             response.setContentType("application/json");
 
             String authorization = API.getCurrentUserAPIAuthorization();
