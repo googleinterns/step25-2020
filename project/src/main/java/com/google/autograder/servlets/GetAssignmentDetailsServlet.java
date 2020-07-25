@@ -30,6 +30,8 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
         PreparedQuery results = Services.DATA_STORE.prepare(query);
         Entity assignment = results.asIterable().iterator().next();
 
+        // TODO: What happens if there are no results in the Datastore?
+
         String title = (String) assignment.getProperty("title");
         String description = (String) assignment.getProperty("description");
         String assignmentDetails = "{ \"assignment\" : { \"title\": \"" + title + "\" , \"description\": \"" + description + "\" }}";

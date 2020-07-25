@@ -49,7 +49,7 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
         if (responseCode == 200) {
             response.sendRedirect("/pages/course.html?courseID=" + courseID);
         } else {
-            // Handle error response
+            // TODO: Handle error response
             System.out.println("\n\nBAD\tRESPONSE\tCODE:\t" + responseCode + "\n\n");
         }
     }
