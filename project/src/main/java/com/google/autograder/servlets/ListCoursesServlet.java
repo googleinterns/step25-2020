@@ -1,39 +1,24 @@
 package com.google.autograder.servlets;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import org.json.simple.JSONArray;
 import java.net.HttpURLConnection;
+import org.json.simple.JSONObject;
 import javax.servlet.http.HttpServlet;
+import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
 import java.io.UnsupportedEncodingException;
+import org.json.simple.parser.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
-import com.google.autograder.servlets.helpers.Services;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.autograder.servlets.auth.AccessTokenResponse;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-
-import java.util.Map;
-import java.util.Iterator; 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
-import org.json.simple.parser.ParseException;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
-
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.Services;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -64,17 +49,9 @@ public final class ListCoursesServlet extends HttpServlet {
 
                 String json = API.getJSON(connection);
 
-                // System.out.println(json);
-
-                // System.out.println("\n\n\n");
-
                 storeCourseDataInDatastore(json);
 
                 String coursesData = getCoursesDataFromDatastore();
-
-                System.out.println(coursesData);
-
-                System.out.println("\n\n\n");
 
                 response.getWriter().println(coursesData);
             } else {
