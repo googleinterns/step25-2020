@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.servlets.helpers.API;
 
-@WebServlet("/requestAccessToken")
+// @WebServlet("/requestAccessToken")
 public final class RequestTokenServlet extends HttpServlet {
 
     private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
     private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
 
-    private static String HOST_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev";
+    private static String BASE_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev"; // "https://step25-2020.uc.r.appspot.com"; 
     private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
 
     private static String AUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -40,7 +40,7 @@ public final class RequestTokenServlet extends HttpServlet {
 
         authEndpointBuffer.append("?client_id=" + API.urlEncode(CLIENT_ID));
 
-        authEndpointBuffer.append("&redirect_uri=" + API.urlEncode((HOST_URL + REDIRECT_URI)));
+        authEndpointBuffer.append("&redirect_uri=" + API.urlEncode(BASE_URL + REDIRECT_URI));
 
         authEndpointBuffer.append("&response_type=" + API.urlEncode(RESPONSE_TYPE));
 

@@ -15,13 +15,13 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-@WebServlet("/getAssignmentDetails")
+// @WebServlet("/getAssignmentDetails")
 public final class GetAssignmentDetailsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestURL = (String) request.getHeader("Referer");
-        String courseID = requestURL.substring(requestURL.indexOf("?courseID=") + 10);
+        String courseID = requestURL.substring(requestURL.indexOf("&courseID=") + 10);
         String assignmentID = requestURL.substring(requestURL.indexOf("?assignmentID=") + 14, requestURL.indexOf("&"));
 
         Filter assignmentIDFilter = new FilterPredicate("id", FilterOperator.EQUAL, assignmentID);
