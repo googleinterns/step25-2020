@@ -3,9 +3,10 @@ package com.google.sps.servlets;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
+import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.autograder.servlets.helpers.Services;
+import com.google.autograder.data.UserHandler;
 
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
@@ -14,11 +15,11 @@ public final class LoginServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String urlToRedirectToAfterUserLogsIn = "/index.html";
         String urlToRedirectToAfterUserLogsOut = "/index.html";
-        String loginURL = Services.USER_SERVICE.createLoginURL(urlToRedirectToAfterUserLogsIn);
-        String logoutURL = Services.USER_SERVICE.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+        String loginURL = UserHandler.createLoginURL(urlToRedirectToAfterUserLogsIn);
+        String logoutURL = UserHandler.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
-        if (Services.USER_SERVICE.isUserLoggedIn()) {
-            String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+        if (UserHandler.isUserLoggedIn()) {
+            String userEmail = UserHandler.getCurrentUserEmail();
             response.setHeader("user-email", userEmail);
             response.setHeader("is-logged-in", "true");
         } else {

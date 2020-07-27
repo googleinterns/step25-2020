@@ -1,5 +1,6 @@
 package com.google.autograder.servlets.helpers;
 
+import java.util.Iterator;
 import java.net.URLEncoder;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -8,10 +9,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
-import com.google.autograder.servlets.helpers.Services;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -26,17 +28,16 @@ public final class API {
     public static Gson GSON = new Gson();
 
     public static String getCurrentUserAPIAuthorization() {
-        String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+        String userEmail = UserHandler.getCurrentUserEmail();
 
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
 
         Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
-        PreparedQuery results = Services.DATA_STORE.prepare(query);
-
+        Iterator<Entity> results = Database.query(query).iterator();
         AccessTokenResponse accessTokenResponse = null;
 
-        Entity entity = (results.asIterable().iterator().hasNext() ? results.asIterable().iterator().next() : null); ;
+        Entity entity = (results.hasNext() ? results.next() : null); ;
 
         if (entity != null) {
             accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(entity);
