@@ -28,7 +28,7 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
         Filter courseIDFilter = new FilterPredicate("courseId", FilterOperator.EQUAL, courseID);
 
         Query query = new Query("Assignment").setFilter(courseIDFilter).setFilter(assignmentIDFilter);
-        Iterator<Entity> results = Database.query(query);
+        Iterator<Entity> results = Database.query(query).iterator();
         Entity assignment = results.next();
 
         String title = (String) assignment.getProperty("title");

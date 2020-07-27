@@ -34,7 +34,7 @@ public final class API {
 
         Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
 
-        Iterator<Entity> results = Database.query(query);
+        Iterator<Entity> results = Database.query(query).iterator();
         AccessTokenResponse accessTokenResponse = null;
 
         Entity entity = (results.hasNext() ? results.next() : null); ;

@@ -31,7 +31,7 @@ public final class GetCourseDetailsServlet extends HttpServlet {
         Filter courseIDFilter = new FilterPredicate("id", FilterOperator.EQUAL, courseID);
 
         Query query = new Query("Course").setFilter(userEmailFilter).setFilter(courseIDFilter);
-        Iterator<Entity> results = Database.query(query); 
+        Iterator<Entity> results = Database.query(query).iterator(); 
         Entity course = results.next();
         
         String name = (String) course.getProperty("name");
