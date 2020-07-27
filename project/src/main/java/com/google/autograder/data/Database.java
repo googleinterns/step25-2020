@@ -182,6 +182,7 @@ public class Database {
     }
     catch (Exception e) {
         System.out.println("answers weren't found");
+        e.printStackTrace(System.out);
         return "error";
     }
   }
