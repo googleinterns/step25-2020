@@ -36,10 +36,8 @@ public final class API {
         AccessTokenResponse accessTokenResponse = null;
         String authorization = null;
 
-        Entity entity = (results.hasNext() ? results.next() : null);
-
-        if (entity != null) {
-            accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(entity);
+        if (results.hasNext()) {
+            accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(results.next());
         }
 
         if (accessTokenResponse != null) {
