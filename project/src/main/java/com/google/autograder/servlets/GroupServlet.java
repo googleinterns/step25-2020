@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import com.google.autograder.data.Database;
-import com.google.autograder.data.Question;
+import com.google.autograder.data.Answer;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +16,20 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-@WebServlet("/question")
-public final class QuestionServlet extends HttpServlet {
+@WebServlet("/group")
+public final class GroupServlet extends HttpServlet {
 
   private Database d = new Database();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // get all the answer entities based on answer + question keys
     String assignmentKey = request.getParameter("assignment-key");
-    String json = d.getAllQuestionsJSON(assignmentKey);
+    String questionKey = request.getParameter("question-key");
+
+    String json = d.createGroups(assignmentKey, questionKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
+  
 }

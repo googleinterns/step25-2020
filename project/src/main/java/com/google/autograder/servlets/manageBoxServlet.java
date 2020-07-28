@@ -37,6 +37,7 @@ import java.util.HashMap;
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
   
+
   private Database database = new Database(); // should this be an existing database from elsewhere?
 
   @Override
