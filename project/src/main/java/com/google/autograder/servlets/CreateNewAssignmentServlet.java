@@ -28,7 +28,7 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestURL = (String) request.getHeader("Referer");
-        int courseIDIndex = request.getParameter("courseID");
+        int courseIDIndex = requestURL.indexOf("?courseID=") + 10;
         String courseID = requestURL.substring(courseIDIndex);
 
         String authorization = API.getCurrentUserAPIAuthorization();
@@ -110,6 +110,9 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
     }
 
     private HttpURLConnection buildHttpURLConnection(String courseID, String authorization, int postBodyDataLength) throws IOException, MalformedURLException, ProtocolException {
+        System.out.println(END_POINT);
+        System.out.println(END_POINT.replace("{courseId}", courseID));
+
         HttpURLConnection connection = (HttpURLConnection) new URL(END_POINT.replace("{courseId}", courseID)).openConnection();
 
         connection.setDoOutput(true);

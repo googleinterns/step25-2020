@@ -6,15 +6,19 @@ import com.google.appengine.api.datastore.KeyFactory;
 /** Class containing assignment data. */
 public class Assignment {
 
-  public String name;
-  public int points;
-  public String status;
+  public String title;
+  public String id;
+  public String description;
+  public int maxPoints;
+  public String creationTime;
   public String key;
 
-  public Assignment(String name, int points, String status, Key key) {
-    this.name = name;
-    this.points = points;
-    this.status = status;
+  public Assignment(String title, String id, String description, String creationTime, String courseID, int maxPoints, Key key) {
+    this.title = title;
+    this.id = id;
+    this.description = description;
+    this.maxPoints = maxPoints;
+    this.creationTime = creationTime;
     this.key = KeyFactory.keyToString(key);
    }
 

@@ -164,26 +164,21 @@ public final class Database {
 
         StringBuilder assignmentsData = new StringBuilder("{\"courseWork\": [");
 
+        List<Assignment> assignments = new ArrayList<>();
         for (Entity assignment : query(assignmentsQuery)) {
-            assignmentsData.append("{");
-            assignmentsData.append("\"title\":" + "\"" + assignment.getProperty("title") + "\"");
-            assignmentsData.append(",");
-            assignmentsData.append("\"id\":" + "\"" + assignment.getProperty("id") + "\"");
-            assignmentsData.append(",");
-            assignmentsData.append("\"courseId\":" + "\"" + courseID + "\"");
-            assignmentsData.append(",");
-            assignmentsData.append("\"description\":" + "\"" + assignment.getProperty("description") + "\"");
-            assignmentsData.append(",");
-            assignmentsData.append("\"creationTime\":" + "\"" + assignment.getProperty("creationTime") + "\"");
-            assignmentsData.append(",");
-            assignmentsData.append("\"key\":" + "\"" + KeyFactory.keyToString(assignment.getKey()) + "\"");
-            assignmentsData.append("},");
+            String title = assignment.getProperty("title");
+            String id = assignment.getProperty("id");
+            String description = assignment.getProperty("description");
+            String creationTime = assignment.getProperty("creationTime");
+            String courseID = assignment.getProperty("courseID");
+            int maxPoints = Math.toIntExact( (Long) assignment.getProperty("maxPoints"));
+            Key key = assignment.getKey();
+            currAssignment = new Assignment(title, id, description, creationTime, courseID, maxPoints, key)
+            assignments.add(currAssignment);
         }
-
-        assignmentsData = new StringBuilder(assignmentsData.deleteCharAt(assignmentsData.length() - 1));
-        assignmentsData.append("]}");
         
-        return assignmentsData.toString();
+        String json = new Gson().toJson(assignments);
+        return json;
     }
 
     // Create operations for all entities (with pk and fk restraints)
