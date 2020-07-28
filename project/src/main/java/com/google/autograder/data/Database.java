@@ -208,7 +208,6 @@ public final class Database {
     public static void addSubmission(Entity assignmentEntity, String blobKey) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
-        // should we be storing Key as String here? ("KeyFactory.keyToString(assignmentEntity.getKey())")
         submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
         submissionEntity.setProperty("blobKey", blobKey);
       //   Contructor: new BlobKey(String blobKey)
