@@ -35,7 +35,7 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
 
         if (authorization == null) {
             // The user is not logged in. Redirect to login page.
-            response.sendRedirect("/pages/course.html?courseID=" + courseID);
+            response.sendRedirect("/index.html");
         }
 
         byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
