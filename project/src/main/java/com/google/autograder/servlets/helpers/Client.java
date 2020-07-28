@@ -21,8 +21,8 @@ public final class Client {
         try {
             String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject credentials = (JSONObject) new JSONParser().parse(jsonObject.get("credentials").toString());
-            client_id = credentials.get("client_id").toString();
+            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
+            client_id = web.get("client_id").toString();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -36,8 +36,8 @@ public final class Client {
         try {
             String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject credentials = (JSONObject) new JSONParser().parse(jsonObject.get("credentials").toString());
-            client_secret = credentials.get("client_secret").toString();
+            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
+            client_secret = web.get("client_secret").toString();
         } catch(Exception e) {
             e.printStackTrace();
         }
