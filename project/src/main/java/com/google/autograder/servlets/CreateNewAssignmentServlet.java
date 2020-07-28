@@ -110,9 +110,6 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
     }
 
     private HttpURLConnection buildHttpURLConnection(String courseID, String authorization, int postBodyDataLength) throws IOException, MalformedURLException, ProtocolException {
-        System.out.println(END_POINT);
-        System.out.println(END_POINT.replace("{courseId}", courseID));
-
         HttpURLConnection connection = (HttpURLConnection) new URL(END_POINT.replace("{courseId}", courseID)).openConnection();
 
         connection.setDoOutput(true);
