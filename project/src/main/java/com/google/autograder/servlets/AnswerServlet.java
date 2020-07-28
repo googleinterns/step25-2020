@@ -19,8 +19,6 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @WebServlet("/answer")
 public final class AnswerServlet extends HttpServlet {
 
-  private Database d = new Database();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // get all the answer entities based on answer + question keys
@@ -28,17 +26,17 @@ public final class AnswerServlet extends HttpServlet {
     String questionKey = request.getParameter("question-key");
 
     //create hard-coded answer data right now
-    //d.addAnswer(filePath, parsedAnswer, score, assignmentKey, questionKey);
-    d.addAnswer("images/eight1.jpeg", parseAnswer("images/eight1.jpeg"), 0, assignmentKey, questionKey);
-    d.addAnswer("images/eight2.jpeg", parseAnswer("images/eight2.jpeg"), 0, assignmentKey, questionKey);
-    d.addAnswer("images/eight3.jpeg", parseAnswer("images/eight3.jpeg"), 0, assignmentKey, questionKey);
-    d.addAnswer("images/three1.jpeg", parseAnswer("images/three1.jpeg"), 0, assignmentKey, questionKey);
-    d.addAnswer("images/three2.jpeg", parseAnswer("images/three2.jpeg"), 0, assignmentKey, questionKey);
-    d.addAnswer("images/three3.jpeg", parseAnswer("images/three3.jpeg"), 0, assignmentKey, questionKey);
+    //Database.addAnswer(filePath, parsedAnswer, score, assignmentKey, questionKey);
+    Database.addAnswer("images/eight1.jpeg", parseAnswer("images/eight1.jpeg"), 0, assignmentKey, questionKey);
+    Database.addAnswer("images/eight2.jpeg", parseAnswer("images/eight2.jpeg"), 0, assignmentKey, questionKey);
+    Database.addAnswer("images/eight3.jpeg", parseAnswer("images/eight3.jpeg"), 0, assignmentKey, questionKey);
+    Database.addAnswer("images/three1.jpeg", parseAnswer("images/three1.jpeg"), 0, assignmentKey, questionKey);
+    Database.addAnswer("images/three2.jpeg", parseAnswer("images/three2.jpeg"), 0, assignmentKey, questionKey);
+    Database.addAnswer("images/three3.jpeg", parseAnswer("images/three3.jpeg"), 0, assignmentKey, questionKey);
 
 
 
-    String json = d.getAllAnswersJSON(assignmentKey, questionKey);
+    String json = Database.getAllAnswersJSON(assignmentKey, questionKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
