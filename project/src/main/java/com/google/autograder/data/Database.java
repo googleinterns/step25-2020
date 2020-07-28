@@ -23,10 +23,10 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import java.util.HashMap;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
 /** Class containing basic database functionalities. */
@@ -169,21 +169,6 @@ public final class Database {
       save(questionEntity);
   }
   
-  public static void addSubmission(Entity assignmentEntity) {
-      Entity submissionEntity = new Entity("Submission");
-      submissionEntity.setProperty("graded", "NOT_GRADED");
-      submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
-      save(submissionEntity);
-  }
-  
-  //unused currently
-  public static void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
-      Entity locationEntity = new Entity("Location");
-      locationEntity.setProperty("topLeft", topLeft);
-      locationEntity.setProperty("bottomRight", bottomRight);
-      locationEntity.setProperty("questionKey", questionEntity.getKey());
-      save(locationEntity);
-  }
   
   // sample add Answer, will change in future
   public static void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
@@ -209,13 +194,6 @@ public final class Database {
       answerEntity.setProperty("groupKey", groupEntity.getKey());
       save(answerEntity);
   }
-
-  //unused right now
-  public static void updateGradedForAnswer(Entity answerEntity, String status) {
-      if (this.answerGradingStatuses.contains(status)) {
-        answerEntity.setProperty("graded", status);
-        save(answerEntity); }
-  }
   
   //unused right now
   public static void updateScoreForAnswer(Entity groupEntity, int score) {
@@ -228,10 +206,8 @@ public final class Database {
     try {
         Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
         Query query = new Query("Question").setFilter(propertyFilter);
-
-        PreparedQuery results = this.queryDatabase(query);
         List<Question> questions = new ArrayList<>();
-        for (Entity entity : results.asIterable()) {
+        for (Entity entity : query(query)) {
             String name = (String) entity.getProperty("name");
             Long pointsLong = (Long) entity.getProperty("points");
             int points = Math.toIntExact(pointsLong);
@@ -240,6 +216,11 @@ public final class Database {
             Key questionKey = entity.getKey();
             Question currQuestion = new Question(name, points, status, assignmentKey, questionKey);
             questions.add(currQuestion); }
+        String json = new Gson().toJson(questions);
+        System.out.println(json);
+        return json;   
+        
+    }
     catch (Exception e) {
         System.out.println("assignment wasn't found");
         return "error";
@@ -275,10 +256,8 @@ public final class Database {
         Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
         CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
         Query query = new Query("Answer").setFilter(propertyFilter);
-
-        PreparedQuery results = this.queryDatabase(query);
         List<Answer> answers = new ArrayList<>();
-        for (Entity entity : results.asIterable()) {
+        for (Entity entity : query(query)) {
             String filePath = (String) entity.getProperty("filePath");
             String parsedAnswer = (String) entity.getProperty("parsedAnswer");
             Long scoreLong = (Long) entity.getProperty("score");
@@ -302,11 +281,9 @@ public final class Database {
     Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
     CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
     Query query = new Query("Answer").setFilter(propertyFilter);
-    PreparedQuery results = this.query(query);
-
-    Map<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
+    HashMap<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
     // loop through answers and see if parsed answer already exists. if so, add answer entity to arraylist. if not exists, init new array and add
-    for (Entity answer : results.asIterable()) {
+    for (Entity answer : query(query)) {
         String parsedAnswer = (String) answer.getProperty("parsedAnswer");
         if (parsedAnswerGroups.get(parsedAnswer) == null) {
             ArrayList<Entity> temp = new ArrayList<Entity>();
@@ -317,9 +294,9 @@ public final class Database {
             parsedAnswerGroups.get(parsedAnswer).add(answer);
         }
     }
-    Map<Group, ArrayList<Answer>> groups = new HashMap<Group, ArrayList<Answer>>();
-    for (Map.Entry<String, ArrayList<Entity>> entry : parsedAnswerGroups.entrySet()) {
-        Entity groupEntity = this.addGroup((int) 0, questionKey);
+    HashMap<Group, ArrayList<Answer>> groups = new HashMap<Group, ArrayList<Answer>>();
+    for (HashMap.Entry<String, ArrayList<Entity>> entry : parsedAnswerGroups.entrySet()) {
+        Entity groupEntity = addGroup((int) 0, questionKey);
         int score = (int) groupEntity.getProperty("score");
         Key groupKey = groupEntity.getKey();
         Group group = new Group(score, questionKey, groupKey);
@@ -346,15 +323,6 @@ public final class Database {
     return json;
   }
 
-
-    public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
-        Entity questionEntity = new Entity("Question");
-        questionEntity.setProperty("name", questionName);
-        questionEntity.setProperty("type", questionType);
-        questionEntity.setProperty("points", questionPoints);
-        questionEntity.setProperty("assignmentKey", assignmentKey);
-        save(questionEntity);
-    }
 
     public static void addSubmission(Entity assignmentEntity) {
         Entity submissionEntity = new Entity("Submission");
@@ -386,45 +354,12 @@ public final class Database {
         groupEntity.setProperty("questionKey", questionEntity.getKey());
         save(groupEntity);
     }
-
-    public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
-        answerEntity.setProperty("groupKey", groupEntity.getKey());
-        save(answerEntity);
-    }
     
     public static void updateGradedForAnswer(Entity answerEntity, String status) {
         if (ANSWER_GRADING_STATUSES.contains(status)) {
             answerEntity.setProperty("graded", status);
             save(answerEntity);
         }
-    }
-
-    public static void updateScoreForAnswer(Entity groupEntity, int score) {
-        groupEntity.setProperty("score", score);
-        save(groupEntity);
-    }
-
-    public static String getAllQuestionsJSON(String key) {
-        // query all questions with this key at assignment_id key
-        if (key != null) {
-            Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
-            Query questionsQuery = new Query("Question").setFilter(propertyFilter);
-            List<Question> questions = new ArrayList<>();
-            
-            for (Entity entity : query(questionsQuery)) {
-                String name = (String) entity.getProperty("name");
-                Long pointsLong = (Long) entity.getProperty("points");
-                int points = Math.toIntExact(pointsLong);
-                String status = (String) entity.getProperty("status");
-                String assignmentKey = (String) entity.getProperty("assignmentKey");
-                Question currentQuestion = new Question(name, points, status, assignmentKey);
-                questions.add(currentQuestion);
-            }
-            
-            return GSON.toJson(questions);
-        }
-        
-        return GSON.toJson("");
     }
 
 }
