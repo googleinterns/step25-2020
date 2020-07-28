@@ -21,10 +21,8 @@ import com.google.autograder.servlets.helpers.Client;
 // @WebServlet("/requestAccessToken")
 public final class RequestTokenServlet extends HttpServlet {
 
-    private static String BASE_URL = "https://8080-b05063a2-6285-476f-bee1-4e6145c2af2b.us-west1.cloudshell.dev"; // "https://step25-2020.uc.r.appspot.com"; 
-    private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
-
     private static String AUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
+    private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
     private static String STATE = "auth_code_received";
     private static String ACCESS_TYPE = "offline";
     private static String RESPONSE_TYPE = "code";
@@ -35,10 +33,11 @@ public final class RequestTokenServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         StringBuilder authEndpointBuffer = new StringBuilder(AUTH_CODE_ENDPOINT);
+        String baseURL = (String) request.getParameter("baseURL");
 
         authEndpointBuffer.append("?client_id=" + API.urlEncode(Client.CLIENT_ID));
 
-        authEndpointBuffer.append("&redirect_uri=" + API.urlEncode(BASE_URL + REDIRECT_URI));
+        authEndpointBuffer.append("&redirect_uri=" + API.urlEncode(baseURL + REDIRECT_URI));
 
         authEndpointBuffer.append("&response_type=" + API.urlEncode(RESPONSE_TYPE));
 

@@ -3,8 +3,12 @@ async function getAssignmentDetails() {
     let assignmentDescriptionText = document.createElement("h4");
     let assignmentTitle = document.getElementById("assignment-title-container");
     let assignmentDescription = document.getElementById("assignment-description-container");
+
+    let urlParameters = new URLSearchParams(window.location.search);
+    let assignmentID = urlParameters.get("assignmentID");
+    let courseID = urlParameters.get("courseID");
     
-    let servletURL = "/getAssignmentDetails";
+    let servletURL = `/getAssignmentDetails?courseID=${courseID}&assignmentID=${assignmentID}`;
 
     let response = await fetch(servletURL, {
         method: "GET",

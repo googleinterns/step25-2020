@@ -38,8 +38,6 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         }
 
         response.setContentType("application/json");
-        
-        String requestURL = (String) request.getHeader("Referer");
 
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
@@ -47,13 +45,12 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String endpoint = END_POINT.replace("{courseId}", courseID);
         endpoint = endpoint.replace("{courseWorkId}", assignmentID);
         endpoint = endpoint += "?key=" + API.API_KEY;
-
+        
         System.out.println("\n\nCourse ID:\t\t" + courseID + "\n\n");
         System.out.println("\n\nAssignment ID:\t\t" + assignmentID + "\n\n");
         System.out.println("\n\nRequest Endpoint:\t" + endpoint + "\n\n");
 
-        URL url = new URL(endpoint);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
 
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
