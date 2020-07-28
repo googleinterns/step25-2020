@@ -162,8 +162,6 @@ public final class Database {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
 
-        StringBuilder assignmentsData = new StringBuilder("{\"courseWork\": [");
-
         List<Assignment> assignments = new ArrayList<>();
         for (Entity assignment : query(assignmentsQuery)) {
             String title = (String) assignment.getProperty("title");
