@@ -1,16 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:web="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     version="1">
-    
-    <!-- <servlet>
-        <servlet-name></servlet-name>
-        <servlet-class></servlet-class>
+
+    <!-- Login and Logout -->
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.auth.LoginServlet</servlet-class>
     </servlet>
     
     <servlet-mapping>
-        <servlet-name></servlet-name>
-        <url-pattern></url-pattern>
-    </servlet-mapping> -->
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
     
+    <!-- Google OAuth -->
+    
+    <servlet>
+        <servlet-name>RequestTokenServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.auth.RequestTokenServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>RequestTokenServlet</servlet-name>
+        <url-pattern>/requestAccessToken</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ExchangeCodeServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.auth.ExchangeCodeServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ExchangeCodeServlet</servlet-name>
+        <url-pattern>/exchangeAuthCode</url-pattern>
+    </servlet-mapping>
+
+    <!-- Courses -->
+    
+    <servlet>
+        <servlet-name>ListCoursesServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.ListCoursesServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping> 
+        <servlet-name>ListCoursesServlet</servlet-name>
+        <url-pattern>/listCourses</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GetCourseDetailsServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetCourseDetailsServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>GetCourseDetailsServlet</servlet-name>
+        <url-pattern>/getCourseDetails</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Assignments -->
+    
+    <servlet>
+        <servlet-name>ListAssignmentsServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.ListAssignmentsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListAssignmentsServlet</servlet-name>
+        <url-pattern>/listAssignments</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetAssignmentDetailsServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetAssignmentDetailsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetAssignmentDetailsServlet</servlet-name>
+        <url-pattern>/getAssignmentDetails</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CreateNewAssignmentServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.CreateNewAssignmentServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>CreateNewAssignmentServlet</servlet-name>
+        <url-pattern>/createNewAssignment</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Assignment Submissions -->
+    
+    <servlet>
+        <servlet-name>ListAssignmentSubmissionsServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.ListAssignmentSubmissionsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ListAssignmentSubmissionsServlet</servlet-name>
+        <url-pattern>/listAssignmentSubmissions</url-pattern>
+    </servlet-mapping>
+
 </web-app>

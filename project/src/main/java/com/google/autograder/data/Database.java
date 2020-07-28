@@ -1,136 +1,229 @@
 package com.google.autograder.data;
 
-import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
 import java.util.Arrays;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
+import java.lang.Iterable;
+import java.util.Iterator;
+import java.util.ArrayList;
+import com.google.gson.Gson;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.autograder.data.UserHandler;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import java.util.HashMap;
-import java.util.Map;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+
 
 /** Class containing basic database functionalities. */
-public class Database {
+public final class Database {
 
-  public final DatastoreService datastore;
-  public final List<String> answerGradingStatuses;
+    private static final DatastoreService DATA_STORE = DatastoreServiceFactory.getDatastoreService();
+    private static final Gson GSON = new Gson();
 
-  public Database() {
-      this.datastore = DatastoreServiceFactory.getDatastoreService();
-      this.answerGradingStatuses = Arrays.asList("NOT_GRADED", "GRADED");
-  }
-    
-  //create operations for all entities (with pk and fk restraints)
-  //FOR FUTURE: ensure new objects have diff main names
+    public static final List<String> ANSWER_GRADING_STATUSES = Arrays.asList("NOT_GRADED", "GRADED");
 
-  public void addAssignment(String name, int totalPoints) {
-    Entity assignmentEntity = new Entity("Assignment");
-    assignmentEntity.setProperty("name", name);
-    assignmentEntity.setProperty("points", totalPoints);
-    assignmentEntity.setProperty("status", "SAMPLE_PENDING");
-    this.datastore.put(assignmentEntity);
-  }
+    public static void save(Entity entity) {
+        DATA_STORE.put(entity);
+    }
 
-  public void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+    public static void delete(Entity entity) {
+        DATA_STORE.delete(entity.getKey());
+    }
+
+    public static Iterable<Entity> query(Query query) {
+        return DATA_STORE.prepare(query).asIterable();
+    }
+
+    // Takes in a courses array in JSON format and then stores that courses data for the current user.
+
+    public static void storeCoursesData(String coursesJSON) {
+        String userEmail = UserHandler.getCurrentUserEmail();
+        String userID = UserHandler.getCurrentUserID();
+
+        Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
+        Query coursesQuery = new Query("Course").setFilter(userEmailFilter);
+
+        // TODO: Compare Datastore contents with the courses data from Google Classroom
+
+        for (Entity course : query(coursesQuery)) {
+            delete(course);
+        }
+
+        Iterator coursesIterator;
+
+        try {
+            JSONObject coursesObject = (JSONObject) new JSONParser().parse(coursesJSON);
+            JSONArray courses = (JSONArray) coursesObject.get("courses");
+            coursesIterator = courses.iterator();
+        } catch(ParseException exception) {
+            System.out.println("\n\n" + "Error parsing JSON Course data from the Google Classroom API" + "\n\n");
+            return;
+        }
+        
+        while (coursesIterator.hasNext()) {
+            JSONObject course = (JSONObject) coursesIterator.next();
+            Entity courseEntity = new Entity("Course");
+
+            courseEntity.setProperty("id", course.get("id"));
+            courseEntity.setProperty("name", course.get("name"));
+            courseEntity.setProperty("description", course.get("description"));
+            courseEntity.setProperty("creationTime", course.get("creationTime"));
+            courseEntity.setProperty("userEmail", userEmail);
+            courseEntity.setProperty("userID", userID);
+
+            save(courseEntity);
+        }        
+    }
+
+    // Retrives the current user's courses data as JSON.
+
+    public static String getCoursesData() {
+        String userEmail = UserHandler.getCurrentUserEmail();
+
+        Filter userEmailFilter = new FilterPredicate("userEmail", FilterOperator.EQUAL, userEmail);
+        Query coursesQuery = new Query("Course").setFilter(userEmailFilter).addSort("creationTime", SortDirection.DESCENDING);
+
+        StringBuilder coursesData = new StringBuilder("{\"courses\": [");
+
+        for (Entity course : query(coursesQuery)) {
+            String name = (String) course.getProperty("name");
+            String courseID = (String) course.getProperty("id");
+
+            coursesData.append("{");
+            coursesData.append("\"name\":" + "\"" + name + "\"");
+            coursesData.append(",");
+            coursesData.append("\"id\":" + "\"" + courseID + "\"");
+            coursesData.append("},");
+        }
+        
+        coursesData = new StringBuilder(coursesData.deleteCharAt(coursesData.length() - 1));
+        coursesData.append("]}");
+        
+        return coursesData.toString();
+    }
+
+    // Takes in a course work array in JSON format and then stores the assignments data for the current user.
+
+    public static void storeAssignmentsData(String courseWorkJSON, String courseID) {        
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter);
+
+        // TODO: Compare Datastore contents with the course work data from Google Classroom
+
+        for (Entity assignment : query(assignmentsQuery)) {
+            delete(assignment);
+        }
+
+        Iterator courseWorkIterator;
+
+        try {
+            JSONObject courseWorkObject = (JSONObject) new JSONParser().parse(courseWorkJSON); 
+            JSONArray courseWork = (JSONArray) courseWorkObject.get("courseWork");
+            courseWorkIterator = courseWork.iterator();
+        } catch (ParseException exception) {
+            System.out.println("\n\n" + "Error parsing JSON Course Work data from the Google Classroom API" + "\n\n");
+            return;
+        }
+
+        while (courseWorkIterator.hasNext()) {
+            JSONObject courseWorkTempObject = (JSONObject) courseWorkIterator.next();
+            String courseWorkType = (String) courseWorkTempObject.get("workType");
+
+            if (courseWorkType.equals("ASSIGNMENT")) {
+                JSONObject assignment = courseWorkTempObject;
+                Entity assignmentEntity = new Entity("Assignment");
+
+                assignmentEntity.setProperty("courseID", courseID);
+                assignmentEntity.setProperty("id", assignment.get("id"));
+                assignmentEntity.setProperty("title", assignment.get("title"));
+                assignmentEntity.setProperty("maxPoints", assignment.get("maxPoints"));
+                assignmentEntity.setProperty("description", assignment.get("description"));
+                assignmentEntity.setProperty("creationTime", assignment.get("creationTime"));
+
+                save(assignmentEntity);
+            }
+        }
+    }
+  
+  public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
       questionEntity.setProperty("points", questionPoints);
       questionEntity.setProperty("assignmentKey", assignmentKey);
-      this.datastore.put(questionEntity);
+      save(questionEntity);
   }
-
-  public void addSubmission(Entity assignmentEntity) {
+  
+  public static void addSubmission(Entity assignmentEntity) {
       Entity submissionEntity = new Entity("Submission");
       submissionEntity.setProperty("graded", "NOT_GRADED");
       submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
-      this.datastore.put(submissionEntity);
+      save(submissionEntity);
   }
-
-  //unused right now
-  public void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
+  
+  //unused currently
+  public static void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
       Entity locationEntity = new Entity("Location");
       locationEntity.setProperty("topLeft", topLeft);
       locationEntity.setProperty("bottomRight", bottomRight);
       locationEntity.setProperty("questionKey", questionEntity.getKey());
-      this.datastore.put(locationEntity);
+      save(locationEntity);
   }
-
+  
   // sample add Answer, will change in future
-  public void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
+  public static void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
       Entity answerEntity = new Entity("Answer");
       answerEntity.setProperty("parsedAnswer", parsedAnswer);
       answerEntity.setProperty("score", score);
       answerEntity.setProperty("filePath", filePath);
       answerEntity.setProperty("questionKey", questionKey);
       answerEntity.setProperty("assignmentKey", assignmentKey);
-      this.datastore.put(answerEntity);
+      save(answerEntity);
   }
-
-  public Entity addGroup(int score, String questionKey) {
+  
+  public static Entity addGroup(int score, String questionKey) {
       Entity groupEntity = new Entity("Group");
       groupEntity.setProperty("score", score);
       groupEntity.setProperty("questionKey", questionKey);
-      this.datastore.put(groupEntity);
+      save(groupEntity);
       return groupEntity;
   }
-
+  
   //unused right now
-  public void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
+  public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
       answerEntity.setProperty("groupKey", groupEntity.getKey());
-      this.datastore.put(answerEntity);
+      save(answerEntity);
   }
 
   //unused right now
-  public void updateGradedForAnswer(Entity answerEntity, String status) {
+  public static void updateGradedForAnswer(Entity answerEntity, String status) {
       if (this.answerGradingStatuses.contains(status)) {
         answerEntity.setProperty("graded", status);
-        this.datastore.put(answerEntity); }
+        save(answerEntity); }
   }
-
+  
   //unused right now
-  public void updateScoreForAnswer(Entity groupEntity, int score) {
+  public static void updateScoreForAnswer(Entity groupEntity, int score) {
       groupEntity.setProperty("score", score);
-      this.datastore.put(groupEntity);
+      save(groupEntity);
   }
-
-  public PreparedQuery queryDatabase(Query query) {
-      return this.datastore.prepare(query);
-  }
-
-  public String getAllAssignmentsJSON() {
-    Query query = new Query("Assignment");
-    PreparedQuery results = this.queryDatabase(query);
-    List<Assignment> assignments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      String name = (String) entity.getProperty("name");
-      Long pointsLong = (Long) entity.getProperty("points");
-      int points = Math.toIntExact(pointsLong);
-      String status = (String) entity.getProperty("status");
-      Key key = entity.getKey();
-      Assignment currAssignment = new Assignment(name, points, status, key);
-      boolean test = (currAssignment.key).equals(KeyFactory.keyToString(KeyFactory.stringToKey(currAssignment.key)));
-      assignments.add(currAssignment);
-    }
-    String json = new Gson().toJson(assignments);
-    return json;
-  }
-
-  public String getAllQuestionsJSON(String key) {
+  
+  public static String getAllQuestionsJSON(String key) {
     // query all questions with this key at assignment_id key
     try {
         Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
@@ -146,19 +239,36 @@ public class Database {
             String assignmentKey = (String) entity.getProperty("assignmentKey");
             Key questionKey = entity.getKey();
             Question currQuestion = new Question(name, points, status, assignmentKey, questionKey);
-            questions.add(currQuestion);
-        }
-        String json = new Gson().toJson(questions);
-        return json;
-    }
+            questions.add(currQuestion); }
     catch (Exception e) {
         System.out.println("assignment wasn't found");
         return "error";
     }
-    
   }
+    
+    // Retrives the current user's assignments for a course data as JSON.
 
-  public String getAllAnswersJSON(String assignmentKey, String questionKey) {
+    public static String getAssignmentsData(String courseID) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
+
+        List<Assignment> assignments = new ArrayList<>();
+        for (Entity assignment : query(assignmentsQuery)) {
+            String title = (String) assignment.getProperty("title");
+            String id = (String) assignment.getProperty("id");
+            String description = (String) assignment.getProperty("description");
+            String creationTime = (String) assignment.getProperty("creationTime");
+            int maxPoints = Math.toIntExact( (Long) assignment.getProperty("maxPoints"));
+            Key key = assignment.getKey();
+            Assignment currAssignment = new Assignment(title, id, description, creationTime, courseID, maxPoints, key);
+            assignments.add(currAssignment);
+        }
+
+        String json = new Gson().toJson(assignments);
+        return json;
+    }
+
+  public static String getAllAnswersJSON(String assignmentKey, String questionKey) {
     // query all answers with these keys
     try {
         Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
@@ -187,12 +297,12 @@ public class Database {
     }
   }
 
-  public String createGroups(String assignmentKey, String questionKey) {
+  public static String createGroups(String assignmentKey, String questionKey) {
     Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
     Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
     CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
     Query query = new Query("Answer").setFilter(propertyFilter);
-    PreparedQuery results = this.queryDatabase(query);
+    PreparedQuery results = this.query(query);
 
     Map<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
     // loop through answers and see if parsed answer already exists. if so, add answer entity to arraylist. if not exists, init new array and add
@@ -226,7 +336,7 @@ public class Database {
             currAnswer.addGroup(groupKey);
             System.out.println(currAnswer.getGroupKey());
             answer.setProperty("groupKey", currAnswer.getGroupKey());
-            this.datastore.put(answer);
+            save(answer);
             answerList.add(currAnswer);
         }
         groups.put(group, answerList);
@@ -236,13 +346,85 @@ public class Database {
     return json;
   }
 
-  //get all submissions for an assignment
 
-  //get all answers for a question
+    public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+        Entity questionEntity = new Entity("Question");
+        questionEntity.setProperty("name", questionName);
+        questionEntity.setProperty("type", questionType);
+        questionEntity.setProperty("points", questionPoints);
+        questionEntity.setProperty("assignmentKey", assignmentKey);
+        save(questionEntity);
+    }
 
-  //set/edit location for a question
+    public static void addSubmission(Entity assignmentEntity) {
+        Entity submissionEntity = new Entity("Submission");
+        submissionEntity.setProperty("graded", "NOT_GRADED");
+        submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
+        save(submissionEntity);
+    }
 
-  //get all groups for a question
+    public static void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
+        Entity locationEntity = new Entity("Location");
+        locationEntity.setProperty("topLeft", topLeft);
+        locationEntity.setProperty("bottomRight", bottomRight);
+        locationEntity.setProperty("questionKey", questionEntity.getKey());
+        save(locationEntity);
+    }
 
-  //change answer's group
+    public static void addAnswer(Entity questionEntity, Entity submissionEntity, String parsedAnswer, int points) {
+        Entity answerEntity = new Entity("Answer");
+        answerEntity.setProperty("parsedAnswer", parsedAnswer);
+        answerEntity.setProperty("points", points);
+        answerEntity.setProperty("graded", "NOT_GRADED");
+        answerEntity.setProperty("questionKey", questionEntity.getKey());
+        answerEntity.setProperty("submissionKey", submissionEntity.getKey());
+        save(answerEntity);
+    }
+
+    public static void addGroup(Entity questionEntity) {
+        Entity groupEntity = new Entity("Group");
+        groupEntity.setProperty("questionKey", questionEntity.getKey());
+        save(groupEntity);
+    }
+
+    public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
+        answerEntity.setProperty("groupKey", groupEntity.getKey());
+        save(answerEntity);
+    }
+    
+    public static void updateGradedForAnswer(Entity answerEntity, String status) {
+        if (ANSWER_GRADING_STATUSES.contains(status)) {
+            answerEntity.setProperty("graded", status);
+            save(answerEntity);
+        }
+    }
+
+    public static void updateScoreForAnswer(Entity groupEntity, int score) {
+        groupEntity.setProperty("score", score);
+        save(groupEntity);
+    }
+
+    public static String getAllQuestionsJSON(String key) {
+        // query all questions with this key at assignment_id key
+        if (key != null) {
+            Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
+            Query questionsQuery = new Query("Question").setFilter(propertyFilter);
+            List<Question> questions = new ArrayList<>();
+            
+            for (Entity entity : query(questionsQuery)) {
+                String name = (String) entity.getProperty("name");
+                Long pointsLong = (Long) entity.getProperty("points");
+                int points = Math.toIntExact(pointsLong);
+                String status = (String) entity.getProperty("status");
+                String assignmentKey = (String) entity.getProperty("assignmentKey");
+                Question currentQuestion = new Question(name, points, status, assignmentKey);
+                questions.add(currentQuestion);
+            }
+            
+            return GSON.toJson(questions);
+        }
+        
+        return GSON.toJson("");
+    }
+
 }

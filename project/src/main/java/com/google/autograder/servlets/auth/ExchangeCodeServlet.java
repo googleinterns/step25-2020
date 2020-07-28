@@ -13,21 +13,18 @@ import java.net.MalformedURLException;
 import javax.servlet.http.HttpServlet;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
+import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
-import com.google.autograder.servlets.helpers.Services;
+import com.google.autograder.servlets.helpers.Client;
 
-
-@WebServlet("/exchangeAuthCode")
+// @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
-
-    private static final String CLIENT_ID = "361755208772-l0oo78304ot5ded6rb0tgbhjhrqgmc53.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "jbzCa4-vkwu394TEk9PEnqNj";
-
-    private static String HOST_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev";
+    
     private static String ACCESS_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
     private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
     private static String GRANT_TYPE = "authorization_code";
@@ -35,11 +32,13 @@ public final class ExchangeCodeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String requestURL = (String) request.getHeader("Referer");
+        String baseURL = (String) request.getParameter("baseURL");
+
         String authCode = requestURL.substring (requestURL.indexOf("&code=") + 6, requestURL.indexOf("&scope="));
 
         if (authCode != null && authCode.length() > 0) {
             try {
-                byte[] postBodyData = buildPostBody(authCode).getBytes(StandardCharsets.UTF_8);
+                byte[] postBodyData = buildPostBody(authCode, baseURL).getBytes(StandardCharsets.UTF_8);
                 HttpURLConnection connection = buildHttpURLConnection(postBodyData.length);
                 connection.getOutputStream().write(postBodyData);
                 int responseCode = connection.getResponseCode();
@@ -49,11 +48,11 @@ public final class ExchangeCodeServlet extends HttpServlet {
 
                     AccessTokenResponse accessTokenResponse = AccessTokenResponse.getAccessTokenResponseObjectFromJSON(json);
 
-                    String userEmail = Services.USER_SERVICE.getCurrentUser().getEmail();
+                    String userEmail = UserHandler.getCurrentUserEmail();
 
                     Entity accessTokenResponseEntity = AccessTokenResponse.createDatastoreAccessTokenResponseEntity(accessTokenResponse, userEmail);
                     
-                    Services.DATA_STORE.put(accessTokenResponseEntity);
+                    Database.save(accessTokenResponseEntity);
 
                 } else {
                     System.out.println("\n" + "INVALID RESPONSE CODE : " + responseCode);
@@ -68,16 +67,16 @@ public final class ExchangeCodeServlet extends HttpServlet {
             System.out.println("\n" + "INVALID AUTH CODE : " + authCode);
         }
 
-        response.setHeader("next-page", (HOST_URL + "/pages/courses.html"));
+        response.setHeader("next-page", "/pages/courses.html");
     }
 
-    private String buildPostBody(String authCode) throws UnsupportedEncodingException {
+    private String buildPostBody(String authCode, String baseURL) throws UnsupportedEncodingException {
         StringBuilder postBody = new StringBuilder();
         
         postBody.append("code=" + authCode);
-        postBody.append("&client_id=" + URLEncoder.encode(CLIENT_ID, API.UTF_8));
-        postBody.append("&client_secret=" + URLEncoder.encode(CLIENT_SECRET, API.UTF_8));
-        postBody.append("&redirect_uri=" + URLEncoder.encode((HOST_URL + REDIRECT_URI), API.UTF_8));
+        postBody.append("&client_id=" + URLEncoder.encode(Client.CLIENT_ID, API.UTF_8));
+        postBody.append("&client_secret=" + URLEncoder.encode(Client.CLIENT_SECRET, API.UTF_8));
+        postBody.append("&redirect_uri=" + URLEncoder.encode(baseURL + REDIRECT_URI, API.UTF_8));
         postBody.append("&grant_type=" + URLEncoder.encode(GRANT_TYPE, API.UTF_8));
 
         return postBody.toString();
