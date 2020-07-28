@@ -41,7 +41,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
-
+        
         String endpoint = END_POINT.replace("{courseId}", courseID);
         endpoint = endpoint.replace("{courseWorkId}", assignmentID);
         endpoint = endpoint += "?key=" + API.API_KEY;
