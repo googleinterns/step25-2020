@@ -19,15 +19,13 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @WebServlet("/group")
 public final class GroupServlet extends HttpServlet {
 
-  private Database d = new Database();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // get all the answer entities based on answer + question keys
     String assignmentKey = request.getParameter("assignment-key");
     String questionKey = request.getParameter("question-key");
 
-    String json = d.createGroups(assignmentKey, questionKey);
+    String json = Database.createGroups(assignmentKey, questionKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }

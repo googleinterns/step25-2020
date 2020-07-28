@@ -19,12 +19,10 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @WebServlet("/question")
 public final class QuestionServlet extends HttpServlet {
 
-  private Database d = new Database();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String assignmentKey = request.getParameter("assignment-key");
-    String json = d.getAllQuestionsJSON(assignmentKey);
+    String json = Database.getAllQuestionsJSON(assignmentKey);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
