@@ -1,5 +1,5 @@
-async function requestAccessTokenReceiveAuthCode() {
-    const servletURL = "/requestAccessToken";
+async function requestAccessTokenReceiveAuthCode(baseURL) {
+    const servletURL = `/requestAccessToken?baseURL=${baseURL}`;
 
     let response = await fetch(servletURL, {
         method: "GET",
@@ -11,8 +11,8 @@ async function requestAccessTokenReceiveAuthCode() {
     window.location.replace(nextPage);
 }
 
-async function exchangeAuthCodeForAccessToken() {
-    const servletURL = "/exchangeAuthCode";
+async function exchangeAuthCodeForAccessToken(baseURL) {
+    const servletURL = `/exchangeAuthCode?baseURL=${baseURL}`;
     
     let response = await fetch(servletURL, {
         method: "GET",
@@ -24,18 +24,15 @@ async function exchangeAuthCodeForAccessToken() {
     window.location.replace(nextPage);
 }
 
-function checkState() {
-    var url = window.location.href;
+async function checkState() {
+    const baseURL = window.location.protocol + "//" + window.location.hostname;
+    const url = window.location.href;
 
-    if (url.indexOf("?state=auth_code_received") != -1) {
-        return true;
+    if (url.indexOf("?state=auth_code_received") == -1) {
+        requestAccessTokenReceiveAuthCode(baseURL);
     } else {
-        return false;
+        exchangeAuthCodeForAccessToken(baseURL);
     }
 }
 
-if (checkState()) {
-    exchangeAuthCodeForAccessToken();
-} else {
-    requestAccessTokenReceiveAuthCode();
-}
+checkState();
