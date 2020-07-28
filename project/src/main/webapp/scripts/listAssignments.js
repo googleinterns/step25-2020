@@ -1,5 +1,6 @@
 async function getAssignments() {
-    let servletURL = "/listAssignments";
+    let courseID = new URLSearchParams(window.location.search).get("courseID");
+    let servletURL = `/listAssignments?courseID=${courseID}`;
 
     let response = await fetch(servletURL, {
         method: "GET",
@@ -44,7 +45,7 @@ function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assign
     submissionsCell.appendChild(submissionsText);
     percentageGradedCell.appendChild(percentageGradedText);
 
-    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}`;
+    assignmentLink.href = `/pages/assignment.html?courseID=${courseID}&assignmentID=${assignmentID}`;
 
     assignmentLink.appendChild(assignmentNameCell);
 
