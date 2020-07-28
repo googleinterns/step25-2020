@@ -28,7 +28,7 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestURL = (String) request.getHeader("Referer");
-        int courseIDIndex = requestURL.indexOf("?courseID=") + 10;
+        int courseIDIndex = request.getParameter("courseID");
         String courseID = requestURL.substring(courseIDIndex);
 
         String authorization = API.getCurrentUserAPIAuthorization();

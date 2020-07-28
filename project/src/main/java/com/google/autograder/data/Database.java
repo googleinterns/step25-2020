@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
@@ -172,6 +173,10 @@ public final class Database {
             assignmentsData.append("\"courseId\":" + "\"" + courseID + "\"");
             assignmentsData.append(",");
             assignmentsData.append("\"description\":" + "\"" + assignment.getProperty("description") + "\"");
+            assignmentsData.append(",");
+            assignmentsData.append("\"creationTime\":" + "\"" + assignment.getProperty("creationTime") + "\"");
+            assignmentsData.append(",");
+            assignmentsData.append("\"key\":" + "\"" + KeyFactory.keyToString(assignment.getKey()) + "\"");
             assignmentsData.append("},");
         }
 
@@ -261,7 +266,7 @@ public final class Database {
             Assignment currentAssignment = new Assignment(name, points, status, entity.getKey());
             assignments.add(currentAssignment);
         }
-
+        System.out.println("assignments json get");
         return GSON.toJson(assignments);
     }
 

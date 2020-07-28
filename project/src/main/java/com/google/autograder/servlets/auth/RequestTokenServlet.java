@@ -21,7 +21,7 @@ import com.google.autograder.servlets.helpers.Client;
 // @WebServlet("/requestAccessToken")
 public final class RequestTokenServlet extends HttpServlet {
 
-    private static String BASE_URL = "https://8080-778d1d95-8447-4f8a-990b-b90da194d107.us-east1.cloudshell.dev"; // "https://step25-2020.uc.r.appspot.com"; 
+    private static String BASE_URL = "https://8080-b05063a2-6285-476f-bee1-4e6145c2af2b.us-west1.cloudshell.dev"; // "https://step25-2020.uc.r.appspot.com"; 
     private static String REDIRECT_URI = "/pages/auth/googleAuthenticator.html";
 
     private static String AUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
