@@ -167,6 +167,7 @@ public final class Database {
       questionEntity.setProperty("points", questionPoints);
       questionEntity.setProperty("assignmentKey", assignmentKey);
       save(questionEntity);
+      System.out.println("question " + questionName + " has been added");
   }
   
   
