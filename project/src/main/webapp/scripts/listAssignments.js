@@ -12,8 +12,7 @@ async function getAssignments() {
     if (redirect != null) {
         window.location.replace(redirect);
     } else {
-        let assignmentsJSON = await response.json();
-        let assignmentList = assignmentsJSON["courseWork"];
+        let assignmentList = await response.json();
         let assignmentTable = document.getElementById("assignments-table-body");
 
         let url = window.location.href;

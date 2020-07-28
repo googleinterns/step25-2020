@@ -166,14 +166,13 @@ public final class Database {
 
         List<Assignment> assignments = new ArrayList<>();
         for (Entity assignment : query(assignmentsQuery)) {
-            String title = assignment.getProperty("title");
-            String id = assignment.getProperty("id");
-            String description = assignment.getProperty("description");
-            String creationTime = assignment.getProperty("creationTime");
-            String courseID = assignment.getProperty("courseID");
+            String title = (String) assignment.getProperty("title");
+            String id = (String) assignment.getProperty("id");
+            String description = (String) assignment.getProperty("description");
+            String creationTime = (String) assignment.getProperty("creationTime");
             int maxPoints = Math.toIntExact( (Long) assignment.getProperty("maxPoints"));
             Key key = assignment.getKey();
-            currAssignment = new Assignment(title, id, description, creationTime, courseID, maxPoints, key)
+            Assignment currAssignment = new Assignment(title, id, description, creationTime, courseID, maxPoints, key);
             assignments.add(currAssignment);
         }
 
