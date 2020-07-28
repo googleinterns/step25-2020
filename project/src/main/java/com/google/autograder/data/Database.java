@@ -176,20 +176,9 @@ public final class Database {
             currAssignment = new Assignment(title, id, description, creationTime, courseID, maxPoints, key)
             assignments.add(currAssignment);
         }
-        
+
         String json = new Gson().toJson(assignments);
         return json;
-    }
-
-    // Create operations for all entities (with pk and fk restraints)
-    // TODO: ensure new objects have diff main names
-    
-    public static void addAssignment(String name, int totalPoints) {
-        Entity assignmentEntity = new Entity("Assignment");
-        assignmentEntity.setProperty("name", name);
-        assignmentEntity.setProperty("points", totalPoints);
-        assignmentEntity.setProperty("status", "SAMPLE_PENDING");
-        save(assignmentEntity);
     }
 
     public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
@@ -249,22 +238,6 @@ public final class Database {
         save(groupEntity);
     }
 
-    public static String getAllAssignmentsJSON() {
-        Query assignmentsQuery = new Query("Assignment");
-        List<Assignment> assignments = new ArrayList<>();
-        
-        for (Entity entity : query(assignmentsQuery)) {
-            String name = (String) entity.getProperty("name");
-            Long pointsLong = (Long) entity.getProperty("points");
-            int points = Math.toIntExact(pointsLong);
-            String status = (String) entity.getProperty("status");
-            Assignment currentAssignment = new Assignment(name, points, status, entity.getKey());
-            assignments.add(currentAssignment);
-        }
-        System.out.println("assignments json get");
-        return GSON.toJson(assignments);
-    }
-
     public static String getAllQuestionsJSON(String key) {
         // query all questions with this key at assignment_id key
         if (key != null) {
@@ -288,13 +261,4 @@ public final class Database {
         return GSON.toJson("");
     }
 
-    // Get all submissions for an assignment
-
-    // Get all answers for a question
-
-    // Set/edit location for a question
-
-    // Get all groups for a question
-
-    // Change answer's group
 }
