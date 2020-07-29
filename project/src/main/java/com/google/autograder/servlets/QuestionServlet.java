@@ -16,7 +16,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-@WebServlet("/question")
+//@WebServlet("/question")
 public final class QuestionServlet extends HttpServlet {
 
   @Override

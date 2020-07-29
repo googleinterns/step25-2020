@@ -34,8 +34,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.Map;
 import java.util.HashMap;
 
-@WebServlet("/manageBox")
-public class manageBoxServlet extends HttpServlet {
+//@WebServlet("/manageBox")
+public class ManageBoxServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
@@ -81,7 +81,7 @@ public class manageBoxServlet extends HttpServlet {
 
     Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
 
-    response.sendRedirect("/manageBox");
+    response.sendRedirect("/ManageBox");
   }
 
 }
