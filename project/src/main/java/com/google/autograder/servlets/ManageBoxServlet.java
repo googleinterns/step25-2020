@@ -34,7 +34,6 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.Map;
 import java.util.HashMap;
 
-// @WebServlet("/manageBox")
 public class ManageBoxServlet extends HttpServlet {
   
   @Override
