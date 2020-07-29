@@ -58,7 +58,7 @@ public class ManageBoxServlet extends HttpServlet {
     Entity questionEntity = Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
     Database.addLocation(questionEntity, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
 
-    response.sendRedirect("/ManageBox");
+    response.setStatus(200);
   }
 
 }
