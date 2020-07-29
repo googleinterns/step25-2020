@@ -37,8 +37,6 @@ import java.util.HashMap;
 @WebServlet("/manageBox")
 public class manageBoxServlet extends HttpServlet {
   
-  private Database database = new Database(); // should this be an existing database from elsewhere?
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
       
@@ -81,7 +79,7 @@ public class manageBoxServlet extends HttpServlet {
     int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
     String assignmentKey = request.getParameter("assignment-key");
 
-    database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
+    Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
 
     response.sendRedirect("/manageBox");
   }
