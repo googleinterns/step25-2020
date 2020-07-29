@@ -164,7 +164,7 @@ public final class Database {
         }
     }
   
-  public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+  public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
@@ -172,6 +172,7 @@ public final class Database {
       questionEntity.setProperty("assignmentKey", assignmentKey);
       save(questionEntity);
       System.out.println("question " + questionName + " has been added");
+      return questionEntity;
   }
   
   
