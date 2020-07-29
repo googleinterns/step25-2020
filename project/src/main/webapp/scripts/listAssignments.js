@@ -1,5 +1,6 @@
 async function getAssignments() {
-    let servletURL = "/listAssignments";
+    let courseID = new URLSearchParams(window.location.search).get("courseID");
+    let servletURL = `/listAssignments?courseID=${courseID}`;
 
     let response = await fetch(servletURL, {
         method: "GET",
@@ -11,20 +12,19 @@ async function getAssignments() {
     if (redirect != null) {
         window.location.replace(redirect);
     } else {
-        let assignmentsJSON = await response.json();
-        let assignmentList = assignmentsJSON["courseWork"];
+        let assignmentList = await response.json();
         let assignmentTable = document.getElementById("assignments-table-body");
 
         let url = window.location.href;
         let courseID = url.substring(url.indexOf("?courseID=") + 10);
 
         assignmentList.forEach(assignment => {
-            addAssignmentTableRow(courseID, assignmentTable, assignment.title, assignment.id, 3, 100);
+            addAssignmentTableRow(courseID, assignmentTable, assignment.title, assignment.id,  assignment.key, 3, 100);
         });
     }
 }
 
-function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assignmentID, numberOfSubmissions, percentageGraded) {
+function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assignmentID, key, numberOfSubmissions, percentageGraded) {
     let assignmentLink = document.createElement("a");
     let row = document.createElement("tr");
 
@@ -44,7 +44,7 @@ function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assign
     submissionsCell.appendChild(submissionsText);
     percentageGradedCell.appendChild(percentageGradedText);
 
-    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}`;
+    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}&assignment-key=${key}`;
 
     assignmentLink.appendChild(assignmentNameCell);
 
