@@ -113,7 +113,7 @@
 
     <servlet-mapping>
         <servlet-name>ManageBoxServlet</servlet-name>
-        <url-pattern>/ManageBoxServlet</url-pattern>
+        <url-pattern>/ManageBox</url-pattern>
     </servlet-mapping>
 
 </web-app>
