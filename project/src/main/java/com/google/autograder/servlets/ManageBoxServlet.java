@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.autograder.servlets;
 
 import com.google.autograder.data.Database;
 import com.google.autograder.data.Question;
@@ -34,54 +34,31 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.Map;
 import java.util.HashMap;
 
-@WebServlet("/manageBox")
-public class manageBoxServlet extends HttpServlet {
+// @WebServlet("/manageBox")
+public class ManageBoxServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
-      
-// TODO: rewrite with database class
-    // Query query = new Query("Coordinates");
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // PreparedQuery results = datastore.prepare(query);
-    // Map<String, String> mapCoordinates = new HashMap<>();
-// TODO: put coordinates and points as fields for questionName
-    // for (Entity entity : results.asIterable()) {
-        // String lx = (String) entity.getProperty("lx");
-        // String ly = (String) entity.getProperty("ly");
-        // String rx = (String) entity.getProperty("ry");
-        // String ry = (String) entity.getProperty("ry");
-        // String questionName = (String) entity.getProperty("questionName");
-        // String points = (String) entity.getProperty("question-points");
-
-        // mapCoordinates.put("lx", lx);
-        // mapCoordinates.put("ly", ly);
-        // mapCoordinates.put("rx", rx);
-        // mapCoordinates.put("ry", ry);
-        // mapCoordinates.put("questionName", questionName);
-        // mapCoordinates.put("points", points);
-    // }
-
-    // Gson gson = new Gson();
     response.setContentType("text/html");
     response.getWriter().println("hello world");
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String leftXCoord = request.getParameter("leftXCoord");
-    String topYCoord = request.getParameter("topYCoord");
-    String rightXCoord = request.getParameter("rightXCoord");
-    String lowerYCoord = request.getParameter("lowerYCoord");
+    int leftXCoord = Integer.parseInt(request.getParameter("leftXCoord"));
+    int topYCoord = Integer.parseInt(request.getParameter("topYCoord"));
+    int rightXCoord = Integer.parseInt(request.getParameter("rightXCoord"));
+    int lowerYCoord = Integer.parseInt(request.getParameter("lowerYCoord"));
 
     String questionName = request.getParameter("qName");
     String questionType = request.getParameter("qType");
     int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
     String assignmentKey = request.getParameter("assignment-key");
 
-    Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
+    Entity questionEntity = Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
+    Database.addLocation(questionEntity, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
 
-    response.sendRedirect("/manageBox");
+    response.setStatus(200);
   }
 
 }
