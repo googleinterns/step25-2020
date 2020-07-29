@@ -104,13 +104,6 @@
         <url-pattern>/listAssignmentSubmissions</url-pattern>
     </servlet-mapping>
 
-    <!-- ManageBoxServlet -->
-
-    <servlet>
-        <servlet-name>AnswerServlet</servlet-name>
-        <servlet-class>com.google.autograder.servlets.AnswerServlet</servlet-class>
-    </servlet>
-
     <!-- Answers -->
 
     <servlet>
@@ -131,5 +124,17 @@
         <servlet-name>GroupServlet</servlet-name>
         <servlet-class>com.google.autograder.servlets.GroupServlet</servlet-class>
     </servlet>
+
+    <!-- Manage Box (Outlines) -->
+    
+    <servlet>
+        <servlet-name>ManageBoxServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.ManageBoxServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ManageBoxServlet</servlet-name>
+        <url-pattern>/ManageBox</url-pattern>
+    </servlet-mapping>
 
 </web-app>
