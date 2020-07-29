@@ -57,12 +57,7 @@ public class ManageBoxServlet extends HttpServlet {
 
     Entity questionEntity = Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
     Database.addLocation(questionEntity, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
-
-<<<<<<< HEAD:project/src/main/java/com/google/autograder/servlets/ManageBoxServlet.java
-    response.sendRedirect("/ManageBox");
-=======
     response.setStatus(200);
->>>>>>> cfe823928768a70af94e2394897833b0d49c648d:project/src/main/java/com/google/autograder/servlets/ManageBoxServlet.java
   }
 
 }
