@@ -55,15 +55,8 @@ public class ManageBoxServlet extends HttpServlet {
     int questionPoints = Integer.parseInt(request.getParameter("qPoints"));
     String assignmentKey = request.getParameter("assignment-key");
 
-<<<<<<< HEAD:project/src/main/java/com/google/autograder/servlets/manageBoxServlet.java
-    //TODO: integrate with updated static database
-    
-    Entity newQuestion = database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
-    database.addLocation(newQuestion, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
-=======
     Entity questionEntity = Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
     Database.addLocation(questionEntity, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
->>>>>>> main:project/src/main/java/com/google/autograder/servlets/ManageBoxServlet.java
 
     response.setStatus(200);
   }

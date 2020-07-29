@@ -418,5 +418,3 @@ public final class Database {
     // Change answer's group
 }
 
-}
-
