@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.autograder.servlets;
 
 import com.google.autograder.data.Database;
 import com.google.autograder.data.Question;
@@ -34,35 +34,11 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.Map;
 import java.util.HashMap;
 
-@WebServlet("/manageBox")
-public class manageBoxServlet extends HttpServlet {
+// @WebServlet("/manageBox")
+public class ManageBoxServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
-      
-// TODO: rewrite with database class
-    // Query query = new Query("Coordinates");
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // PreparedQuery results = datastore.prepare(query);
-    // Map<String, String> mapCoordinates = new HashMap<>();
-// TODO: put coordinates and points as fields for questionName
-    // for (Entity entity : results.asIterable()) {
-        // String lx = (String) entity.getProperty("lx");
-        // String ly = (String) entity.getProperty("ly");
-        // String rx = (String) entity.getProperty("ry");
-        // String ry = (String) entity.getProperty("ry");
-        // String questionName = (String) entity.getProperty("questionName");
-        // String points = (String) entity.getProperty("question-points");
-
-        // mapCoordinates.put("lx", lx);
-        // mapCoordinates.put("ly", ly);
-        // mapCoordinates.put("rx", rx);
-        // mapCoordinates.put("ry", ry);
-        // mapCoordinates.put("questionName", questionName);
-        // mapCoordinates.put("points", points);
-    // }
-
-    // Gson gson = new Gson();
     response.setContentType("text/html");
     response.getWriter().println("hello world");
   }
@@ -81,7 +57,7 @@ public class manageBoxServlet extends HttpServlet {
 
     Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
 
-    response.sendRedirect("/manageBox");
+    response.sendRedirect("/ManageBox");
   }
 
 }
