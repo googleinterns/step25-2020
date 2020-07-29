@@ -20,6 +20,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 // @WebServlet("/createNewAssignment")
 public final class CreateNewAssignmentServlet extends HttpServlet {
 
@@ -38,75 +41,61 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
             response.sendRedirect("/index.html");
         }
 
-        byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
-        HttpURLConnection connection = buildHttpURLConnection(courseID, authorization, postBodyData.length);
-        connection.getOutputStream().write(postBodyData);
-        connection.connect();
+        HttpURLConnection connection = null;
+        int responseCode = 200;
 
-        int responseCode = connection.getResponseCode();
+        try {
+            byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
+            connection = buildHttpURLConnection(courseID, authorization, postBodyData.length);
+            connection.getOutputStream().write(postBodyData);
 
-        if (responseCode == 200) {
-            response.sendRedirect("/pages/course.html?courseID=" + courseID);
-        } else {
+            String json = API.getJSON(connection);
+
+            System.out.println("\n\n" + json + "\n\n");
+        } catch(IOException e) {
             // TODO: Handle error response
-            System.out.println("\n\nBAD\tRESPONSE\tCODE:\t" + responseCode + "\n\n");
+        }
+
+        if (connection != null) {
+            responseCode = connection.getResponseCode();
+            response.setHeader("responseCode", String.valueOf(responseCode));
         }
     }
 
-    private int[] getDayMonthYear(String date) {
-        int firstSeperator = date.indexOf('-');
-        int secondSeperator = date.lastIndexOf('-');
-        int[] values = new int[3];
-
-        values[0] = Integer.parseInt(date.substring(firstSeperator + 1, secondSeperator));
-        values[1] = Integer.parseInt(date.substring(secondSeperator + 1));
-        values[2] = Integer.parseInt(date.substring(0, firstSeperator));
-
-        return values;
-    }
-
-    private int[] getHoursMinutes(String time) {
-        int seperator = time.indexOf(':');
-        int[] values = new int[2];
-
-        values[0] = Integer.parseInt(time.substring(0, seperator));
-        values[1] = Integer.parseInt(time.substring(seperator + 1));
-
-        return values;
-    }
-
     private String buildPostBody(HttpServletRequest request) throws UnsupportedEncodingException {
+        String title = request.getParameter("title");
         String description = request.getParameter("description");
         String maxPoints = request.getParameter("maxPoints");
         String dueDate = request.getParameter("dueDate");
-        String dueTime = request.getParameter("dueTime");
-        String title = request.getParameter("title");
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        String day = request.getParameter("day");
+        String hours = request.getParameter("hours");
+        String minutes = request.getParameter("minutes");
 
-        int[] dayMonthYear = getDayMonthYear(dueDate);
-        int[] hoursMinutes = getHoursMinutes(dueTime);
+        JsonObject assignmentObject = new JsonObject();
+        JsonObject dueDateObject = new JsonObject();
+        JsonObject dueTimeObject = new JsonObject();
 
-        StringBuilder postBody = new StringBuilder();
+        assignmentObject.addProperty("title", title);
+        assignmentObject.addProperty("description", description);
+        assignmentObject.addProperty("maxPoints", maxPoints);
+        assignmentObject.addProperty("state", "DRAFT");
+        assignmentObject.addProperty("workType", "ASSIGNMENT");
+        assignmentObject.addProperty("assigneeMode", "ALL_STUDENTS");
+        assignmentObject.addProperty("submissionModificationMode", "MODIFIABLE_UNTIL_TURNED_IN");
 
-        postBody.append("{");
-        postBody.append("\"title\":\"" + title + "\",");
-        postBody.append("\"description\":\"" + description + "\",");
-        postBody.append("\"maxPoints\":" + maxPoints + ",");
-        postBody.append("\"state\":\"" + "DRAFT" + "\",");
-        postBody.append("\"workType\":\"" + "ASSIGNMENT" + "\",");
-        postBody.append("\"assigneeMode\":\"" + "ALL_STUDENTS" + "\",");
-        postBody.append("\"submissionModificationMode\":\"" + "MODIFIABLE_UNTIL_TURNED_IN" + "\",");
-        postBody.append("\"dueDate\":{");
-        postBody.append("\"day\":" + dayMonthYear[0] + ",");
-        postBody.append("\"month\":" + dayMonthYear[1] + ",");
-        postBody.append("\"year\":" + dayMonthYear[2]);
-        postBody.append("},");
-        postBody.append("\"dueTime\":{");
-        postBody.append("\"hours\":" + hoursMinutes[0] + ",");
-        postBody.append("\"minutes\":" + hoursMinutes[1]);
-        postBody.append("}");
-        postBody.append("}");
+        dueDateObject.addProperty("year", year);
+        dueDateObject.addProperty("month", month);
+        dueDateObject.addProperty("day", day);
 
-        return postBody.toString();
+        dueTimeObject.addProperty("hours", hours);
+        dueTimeObject.addProperty("minutes", minutes);
+
+        assignmentObject.add("dueDate", dueDateObject);
+        assignmentObject.add("dueTime", dueTimeObject);
+
+        return assignmentObject.toString();
     }
 
     private HttpURLConnection buildHttpURLConnection(String courseID, String authorization, int postBodyDataLength) throws IOException, MalformedURLException, ProtocolException {
