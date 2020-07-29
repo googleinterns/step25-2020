@@ -210,7 +210,6 @@ public final class Database {
         submissionEntity.setProperty("graded", "NOT_GRADED");
         submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
         submissionEntity.setProperty("blobKey", blobKey);
-      //   Contructor: new BlobKey(String blobKey)
         save(submissionEntity);
     }
 
@@ -300,7 +299,7 @@ public final class Database {
  * this function takes the assignment Key and answer group key as parameters
  * returns list of blobKeys to submissions that fit in specified answer group for specific question
  */ 
-  public String blobkeysFromAnswerGroup(String assignKey, String groupKey) {
+  public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
 
     // query answer entities filtered only in group from parameter
     Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
@@ -318,11 +317,11 @@ public final class Database {
 
     // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
     // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
-    Map<String, String> blobKeyMap = new HashMap<>();
+    Map<Key, String> blobKeyMap = new HashMap<>();
     for (Entity submissionEntity : query(submissionsQuery)) {
         if (submissionKeys.contains(submissionEntity.getKey())) {
             String blobKey = (String) submissionEntity.getProperty("blobKey");
-            String submissionKey = KeyFactory.keyToString(submissionEntity.getKey());
+            Key submissionKey = submissionEntity.getKey();
             blobKeyMap.put(submissionKey, blobKey);
         }
     }
