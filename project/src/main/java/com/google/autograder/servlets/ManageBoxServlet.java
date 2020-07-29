@@ -38,43 +38,10 @@ public class ManageBoxServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {  
-      System.out.println("bruh");   
-    // Query query = new Query("Coordinates");
-
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // PreparedQuery results = datastore.prepare(query);
-    
-    // Map<String, String> mapCoordinates = new HashMap<>();
-    // // TODO: put coordinates and points as fields for questionName
-
-    // for (Entity entity : results.asIterable()) {
-    //     String lx = (String) entity.getProperty("lx");
-    //     String ly = (String) entity.getProperty("ly");
-    //     String rx = (String) entity.getProperty("ry");
-    //     String ry = (String) entity.getProperty("ry");
-    //     // String questionName = (String) entity.getProperty("questionName");
-    //     // String points = (String) entity.getProperty("question-points");
-
-    //     mapCoordinates.put("lx", lx);
-    //     mapCoordinates.put("ly", ly);
-    //     mapCoordinates.put("rx", rx);
-    //     mapCoordinates.put("ry", ry);
-    //     // mapCoordinates.put("questionName", questionName);
-    //     // mapCoordinates.put("points", points);
-    // }
-
-    // Gson gson = new Gson();
-
-    // response.setContentType("application/json");
-    // response.getWriter().println(gson.toJson(mapCoordinates));
-
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-      System.out.println("weewoo");
-
     String lx = request.getParameter("lx");
     String ly = request.getParameter("ly");
     String rx = request.getParameter("rx");
