@@ -52,14 +52,14 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
             String json = API.getJSON(connection);
 
             System.out.println("\n\n" + json + "\n\n");
+
+            responseCode = connection.getResponseCode();
         } catch(IOException e) {
             // TODO: Handle error response
+            responseCode = connection.getResponseCode();   
         }
 
-        if (connection != null) {
-            responseCode = connection.getResponseCode();
-            response.setHeader("responseCode", String.valueOf(responseCode));
-        }
+        response.setHeader("responseCode", String.valueOf(responseCode));
     }
 
     private String buildPostBody(HttpServletRequest request) throws UnsupportedEncodingException {
