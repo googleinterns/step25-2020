@@ -166,7 +166,7 @@ function submitBoxButton() {
   }
 
   if (leftXCoord != undefined && rightXCoord != undefined && qName != ""){
-    var url = `/manageBox?qName=${qName}&qType=${qType}&qPoints=${qPoints}&assignment-key=${assignmentKey}&leftXCoord=${leftXCoord}&topYCoord=${topYCoord}&rightXCoord=${rightXCoord}&lowerYCoord=${lowerYCoord}`;
+    var url = `/ManageBox?qName=${qName}&qType=${qType}&qPoints=${qPoints}&assignment-key=${assignmentKey}&leftXCoord=${leftXCoord}&topYCoord=${topYCoord}&rightXCoord=${rightXCoord}&lowerYCoord=${lowerYCoord}`;
     fetch(url, {method:"POST"});
   }
 }

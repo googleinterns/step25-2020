@@ -160,7 +160,7 @@ public final class Database {
         }
     }
   
-  public static void addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+  public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
       questionEntity.setProperty("name", questionName);
       questionEntity.setProperty("type", questionType);
@@ -168,6 +168,7 @@ public final class Database {
       questionEntity.setProperty("assignmentKey", assignmentKey);
       save(questionEntity);
       System.out.println("question " + questionName + " has been added");
+      return questionEntity;
   }
   
   
@@ -332,10 +333,12 @@ public final class Database {
         save(submissionEntity);
     }
 
-    public static void addLocation(Entity questionEntity, int topLeft, int bottomRight) {
+    public static void addLocation(Entity questionEntity, int leftXCoord, int topYCoord, int rightXCoord, int lowerYCoord) {
         Entity locationEntity = new Entity("Location");
-        locationEntity.setProperty("topLeft", topLeft);
-        locationEntity.setProperty("bottomRight", bottomRight);
+        locationEntity.setProperty("leftXCoord", leftXCoord);
+        locationEntity.setProperty("topYCoord", topYCoord);
+        locationEntity.setProperty("rightXCoord", rightXCoord);
+        locationEntity.setProperty("lowerYCoord", lowerYCoord);
         locationEntity.setProperty("questionKey", questionEntity.getKey());
         save(locationEntity);
     }
