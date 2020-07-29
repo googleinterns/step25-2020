@@ -16,7 +16,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-@WebServlet("/group")
 public final class GroupServlet extends HttpServlet {
 
   @Override

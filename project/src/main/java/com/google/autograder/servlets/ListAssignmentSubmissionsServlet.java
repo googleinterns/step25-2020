@@ -17,7 +17,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-// @WebServlet("/listAssignmentSubmissions")
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
     private static String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";

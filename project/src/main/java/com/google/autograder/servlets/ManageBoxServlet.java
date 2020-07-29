@@ -34,7 +34,6 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.Map;
 import java.util.HashMap;
 
-// @WebServlet("/manageBox")
 public class ManageBoxServlet extends HttpServlet {
   
   @Override
@@ -57,7 +56,6 @@ public class ManageBoxServlet extends HttpServlet {
 
     Entity questionEntity = Database.addQuestion(questionName, questionType, questionPoints, assignmentKey);
     Database.addLocation(questionEntity, leftXCoord, topYCoord, rightXCoord, lowerYCoord);
-
     response.setStatus(200);
   }
 
