@@ -26,6 +26,8 @@ function addSubmissionToTable(table, link) {
     let space = document.createElement("p");
 
     frame.src = link;
+    frame.width="100%";
+    frame.height= "400px";
 
     space.appendChild(frame);
 
