@@ -1,9 +1,17 @@
 package com.google.autograder.servlets;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Iterator;
 import java.io.IOException;
+import java.util.ArrayList;
+import com.google.gson.Gson;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
+import org.json.simple.parser.JSONParser;
+import com.google.gson.reflect.TypeToken;
 import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
@@ -16,16 +24,6 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-
-import java.util.Iterator;
-import com.google.gson.Gson;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
-import java.util.ArrayList;
 
 // @WebServlet("/listAssignmentSubmissions")
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
@@ -69,18 +67,10 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         List<String> driveFilePreviewLinks = new ArrayList<>();
 
         for(String driveFileID : driveFileIDs) {
-            System.out.println("\n" + "GOOGLE DRIVE FILE ID:\t" + driveFileID + "\n");
-
-            String driveFilePreviewLink = DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID);
-
-            driveFilePreviewLinks.add("\"" + driveFilePreviewLink + "\"");
-
-            System.out.println("\n" + driveFilePreviewLink + "\n");
+            driveFilePreviewLinks.add("\"" + DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID) + "\"");
         }
 
         String responseJSON = new Gson().toJson(driveFilePreviewLinks);
-
-        System.out.println("\n" + driveFilePreviewLinks + "\n");
 
         // storeAssignmentSubmissionsData(json, courseID, assignmentID);
         // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
@@ -99,7 +89,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             jsonObject = (JSONObject) new JSONParser().parse(json);
         } catch (Exception e) {
             // handle error
-            return null;
+            return driveFileIDs;
         }
 
         JSONArray studentSubmissionsArray = (JSONArray) jsonObject.get("studentSubmissions");

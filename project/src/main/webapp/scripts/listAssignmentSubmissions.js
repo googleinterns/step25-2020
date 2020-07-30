@@ -12,8 +12,28 @@ async function listAssignmentSubmissions() {
 
     const json = await response.json();
 
-    console.log(json);
+    const table = document.getElementById("submissions-table");
+    json.forEach(
+        function(link) {
+            addSubmissionToTable(table, link);
+        }
+    );
+}
 
+function addSubmissionToTable(table, link) {
+    let frame = document.createElement("iframe");
+    let content = document.createElement("div");
+    let space = document.createElement("p");
+
+    frame.src = link;
+
+    space.appendChild(frame);
+
+    content.appendChild(document.createElement("br"));
+    content.appendChild(space);
+    content.appendChild(document.createElement("br"));
+
+    table.appendChild(content);
 }
 
 listAssignmentSubmissions();
