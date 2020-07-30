@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import com.google.autograder.data.Database;
+import com.google.autograder.data.Detect;
 import com.google.autograder.data.Answer;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -40,7 +41,9 @@ public final class AnswerServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
-  public String parseAnswer(String filePath) {
+  public String parseAnswer(String filePath) throws IOException {
+      Detect d = new Detect();
+      d.detectDocumentText(filePath);
       if (filePath.startsWith("images/e")) {
           return "8";
       }
