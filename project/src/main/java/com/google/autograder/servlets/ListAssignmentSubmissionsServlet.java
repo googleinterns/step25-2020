@@ -17,6 +17,14 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import java.util.Iterator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.util.List;
+import java.util.ArrayList;
+
 // @WebServlet("/listAssignmentSubmissions")
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
@@ -60,6 +68,12 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
         System.out.println("\n\n" + json + "\n\n");
 
+        List<String> driveFileIDs = getDriveFileIDs(json);
+
+        for(String id : driveFileIDs) {
+            System.out.println("GOOGLE DRIVE FILE ID:\t" + id + "\n");
+        }
+
         storeAssignmentSubmissionsData(json, courseID, assignmentID);
         // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
 
@@ -68,6 +82,41 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
                 
         response.getWriter().println(assignmentSubmissionsData);
     }
+
+    private List<String> getDriveFileIDs(String json) {
+        List<String> driveFileIDs = new ArrayList<>();
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = (JSONObject) new JSONParser().parse(json);
+        } catch (Exception e) {
+            // handle error
+            return null;
+        }
+
+        JSONArray studentSubmissionsArray = (JSONArray) jsonObject.get("studentSubmissions");
+        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
+
+        while (studentSubmissionsIterator.hasNext()) {
+            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
+            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
+            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
+
+            if (attachmentsArray != null) {
+                Iterator attachmentsIterator = attachmentsArray.iterator();
+
+                if (attachmentsIterator.hasNext()) {
+                    JSONObject attachment = (JSONObject) attachmentsIterator.next();
+                    JSONObject driveFile = (JSONObject) attachment.get("driveFile");
+
+                    driveFileIDs.add(driveFile.get("id").toString());
+                }
+            }
+        }
+
+        return driveFileIDs;
+    }
+
 
     public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID) {}
 
