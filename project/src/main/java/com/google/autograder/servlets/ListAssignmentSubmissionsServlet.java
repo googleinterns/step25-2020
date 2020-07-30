@@ -47,8 +47,6 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
 
-        response.setContentType("application/json");
-
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
         
@@ -72,18 +70,20 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         parseStudentSubmissionInfo(json, studentNames, studentUserIDs, studentSubmissionDriveFileLinks);
         parseStudentInfo(authorization, courseID, studentUserIDs, studentNames, studentEmails);
 
+        JSONArray jsonArray = new JSONArray();
+
         for (int index = 0; index < studentSubmissionDriveFileLinks.size(); index++) {
             String studentName = studentNames.get(index);
             String studentEmail = studentEmails.get(index);
-            String studentUserID = studentUserIDs.get(index);
             String studentSubmissionDriveFileLink = studentSubmissionDriveFileLinks.get(index);
 
-            System.out.println("\n");
-            System.out.println(studentName);
-            System.out.println(studentEmail);
-            System.out.println(studentUserID);
-            System.out.println(studentSubmissionDriveFileLink);
-            System.out.println("\n");
+            JSONObject studentSubmissionData = new JSONObject();
+
+            studentSubmissionData.put("name", studentName);
+            studentSubmissionData.put("email", studentEmail);
+            studentSubmissionData.put("link", studentSubmissionDriveFileLink);
+
+            jsonArray.add(studentSubmissionData);
         }
 
         // storeAssignmentSubmissionsData(json, courseID, assignmentID);
@@ -92,7 +92,8 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         // String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
         // Database.getAssignmentSubmissionsData(courseID, assignmentID);
                 
-        response.getWriter().println(studentSubmissionDriveFileLinks);
+        response.setContentType("application/json");
+        response.getWriter().println(jsonArray.toString());
     }
 
     private void parseStudentSubmissionInfo(String json, List<String> studentNames, List<String> studentUserIDs, List<String> studentSubmissionDriveFileLinks) {
@@ -101,7 +102,6 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         try {
             jsonObject = (JSONObject) new JSONParser().parse(json);
         } catch (Exception e) {
-            // handle error
             return;
         }
 
@@ -134,7 +134,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             String driveFileID = driveFileObject.get("id").toString();
 
             studentUserIDs.add(studentUserID);
-            studentSubmissionDriveFileLinks.add("\"" + DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID) + "\"");
+            studentSubmissionDriveFileLinks.add(DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID));
         }
     }
 
@@ -162,7 +162,6 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             try {
                 jsonObject = (JSONObject) new JSONParser().parse(json);
             } catch (Exception e) {
-                // handle error
                 continue;
             }
 

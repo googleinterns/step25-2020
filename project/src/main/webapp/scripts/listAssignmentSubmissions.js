@@ -14,23 +14,27 @@ async function listAssignmentSubmissions() {
 
     const table = document.getElementById("submissions-table");
     json.forEach(
-        function(link) {
-            addSubmissionToTable(table, link);
+        function(studentSubmission) {
+            addSubmissionToTable(table, studentSubmission);
         }
     );
 }
 
-function addSubmissionToTable(table, link) {
+function addSubmissionToTable(table, studentSubmission) {
     let frame = document.createElement("iframe");
     let content = document.createElement("div");
     let space = document.createElement("p");
+    let info = document.createElement("h4");
 
-    frame.src = link;
-    frame.width="100%";
+    info.innerText = `${studentSubmission.name} - ${studentSubmission.email}`;
+    frame.src = studentSubmission.link;
     frame.height= "400px";
+    frame.width="100%";
 
     space.appendChild(frame);
 
+    content.appendChild(document.createElement("br"));
+    content.appendChild(info);
     content.appendChild(document.createElement("br"));
     content.appendChild(space);
     content.appendChild(document.createElement("br"));
