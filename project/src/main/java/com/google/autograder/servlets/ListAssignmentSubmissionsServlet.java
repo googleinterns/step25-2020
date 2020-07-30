@@ -18,9 +18,11 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 import java.util.Iterator;
+import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,7 +30,8 @@ import java.util.ArrayList;
 // @WebServlet("/listAssignmentSubmissions")
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
-    private static String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
+    private static String CLASSROOM_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
+    private static String DRIVE_PREVIEW_LINK = "https://drive.google.com/file/d/{fileId}/preview";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -50,37 +53,42 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
         
-        String endpoint = END_POINT.replace("{courseId}", courseID);
-        endpoint = endpoint.replace("{courseWorkId}", assignmentID);
-        endpoint = endpoint += "?key=" + API.API_KEY;
+        String classroomEndpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID);
+        classroomEndpoint = classroomEndpoint.replace("{courseWorkId}", assignmentID);
+        classroomEndpoint = classroomEndpoint += "?key=" + API.API_KEY;
+
+        HttpURLConnection classroomConnection = (HttpURLConnection) new URL(classroomEndpoint).openConnection();
+
+        classroomConnection.setRequestMethod("GET");
+        classroomConnection.setRequestProperty("Accept", "application/json");
+        classroomConnection.setRequestProperty("Authorization", authorization);
         
-        System.out.println("\n\nCourse ID:\t\t" + courseID + "\n\n");
-        System.out.println("\n\nAssignment ID:\t\t" + assignmentID + "\n\n");
-        System.out.println("\n\nRequest Endpoint:\t" + endpoint + "\n\n");
-
-        HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
-
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("Authorization", authorization);
-        
-        String json = API.getJSON(connection);
-
-        System.out.println("\n\n" + json + "\n\n");
+        String json = API.getJSON(classroomConnection);
 
         List<String> driveFileIDs = getDriveFileIDs(json);
+        List<String> driveFilePreviewLinks = new ArrayList<>();
 
-        for(String id : driveFileIDs) {
-            System.out.println("GOOGLE DRIVE FILE ID:\t" + id + "\n");
+        for(String driveFileID : driveFileIDs) {
+            System.out.println("\n" + "GOOGLE DRIVE FILE ID:\t" + driveFileID + "\n");
+
+            String driveFilePreviewLink = DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID);
+
+            driveFilePreviewLinks.add("\"" + driveFilePreviewLink + "\"");
+
+            System.out.println("\n" + driveFilePreviewLink + "\n");
         }
 
-        storeAssignmentSubmissionsData(json, courseID, assignmentID);
+        String responseJSON = new Gson().toJson(driveFilePreviewLinks);
+
+        System.out.println("\n" + driveFilePreviewLinks + "\n");
+
+        // storeAssignmentSubmissionsData(json, courseID, assignmentID);
         // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
 
-        String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
+        // String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
         // Database.getAssignmentSubmissionsData(courseID, assignmentID);
                 
-        response.getWriter().println(assignmentSubmissionsData);
+        response.getWriter().println(driveFilePreviewLinks);
     }
 
     private List<String> getDriveFileIDs(String json) {
@@ -95,21 +103,24 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         }
 
         JSONArray studentSubmissionsArray = (JSONArray) jsonObject.get("studentSubmissions");
-        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
 
-        while (studentSubmissionsIterator.hasNext()) {
-            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
-            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
-            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
+        if (studentSubmissionsArray.iterator() != null) {
+            Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
 
-            if (attachmentsArray != null) {
-                Iterator attachmentsIterator = attachmentsArray.iterator();
+            while (studentSubmissionsIterator.hasNext()) {
+                JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
+                JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
+                JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
 
-                if (attachmentsIterator.hasNext()) {
-                    JSONObject attachment = (JSONObject) attachmentsIterator.next();
-                    JSONObject driveFile = (JSONObject) attachment.get("driveFile");
+                if (attachmentsArray != null) {
+                    Iterator attachmentsIterator = attachmentsArray.iterator();
 
-                    driveFileIDs.add(driveFile.get("id").toString());
+                    if (attachmentsIterator.hasNext()) {
+                        JSONObject attachment = (JSONObject) attachmentsIterator.next();
+                        JSONObject driveFile = (JSONObject) attachment.get("driveFile");
+
+                        driveFileIDs.add(driveFile.get("id").toString());
+                    }
                 }
             }
         }
