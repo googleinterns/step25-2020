@@ -29,7 +29,9 @@ public final class RequestTokenServlet extends HttpServlet {
 
     private static String SCOPE = "https://www.googleapis.com/auth/classroom.courses "
                                 + "https://www.googleapis.com/auth/classroom.coursework.students "
-                                + "https://www.googleapis.com/auth/drive";
+                                + "https://www.googleapis.com/auth/drive "
+                                + "https://www.googleapis.com/auth/classroom.rosters "
+                                + "https://www.googleapis.com/auth/classroom.profile.emails";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

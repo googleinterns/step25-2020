@@ -29,6 +29,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
     private static String CLASSROOM_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
+    private static String STUDENT_INFO_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/students/{userId}";    
     private static String DRIVE_PREVIEW_LINK = "https://drive.google.com/file/d/{fileId}/preview";
 
     @Override
@@ -64,30 +65,26 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String json = API.getJSON(classroomConnection);
 
         List<String> studentNames = new ArrayList<>();
+        List<String> studentEmails = new ArrayList<>();
         List<String> studentUserIDs = new ArrayList<>();
         List<String> studentSubmissionDriveFileLinks = new ArrayList<>();
 
         parseStudentSubmissionInfo(json, studentNames, studentUserIDs, studentSubmissionDriveFileLinks);
+        parseStudentInfo(authorization, courseID, studentUserIDs, studentNames, studentEmails);
 
         for (int index = 0; index < studentSubmissionDriveFileLinks.size(); index++) {
-            // String studentName = studentNames.get(index);
+            String studentName = studentNames.get(index);
+            String studentEmail = studentEmails.get(index);
             String studentUserID = studentUserIDs.get(index);
             String studentSubmissionDriveFileLink = studentSubmissionDriveFileLinks.get(index);
 
-            System.out.println("FAKE NAME FOR NOW");
+            System.out.println("\n");
+            System.out.println(studentName);
+            System.out.println(studentEmail);
             System.out.println(studentUserID);
             System.out.println(studentSubmissionDriveFileLink);
             System.out.println("\n");
         }
-
-        List<String> driveFileIDs = getDriveFileIDs(json);
-        List<String> driveFilePreviewLinks = new ArrayList<>();
-
-        for(String driveFileID : driveFileIDs) {
-            driveFilePreviewLinks.add("\"" + DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID) + "\"");
-        }
-
-        String responseJSON = new Gson().toJson(driveFilePreviewLinks);
 
         // storeAssignmentSubmissionsData(json, courseID, assignmentID);
         // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
@@ -95,7 +92,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         // String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
         // Database.getAssignmentSubmissionsData(courseID, assignmentID);
                 
-        response.getWriter().println(driveFilePreviewLinks);
+        response.getWriter().println(studentSubmissionDriveFileLinks);
     }
 
     private void parseStudentSubmissionInfo(String json, List<String> studentNames, List<String> studentUserIDs, List<String> studentSubmissionDriveFileLinks) {
@@ -138,48 +135,45 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
             studentUserIDs.add(studentUserID);
             studentSubmissionDriveFileLinks.add("\"" + DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID) + "\"");
-
-            // Get student name
         }
     }
 
-    private List<String> getDriveFileIDs(String json) {
-        List<String> driveFileIDs = new ArrayList<>();
-        JSONObject jsonObject = null;
+    private void parseStudentInfo(String authorization, String courseID, List<String> studentUserIDs, List<String> studentNames, List<String> studentEmails) {
+        for (String studentUserID : studentUserIDs) {
+            String studentInfoEndpoint = STUDENT_INFO_END_POINT.replace("{courseId}", courseID);
+            studentInfoEndpoint = studentInfoEndpoint.replace("{userId}", studentUserID);
+            studentInfoEndpoint = studentInfoEndpoint += "?key=" + API.API_KEY;
 
-        try {
-            jsonObject = (JSONObject) new JSONParser().parse(json);
-        } catch (Exception e) {
-            // handle error
-            return driveFileIDs;
-        }
+            String json = null;
+            JSONObject jsonObject = null;
 
-        JSONArray studentSubmissionsArray = (JSONArray) jsonObject.get("studentSubmissions");
-
-        if (studentSubmissionsArray.iterator() != null) {
-            Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
-
-            while (studentSubmissionsIterator.hasNext()) {
-                JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
-                JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
-                JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
-
-                if (attachmentsArray != null) {
-                    Iterator attachmentsIterator = attachmentsArray.iterator();
-
-                    if (attachmentsIterator.hasNext()) {
-                        JSONObject attachment = (JSONObject) attachmentsIterator.next();
-                        JSONObject driveFile = (JSONObject) attachment.get("driveFile");
-
-                        driveFileIDs.add(driveFile.get("id").toString());
-                    }
-                }
+            try {
+                HttpURLConnection studentInfoConnection = (HttpURLConnection) new URL(studentInfoEndpoint).openConnection();
+                
+                studentInfoConnection.setRequestMethod("GET");
+                studentInfoConnection.setRequestProperty("Accept", "application/json");
+                studentInfoConnection.setRequestProperty("Authorization", authorization);
+                
+                json = API.getJSON(studentInfoConnection);
+            } catch(Exception e) {
+                continue;
             }
+
+            try {
+                jsonObject = (JSONObject) new JSONParser().parse(json);
+            } catch (Exception e) {
+                // handle error
+                continue;
+            }
+
+            JSONObject profile = (JSONObject) jsonObject.get("profile");
+            String emailAddress = profile.get("emailAddress").toString();
+            String fullName = ((JSONObject) profile.get("name")).get("fullName").toString();
+
+            studentNames.add(fullName);
+            studentEmails.add(emailAddress);
         }
-
-        return driveFileIDs;
     }
-
 
     public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID) {}
 
