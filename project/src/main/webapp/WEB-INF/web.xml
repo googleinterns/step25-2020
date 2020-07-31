@@ -38,6 +38,18 @@
         <url-pattern>/exchangeAuthCode</url-pattern>
     </servlet-mapping>
 
+    <!-- Students -->
+
+    <servlet>
+        <servlet-name>GetStudentServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetStudentServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>GetStudentServlet</servlet-name>
+        <url-pattern>/getStudent</url-pattern>
+    </servlet-mapping>
+
     <!-- Courses -->
     
     <servlet>
