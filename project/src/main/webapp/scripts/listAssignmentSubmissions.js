@@ -1,9 +1,10 @@
 async function listAssignmentSubmissions() {
     const urlParameters = new URLSearchParams(window.location.search);
+    const assignmentKey = urlParameters.get("assignmentKey");
     const assignmentID = urlParameters.get("assignmentID");
     const courseID = urlParameters.get("courseID");
 
-    const servletURL = `/listAssignmentSubmissions?courseID=${courseID}&assignmentID=${assignmentID}`;
+    const servletURL = `/listAssignmentSubmissions?courseID=${courseID}&assignmentID=${assignmentID}&assignmentKey=${assignmentKey}`;
 
     const response = await fetch(servletURL, {
         method: "GET",

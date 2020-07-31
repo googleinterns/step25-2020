@@ -30,10 +30,9 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
 
-        String requestURL = request.getHeader("referer");
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
-        String assignmentKey = requestURL.substring(requestURL.indexOf("assignmentKey=") + 14);
+        String assignmentKey = request.getParameter("assignmentKey");
 
         String classroomEndpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID);
         classroomEndpoint = classroomEndpoint.replace("{courseWorkId}", assignmentID);
