@@ -39,6 +39,7 @@ public final class GetStudentServlet extends HttpServlet {
                 
             json = API.getJSON(connection);
         } catch(Exception e) {
+            e.printStackTrace();
             return;
         }
 
