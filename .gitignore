@@ -48,3 +48,6 @@ buildNumber.properties
 ### Credentials ###
 src/main/resources/auth/
 credentials.json
+
+src/main/resources/
+serviceaccount.json
