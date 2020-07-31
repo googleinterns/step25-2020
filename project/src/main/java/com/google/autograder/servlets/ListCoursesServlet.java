@@ -28,7 +28,6 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.autograder.servlets.auth.AccessTokenResponse;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-// @WebServlet("/listCourses")
 public final class ListCoursesServlet extends HttpServlet {
 
     private static String END_POINT = "https://classroom.googleapis.com/v1/courses";

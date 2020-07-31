@@ -1,10 +1,11 @@
 package com.google.autograder.data;
 
+import java.util.Map;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Arrays;
-import java.lang.Iterable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.lang.Iterable;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
@@ -226,9 +227,10 @@ public final class Database {
     }
   }
     
+
     // Retrives the current user's assignments for a course data as JSON.
 
-    public static String getAssignmentsData(String courseID) {
+    public static String getAssignmentsData (String courseID) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
 
@@ -323,10 +325,11 @@ public final class Database {
   }
 
 
-    public static void addSubmission(Entity assignmentEntity) {
+    public static void addSubmission(Entity assignmentEntity, String blobKey) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
         submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
+        submissionEntity.setProperty("blobKey", blobKey);
         save(submissionEntity);
     }
 
@@ -336,7 +339,7 @@ public final class Database {
         locationEntity.setProperty("topYCoord", topYCoord);
         locationEntity.setProperty("rightXCoord", rightXCoord);
         locationEntity.setProperty("lowerYCoord", lowerYCoord);
-        locationEntity.setProperty("questionKey", questionEntity.getKey());
+        locationEntity.setProperty("questionKey", questionEntity.getKey()); 
         save(locationEntity);
     }
 
@@ -363,4 +366,49 @@ public final class Database {
         }
     }
 
+/** 
+ * this function takes the assignment Key and answer group key as parameters
+ * returns list of blobKeys to submissions that fit in specified answer group for specific question
+ */ 
+  public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
+
+    // query answer entities filtered only in group from parameter
+    Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+    Query answersQuery = new Query("Answer").setFilter(groupFilter);    
+    
+    // generate list of submissionKeys for the group
+    List<String> submissionKeys = new ArrayList<>();
+    for (Entity entity : query(answersQuery)) {
+        String submissionKey = (String) entity.getProperty("submissionKey");
+        submissionKeys.add(submissionKey);
+    }  
+
+    // query submissions filtered to the assignment
+    Query submissionsQuery = new Query("Submission");
+
+    // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
+    // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
+    Map<Key, String> blobKeyMap = new HashMap<>();
+    for (Entity submissionEntity : query(submissionsQuery)) {
+        if (submissionKeys.contains(submissionEntity.getKey())) {
+            String blobKey = (String) submissionEntity.getProperty("blobKey");
+            Key submissionKey = submissionEntity.getKey();
+            blobKeyMap.put(submissionKey, blobKey);
+        }
+    }
+
+    String blobKeyJson = new Gson().toJson(blobKeyMap);
+    return blobKeyJson;
+  }
+
+  //get all submissions for an assignment
+
+    // Get all answers for a question
+
+    // Set/edit location for a question
+
+    // Get all groups for a question
+
+    // Change answer's group
 }
+

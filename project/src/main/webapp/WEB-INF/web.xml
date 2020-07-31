@@ -104,6 +104,42 @@
         <url-pattern>/listAssignmentSubmissions</url-pattern>
     </servlet-mapping>
 
+    <!-- Answers -->
+
+    <servlet>
+        <servlet-name>AnswerServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.AnswerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AnswerServlet</servlet-name>
+        <url-pattern>/answer</url-pattern>
+    </servlet-mapping>
+
+    <!-- Questions -->
+    
+    <servlet>
+        <servlet-name>QuestionServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.QuestionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>QuestionServlet</servlet-name>
+        <url-pattern>/question</url-pattern>
+    </servlet-mapping>
+
+    <!-- Groups -->
+    
+    <servlet>
+        <servlet-name>GroupServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GroupServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GroupServlet</servlet-name>
+        <url-pattern>/group</url-pattern>
+    </servlet-mapping>
+
     <!-- Manage Box (Outlines) -->
     
     <servlet>
