@@ -3,10 +3,13 @@ package com.google.autograder.servlets;
 import java.net.URL;
 import java.io.IOException;
 import java.net.URLConnection;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import javax.servlet.http.HttpServlet;
 import java.net.MalformedURLException;
+import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.annotation.WebServlet;
 import java.io.UnsupportedEncodingException;
@@ -48,14 +51,14 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
             String json = API.getJSON(connection);
 
             System.out.println("\n\n" + json + "\n\n");
+
+            responseCode = connection.getResponseCode();
         } catch(IOException e) {
             // TODO: Handle error response
+            responseCode = connection.getResponseCode();   
         }
 
-        if (connection != null) {
-            responseCode = connection.getResponseCode();
-            response.setHeader("responseCode", String.valueOf(responseCode));
-        }
+        response.setHeader("responseCode", String.valueOf(responseCode));
     }
 
     private String buildPostBody(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -69,27 +72,27 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
         String hours = request.getParameter("hours");
         String minutes = request.getParameter("minutes");
 
-        JsonObject assignmentObject = new JsonObject();
-        JsonObject dueDateObject = new JsonObject();
-        JsonObject dueTimeObject = new JsonObject();
+        JSONObject assignmentObject = new JSONObject();
+        JSONObject dueDateObject = new JSONObject();
+        JSONObject dueTimeObject = new JSONObject();
 
-        assignmentObject.addProperty("title", title);
-        assignmentObject.addProperty("description", description);
-        assignmentObject.addProperty("maxPoints", maxPoints);
-        assignmentObject.addProperty("state", "DRAFT");
-        assignmentObject.addProperty("workType", "ASSIGNMENT");
-        assignmentObject.addProperty("assigneeMode", "ALL_STUDENTS");
-        assignmentObject.addProperty("submissionModificationMode", "MODIFIABLE_UNTIL_TURNED_IN");
+        assignmentObject.put("title", title);
+        assignmentObject.put("description", description);
+        assignmentObject.put("maxPoints", maxPoints);
+        assignmentObject.put("state", "DRAFT");
+        assignmentObject.put("workType", "ASSIGNMENT");
+        assignmentObject.put("assigneeMode", "ALL_STUDENTS");
+        assignmentObject.put("submissionModificationMode", "MODIFIABLE_UNTIL_TURNED_IN");
 
-        dueDateObject.addProperty("year", year);
-        dueDateObject.addProperty("month", month);
-        dueDateObject.addProperty("day", day);
+        dueDateObject.put("year", year);
+        dueDateObject.put("month", month);
+        dueDateObject.put("day", day);
 
-        dueTimeObject.addProperty("hours", hours);
-        dueTimeObject.addProperty("minutes", minutes);
+        dueTimeObject.put("hours", hours);
+        dueTimeObject.put("minutes", minutes);
 
-        assignmentObject.add("dueDate", dueDateObject);
-        assignmentObject.add("dueTime", dueTimeObject);
+        assignmentObject.put("dueDate", dueDateObject);
+        assignmentObject.put("dueTime", dueTimeObject);
 
         return assignmentObject.toString();
     }

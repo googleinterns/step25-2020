@@ -44,7 +44,7 @@ function addAssignmentTableRow(courseID, assignmentTable, assignmentName, assign
     submissionsCell.appendChild(submissionsText);
     percentageGradedCell.appendChild(percentageGradedText);
 
-    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}&assignment-key=${key}`;
+    assignmentLink.href = `/pages/assignment.html?assignmentID=${assignmentID}&courseID=${courseID}&assignmentKey=${key}`;
 
     assignmentLink.appendChild(assignmentNameCell);
 

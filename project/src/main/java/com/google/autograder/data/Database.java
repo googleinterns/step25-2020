@@ -1,35 +1,33 @@
 package com.google.autograder.data;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.lang.Iterable;
+import java.util.ArrayList;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import com.google.autograder.data.Submission;
 import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.autograder.data.UserHandler;
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -168,6 +166,93 @@ public final class Database {
                 save(assignmentEntity);
             }
         }
+    }
+
+    public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        // TODO: Compare Datastore contents with the submissions data from Google Classroom
+
+        for (Entity submission : query(submissionsQuery)) {
+            delete(submission);
+        }
+
+        JSONObject submissionsJSONObject = null;
+        
+        try {
+            submissionsJSONObject = (JSONObject) new JSONParser().parse(submissionsJSON);
+        } catch (Exception e) {
+            return;
+        }
+
+        JSONArray studentSubmissionsArray = (JSONArray) submissionsJSONObject.get("studentSubmissions");
+
+        if (studentSubmissionsArray.iterator() == null) {
+            return;
+        }
+
+        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
+        String drivePreviewLink = "https://drive.google.com/file/d/{fileId}/preview";
+        String driveDownloadLink = "https://drive.google.com/uc?export=download&id={fileId}";
+
+        while (studentSubmissionsIterator.hasNext()) {
+            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
+            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
+            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
+            String studentUserID = studentSubmission.get("userId").toString();
+            String submissionID = studentSubmission.get("id").toString();
+
+            if (attachmentsArray == null) {
+                continue;
+            }
+
+            Iterator attachmentsIterator = attachmentsArray.iterator();
+
+            if (!attachmentsIterator.hasNext()) {
+                continue;
+            }
+                
+            JSONObject attachment = (JSONObject) attachmentsIterator.next();
+            JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
+
+            String driveFileID = driveFileObject.get("id").toString();
+            String driveFilePreviewLink = drivePreviewLink.replace("{fileId}", driveFileID);
+            String driveFileDownloadLink = driveDownloadLink.replace("{fileId}", driveFileID);
+
+            Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFilePreviewLink, driveFileDownloadLink);
+
+            addSubmission(submission);
+        }
+    }
+
+    public static String getAssignmentSubmissionsData(String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        List<Submission> submissions = new ArrayList<>();
+
+        for (Entity submissionEntity : query(submissionsQuery)) {
+            Submission submission = new Submission(
+                submissionEntity.getKey().toString(),
+                submissionEntity.getProperty("graded").toString(),
+                submissionEntity.getProperty("userID").toString(),
+                submissionEntity.getProperty("courseID").toString(),
+                submissionEntity.getProperty("assignmentID").toString(),
+                submissionEntity.getProperty("submissionID").toString(),
+                submissionEntity.getProperty("assignmentKey").toString(),
+                submissionEntity.getProperty("driveFilePreviewLink").toString(),
+                submissionEntity.getProperty("driveFileDownloadLink").toString()
+            );
+
+            submissions.add(submission);
+        }
+
+        return new Gson().toJson(submissions);
     }
   
   public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
@@ -336,12 +421,16 @@ public final class Database {
     return json;
   }
 
-
-    public static void addSubmission(Entity assignmentEntity, String blobKey) {
+    public static void addSubmission(Submission submission) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
-        submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
-        submissionEntity.setProperty("blobKey", blobKey);
+        submissionEntity.setProperty("userID", submission.userID);
+        submissionEntity.setProperty("courseID", submission.courseID);
+        submissionEntity.setProperty("assignmentID", submission.assignmentID);
+        submissionEntity.setProperty("submissionID", submission.submissionID);
+        submissionEntity.setProperty("assignmentKey", submission.assignmentKey);
+        submissionEntity.setProperty("driveFilePreviewLink", submission.driveFilePreviewLink);
+        submissionEntity.setProperty("driveFileDownloadLink", submission.driveFileDownloadLink);
         save(submissionEntity);
     }
 

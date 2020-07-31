@@ -4,22 +4,16 @@ import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.data.UserHandler;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
-    private static String END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
+    private static String CLASSROOM_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -36,42 +30,28 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
 
-        response.setContentType("application/json");
-
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
+        String assignmentKey = request.getParameter("assignmentKey");
+
+        String classroomEndpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID);
+        classroomEndpoint = classroomEndpoint.replace("{courseWorkId}", assignmentID);
+        classroomEndpoint = classroomEndpoint += "?key=" + API.API_KEY;
+
+        HttpURLConnection classroomConnection = (HttpURLConnection) new URL(classroomEndpoint).openConnection();
+
+        classroomConnection.setRequestMethod("GET");
+        classroomConnection.setRequestProperty("Accept", "application/json");
+        classroomConnection.setRequestProperty("Authorization", authorization);
         
-        String endpoint = END_POINT.replace("{courseId}", courseID);
-        endpoint = endpoint.replace("{courseWorkId}", assignmentID);
-        endpoint = endpoint += "?key=" + API.API_KEY;
-        
-        System.out.println("\n\nCourse ID:\t\t" + courseID + "\n\n");
-        System.out.println("\n\nAssignment ID:\t\t" + assignmentID + "\n\n");
-        System.out.println("\n\nRequest Endpoint:\t" + endpoint + "\n\n");
+        String json = API.getJSON(classroomConnection);
 
-        HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
+        Database.storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
 
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setRequestProperty("Authorization", authorization);
-        
-        String json = API.getJSON(connection);
-
-        System.out.println("\n\n" + json + "\n\n");
-
-        storeAssignmentSubmissionsData(json, courseID, assignmentID);
-        // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
-
-        String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
-        // Database.getAssignmentSubmissionsData(courseID, assignmentID);
+        String submissionsJSON = Database.getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
                 
-        response.getWriter().println(assignmentSubmissionsData);
-    }
-
-    public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID) {}
-
-    public static String getAssignmentSubmissionsData(String courseID, String assignmentID) {
-        return null;
+        response.setContentType("application/json");
+        response.getWriter().println(submissionsJSON);
     }
 
 }
