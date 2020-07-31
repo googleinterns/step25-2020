@@ -1,3 +1,11 @@
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.fixed-action-btn');
+    var instances = M.FloatingActionButton.init(elems, {
+      direction: 'left',
+      hoverEnabled: false
+    });
+});
+
 async function getQuestionFunctions() {
     const urlParameters = new URLSearchParams(window.location.search);
     const assignmentID = urlParameters.get("assignmentID");
@@ -8,26 +16,30 @@ async function getQuestionFunctions() {
 
     var myDiv = document.getElementById('question-functions');
 
-    var editOutline = document.createElement('a');
-    editOutline.innerHTML = "Edit Question Outlines<br><br>";
+    // var editOutline = document.createElement('a');
+    var editOutline = document.getElementById('editOutline');
+    // editOutline.innerHTML = "Edit Question Outlines<br><br>";
     editOutline.href = `/pages/editOutline.html${assignmentParameters}`;
 
-    var viewSubmissions = document.createElement('a');
-    viewSubmissions.innerHTML = "View Submissions<br><br>";
+    // var viewSubmissions = document.createElement('a');
+    var viewSubmissions = document.getElementById('viewSubmissions');
+    // viewSubmissions.innerHTML = "View Submissions<br><br>";
     viewSubmissions.href = `/pages/viewSubmissions.html${assignmentParameters}`;
 
-    var gradeSubmissions = document.createElement('a');
-    gradeSubmissions.innerHTML = "Grade Submissions<br><br>";
+    // var gradeSubmissions = document.createElement('a');
+    var gradeSubmissions = document.getElementById('gradeSubmissions');
+    // gradeSubmissions.innerHTML = "Grade Submissions<br><br>";
     gradeSubmissions.href = `/pages/gradeSubmissions.html${assignmentParameters}`;
 
-    var reviewGrades = document.createElement('a');
-    reviewGrades.innerHTML = "Review Grades<br><br>";
+    // var reviewGrades = document.createElement('a');
+    var reviewGrades = document.getElementById('reviewGrades');
+    // reviewGrades.innerHTML = "Review Grades<br><br>";
     reviewGrades.href = `/pages/reviewGrades.html${assignmentParameters}`;
 
-    myDiv.appendChild(editOutline);
-    myDiv.appendChild(viewSubmissions);
-    myDiv.appendChild(gradeSubmissions);
-    myDiv.appendChild(reviewGrades);
+    // myDiv.appendChild(editOutline);
+    // myDiv.appendChild(viewSubmissions);
+    // myDiv.appendChild(gradeSubmissions);
+    // myDiv.appendChild(reviewGrades);
 }
 
 getQuestionFunctions();
