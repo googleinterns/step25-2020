@@ -2,9 +2,9 @@ async function getQuestionFunctions() {
     const urlParameters = new URLSearchParams(window.location.search);
     const assignmentID = urlParameters.get("assignmentID");
     const courseID = urlParameters.get("courseID");
-    const assignmentKey = urlParameters.get("assignment-key");
+    const assignmentKey = urlParameters.get("assignmentKey");
     
-    const assignmentParameters = `?courseID=${courseID}&assignmentID=${assignmentID}&assignment-key=${assignmentKey}`;
+    const assignmentParameters = `?courseID=${courseID}&assignmentID=${assignmentID}&assignmentKey=${assignmentKey}`;
 
     var myDiv = document.getElementById('question-functions');
 

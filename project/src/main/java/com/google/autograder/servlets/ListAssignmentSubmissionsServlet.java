@@ -27,6 +27,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import java.util.Enumeration;
+
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
     private static String CLASSROOM_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
@@ -48,9 +50,10 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
 
+        String requestURL = request.getHeader("referer");
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
-        String assignmentKey = request.getParameter("assignment-key");
+        String assignmentKey = requestURL.substring(requestURL.indexOf("assignmentKey=") + 14);
 
         String classroomEndpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID);
         classroomEndpoint = classroomEndpoint.replace("{courseWorkId}", assignmentID);
@@ -65,6 +68,10 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String json = API.getJSON(classroomConnection);
 
         storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
+        // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
+
+        String submissionsJSON = getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
+        // Database.getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
 
         List<String> studentNames = new ArrayList<>();
         List<String> studentEmails = new ArrayList<>();
@@ -89,26 +96,20 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
             jsonArray.add(studentSubmissionData);
         }
-
-        // storeAssignmentSubmissionsData(json, courseID, assignmentID);
-        // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID);
-
-        // String assignmentSubmissionsData = getAssignmentSubmissionsData(courseID, assignmentID);
-        // Database.getAssignmentSubmissionsData(courseID, assignmentID);
                 
         response.setContentType("application/json");
-        response.getWriter().println(jsonArray.toString());
+        response.getWriter().println(submissionsJSON);
     }
 
     public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID, String assignmentKey) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
         Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
-        Query coursesQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
 
         // TODO: Compare Datastore contents with the submissions data from Google Classroom
 
-        for (Entity submission : Database.query(coursesQuery)) {
+        for (Entity submission : Database.query(submissionsQuery)) {
             Database.delete(submission);
         }
 
@@ -156,8 +157,30 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         }
     }
 
-    public static String getAssignmentSubmissionsData(String courseID, String assignmentID) {
-        return null;
+    public static String getAssignmentSubmissionsData(String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        List<Submission> submissions = new ArrayList<>();
+
+        for (Entity submissionEntity : Database.query(submissionsQuery)) {
+            Submission submission = new Submission(
+                submissionEntity.getKey().toString(),
+                submissionEntity.getProperty("graded").toString(),
+                submissionEntity.getProperty("userID").toString(),
+                submissionEntity.getProperty("courseID").toString(),
+                submissionEntity.getProperty("assignmentID").toString(),
+                submissionEntity.getProperty("submissionID").toString(),
+                submissionEntity.getProperty("assignmentKey").toString(),
+                submissionEntity.getProperty("driveFileLink").toString()
+            );
+
+            submissions.add(submission);
+        }
+
+        return new Gson().toJson(submissions);
     }
 
     private void parseStudentSubmissionInfo(String json, List<String> studentNames, List<String> studentUserIDs, List<String> studentSubmissionDriveFileLinks) {

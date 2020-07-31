@@ -27,7 +27,7 @@ function addSubmissionToTable(table, studentSubmission) {
     let info = document.createElement("h4");
 
     info.innerText = `${studentSubmission.name} - ${studentSubmission.email}`;
-    frame.src = studentSubmission.link;
+    frame.src = studentSubmission.driveFileLink;
     frame.height= "400px";
     frame.width="100%";
 
