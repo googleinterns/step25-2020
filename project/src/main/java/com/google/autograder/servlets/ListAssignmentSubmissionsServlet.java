@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
 import org.json.simple.parser.JSONParser;
 import com.google.gson.reflect.TypeToken;
+import com.google.autograder.data.Database;
 import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import com.google.autograder.data.Submission;
@@ -49,7 +50,8 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
-        
+        String assignmentKey = request.getParameter("assignment-key");
+
         String classroomEndpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID);
         classroomEndpoint = classroomEndpoint.replace("{courseWorkId}", assignmentID);
         classroomEndpoint = classroomEndpoint += "?key=" + API.API_KEY;
@@ -61,6 +63,8 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         classroomConnection.setRequestProperty("Authorization", authorization);
         
         String json = API.getJSON(classroomConnection);
+
+        storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
 
         List<String> studentNames = new ArrayList<>();
         List<String> studentEmails = new ArrayList<>();
@@ -94,6 +98,66 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
                 
         response.setContentType("application/json");
         response.getWriter().println(jsonArray.toString());
+    }
+
+    public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query coursesQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        // TODO: Compare Datastore contents with the submissions data from Google Classroom
+
+        for (Entity submission : Database.query(coursesQuery)) {
+            Database.delete(submission);
+        }
+
+        JSONObject submissionsJSONObject = null;
+        
+        try {
+            submissionsJSONObject = (JSONObject) new JSONParser().parse(submissionsJSON);
+        } catch (Exception e) {
+            return;
+        }
+
+        JSONArray studentSubmissionsArray = (JSONArray) submissionsJSONObject.get("studentSubmissions");
+
+        if (studentSubmissionsArray.iterator() == null) {
+            return;
+        }
+
+        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
+
+        while (studentSubmissionsIterator.hasNext()) {
+            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
+            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
+            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
+            String studentUserID = studentSubmission.get("userId").toString();
+            String submissionID = studentSubmission.get("id").toString();
+
+            if (attachmentsArray == null) {
+                continue;
+            }
+
+            Iterator attachmentsIterator = attachmentsArray.iterator();
+
+            if (!attachmentsIterator.hasNext()) {
+                continue;
+            }
+                
+            JSONObject attachment = (JSONObject) attachmentsIterator.next();
+            JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
+            String driveFileID = driveFileObject.get("id").toString();
+            String driveFileLink = DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID);
+
+            Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFileLink);
+
+            Database.addSubmission(submission);
+        }
+    }
+
+    public static String getAssignmentSubmissionsData(String courseID, String assignmentID) {
+        return null;
     }
 
     private void parseStudentSubmissionInfo(String json, List<String> studentNames, List<String> studentUserIDs, List<String> studentSubmissionDriveFileLinks) {
@@ -172,12 +236,6 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
             studentNames.add(fullName);
             studentEmails.add(emailAddress);
         }
-    }
-
-    public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID) {}
-
-    public static String getAssignmentSubmissionsData(String courseID, String assignmentID) {
-        return null;
     }
 
 }
