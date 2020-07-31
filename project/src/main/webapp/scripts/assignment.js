@@ -30,4 +30,9 @@ async function getQuestionFunctions() {
     myDiv.appendChild(reviewGrades);
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems, options);
+});
+
 getQuestionFunctions();

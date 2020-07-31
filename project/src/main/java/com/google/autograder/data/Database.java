@@ -28,6 +28,15 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /** Class containing basic database functionalities. */
 public final class Database {
 
@@ -423,6 +432,21 @@ public final class Database {
         submissionEntity.setProperty("driveFilePreviewLink", submission.driveFilePreviewLink);
         submissionEntity.setProperty("driveFileDownloadLink", submission.driveFileDownloadLink);
         save(submissionEntity);
+    }
+
+/** upload a file to the submission_bucket 
+  * objectName will be the ID of the GCS object
+  * filePath is absolute
+  */
+    public static void uploadObject(String objectName, String filePath) {    
+        try {
+            Storage storage = StorageOptions.newBuilder().setProjectId("step25-2020").build().getService();
+            BlobId blobId = BlobId.of("submission_bucket", objectName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            storage.create(blobInfo, Files.readAllBytes(Paths.get(filePath)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addLocation(Entity questionEntity, int leftXCoord, int topYCoord, int rightXCoord, int lowerYCoord) {
