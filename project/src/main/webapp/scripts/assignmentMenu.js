@@ -34,4 +34,4 @@ async function getQuestionFunctions() {
     reviewGrades.href = `/pages/reviewGrades.html${assignmentParameters}`;
 }
 
-getQuestionFunctions();
+// getQuestionFunctions();
