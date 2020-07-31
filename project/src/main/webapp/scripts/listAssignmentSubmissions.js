@@ -15,19 +15,35 @@ async function listAssignmentSubmissions() {
 
     const table = document.getElementById("submissions-table");
     json.forEach(
-        function(studentSubmission) {
-            addSubmissionToTable(table, studentSubmission);
+        async function(studentSubmission) {
+            const student = await getStudent(courseID, studentSubmission.userID);
+
+            const fullName = student.profile.name.fullName;
+            const emailAddress = student.profile.emailAddress;
+            
+            addSubmissionToTable(table, studentSubmission, fullName, emailAddress);
         }
     );
 }
 
-function addSubmissionToTable(table, studentSubmission) {
+async function getStudent(courseID, studentID) {
+    const servletURL = `/getStudent?courseID=${courseID}&studentID=${studentID}`;
+
+    const response = await fetch(servletURL, {
+        method: "GET",
+        mode: "no-cors"
+    });
+
+    return await response.json();
+}
+
+function addSubmissionToTable(table, studentSubmission, name, email) {
     let frame = document.createElement("iframe");
     let content = document.createElement("div");
     let space = document.createElement("p");
     let info = document.createElement("h4");
 
-    info.innerText = `${studentSubmission.name} - ${studentSubmission.email}`;
+    info.innerText = `${name} - ${email}`;
     frame.src = studentSubmission.driveFileLink;
     frame.height= "400px";
     frame.width="100%";
