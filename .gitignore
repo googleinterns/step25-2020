@@ -48,3 +48,4 @@ buildNumber.properties
 ### Credentials ###
 src/main/resources/auth/
 credentials.json
+api_key.json
