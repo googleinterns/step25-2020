@@ -158,6 +158,88 @@ public final class Database {
             }
         }
     }
+
+    public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        // TODO: Compare Datastore contents with the submissions data from Google Classroom
+
+        for (Entity submission : Database.query(submissionsQuery)) {
+            Database.delete(submission);
+        }
+
+        JSONObject submissionsJSONObject = null;
+        
+        try {
+            submissionsJSONObject = (JSONObject) new JSONParser().parse(submissionsJSON);
+        } catch (Exception e) {
+            return;
+        }
+
+        JSONArray studentSubmissionsArray = (JSONArray) submissionsJSONObject.get("studentSubmissions");
+
+        if (studentSubmissionsArray.iterator() == null) {
+            return;
+        }
+
+        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
+
+        while (studentSubmissionsIterator.hasNext()) {
+            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
+            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
+            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
+            String studentUserID = studentSubmission.get("userId").toString();
+            String submissionID = studentSubmission.get("id").toString();
+
+            if (attachmentsArray == null) {
+                continue;
+            }
+
+            Iterator attachmentsIterator = attachmentsArray.iterator();
+
+            if (!attachmentsIterator.hasNext()) {
+                continue;
+            }
+                
+            JSONObject attachment = (JSONObject) attachmentsIterator.next();
+            JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
+            String driveFileID = driveFileObject.get("id").toString();
+            String driveFileLink = DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID);
+
+            Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFileLink);
+
+            Database.addSubmission(submission);
+        }
+    }
+
+    public static String getAssignmentSubmissionsData(String courseID, String assignmentID, String assignmentKey) {
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
+        Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
+        Filter assignmentKeyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+        Query submissionsQuery = new Query("Submission").setFilter(courseIDFilter).setFilter(assignmentIDFilter).setFilter(assignmentKeyFilter);
+
+        List<Submission> submissions = new ArrayList<>();
+
+        for (Entity submissionEntity : Database.query(submissionsQuery)) {
+            Submission submission = new Submission(
+                submissionEntity.getKey().toString(),
+                submissionEntity.getProperty("graded").toString(),
+                submissionEntity.getProperty("userID").toString(),
+                submissionEntity.getProperty("courseID").toString(),
+                submissionEntity.getProperty("assignmentID").toString(),
+                submissionEntity.getProperty("submissionID").toString(),
+                submissionEntity.getProperty("assignmentKey").toString(),
+                submissionEntity.getProperty("driveFileLink").toString()
+            );
+
+            submissions.add(submission);
+        }
+
+        return new Gson().toJson(submissions);
+    }
   
   public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
       Entity questionEntity = new Entity("Question");
