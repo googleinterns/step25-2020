@@ -116,6 +116,16 @@
         <url-pattern>/answer</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AddAnswerServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.AddAnswerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddAnswersServlet</servlet-name>
+        <url-pattern>/addAnswers</url-pattern>
+    </servlet-mapping>
+
     <!-- Questions -->
     
     <servlet>
