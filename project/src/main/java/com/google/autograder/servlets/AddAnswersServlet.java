@@ -35,7 +35,8 @@ public final class AddAnswersServlet extends HttpServlet {
         Database.addAnswer(path, parseAnswer(path), 0, assignmentKey, questionKey);
     }
     System.out.println("Done!");
-    return;
+    response.setContentType("application/json;");
+    response.getWriter().println("");
   }
 
   public String parseAnswer(String filePath) throws IOException {

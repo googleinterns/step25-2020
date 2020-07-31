@@ -15,6 +15,8 @@ function drop(ev) {
 
 async function addAnswers() {
     var servletURL = "/addAnswers?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
+    const response = await fetch(servletURL);
+    const answers = await response.json(); 
 }
 
 async function getAnswers() {
