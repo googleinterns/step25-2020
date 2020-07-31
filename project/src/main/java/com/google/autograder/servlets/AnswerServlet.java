@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import com.google.autograder.data.Database;
+import com.google.autograder.data.Detect;
 import com.google.autograder.data.Answer;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import java.io.File;
 
 public final class AnswerServlet extends HttpServlet {
 
@@ -24,28 +26,23 @@ public final class AnswerServlet extends HttpServlet {
     String assignmentKey = request.getParameter("assignment-key");
     String questionKey = request.getParameter("question-key");
 
-    //create hard-coded answer data right now
-    //Database.addAnswer(filePath, parsedAnswer, score, assignmentKey, questionKey);
-    Database.addAnswer("images/eight1.jpeg", parseAnswer("images/eight1.jpeg"), 0, assignmentKey, questionKey);
-    Database.addAnswer("images/eight2.jpeg", parseAnswer("images/eight2.jpeg"), 0, assignmentKey, questionKey);
-    Database.addAnswer("images/eight3.jpeg", parseAnswer("images/eight3.jpeg"), 0, assignmentKey, questionKey);
-    Database.addAnswer("images/three1.jpeg", parseAnswer("images/three1.jpeg"), 0, assignmentKey, questionKey);
-    Database.addAnswer("images/three2.jpeg", parseAnswer("images/three2.jpeg"), 0, assignmentKey, questionKey);
-    Database.addAnswer("images/three3.jpeg", parseAnswer("images/three3.jpeg"), 0, assignmentKey, questionKey);
+    File folder = new File("images/answers");
+    File[] listOfFiles = folder.listFiles();
 
-
+    for (File file : listOfFiles) {
+        String path = "images/answers/" + file.getName();
+        Database.addAnswer(path, parseAnswer(path), 0, assignmentKey, questionKey);
+    }
 
     String json = Database.getAllAnswersJSON(assignmentKey, questionKey);
+    System.out.println(json);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
-  public String parseAnswer(String filePath) {
-      if (filePath.startsWith("images/e")) {
-          return "8";
-      }
-      else {
-          return "3";
-      }
+  public String parseAnswer(String filePath) throws IOException {
+      Detect d = new Detect();
+      return d.detectDocumentText(filePath);
+
   }
 }
