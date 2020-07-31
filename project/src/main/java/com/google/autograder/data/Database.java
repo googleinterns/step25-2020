@@ -187,6 +187,7 @@ public final class Database {
 
         Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
         String drivePreviewLink = "https://drive.google.com/file/d/{fileId}/preview";
+        String driveDownloadLink = "https://drive.google.com/uc?export=download&id={fileId}";
 
         while (studentSubmissionsIterator.hasNext()) {
             JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
@@ -207,10 +208,12 @@ public final class Database {
                 
             JSONObject attachment = (JSONObject) attachmentsIterator.next();
             JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
-            String driveFileID = driveFileObject.get("id").toString();
-            String driveFileLink = drivePreviewLink.replace("{fileId}", driveFileID);
 
-            Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFileLink);
+            String driveFileID = driveFileObject.get("id").toString();
+            String driveFilePreviewLink = drivePreviewLink.replace("{fileId}", driveFileID);
+            String driveFileDownloadLink = driveDownloadLink.replace("{fileId}", driveFileID);
+
+            Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFilePreviewLink, driveFileDownloadLink);
 
             addSubmission(submission);
         }
@@ -233,7 +236,8 @@ public final class Database {
                 submissionEntity.getProperty("assignmentID").toString(),
                 submissionEntity.getProperty("submissionID").toString(),
                 submissionEntity.getProperty("assignmentKey").toString(),
-                submissionEntity.getProperty("driveFileLink").toString()
+                submissionEntity.getProperty("driveFilePreviewLink").toString(),
+                submissionEntity.getProperty("driveFileDownloadLink").toString()
             );
 
             submissions.add(submission);
@@ -416,7 +420,8 @@ public final class Database {
         submissionEntity.setProperty("assignmentID", submission.assignmentID);
         submissionEntity.setProperty("submissionID", submission.submissionID);
         submissionEntity.setProperty("assignmentKey", submission.assignmentKey);
-        submissionEntity.setProperty("driveFileLink", submission.driveFileLink);
+        submissionEntity.setProperty("driveFilePreviewLink", submission.driveFilePreviewLink);
+        submissionEntity.setProperty("driveFileDownloadLink", submission.driveFileDownloadLink);
         save(submissionEntity);
     }
 

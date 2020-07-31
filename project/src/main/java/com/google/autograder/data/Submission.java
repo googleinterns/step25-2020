@@ -14,10 +14,12 @@ public final class Submission {
     public String assignmentID;
     public String submissionID;
     public String assignmentKey;
-    public String driveFileLink;
+    public String driveFilePreviewLink;
+    public String driveFileDownloadLink;
 
-    public Submission(String key, String graded, String userID, String courseID, String assignmentID, String submissionID, String assignmentKey, String driveFileLink) {
-        this.driveFileLink = driveFileLink;
+    public Submission(String key, String graded, String userID, String courseID, String assignmentID, String submissionID, String assignmentKey, String driveFilePreviewLink, String driveFileDownloadLink) {
+        this.driveFileDownloadLink = driveFileDownloadLink;
+        this.driveFilePreviewLink = driveFilePreviewLink;
         this.assignmentKey = assignmentKey;
         this.submissionID = submissionID;
         this.assignmentID = assignmentID;
