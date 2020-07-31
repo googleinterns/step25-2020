@@ -4,13 +4,11 @@ import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.data.UserHandler;
 import com.google.autograder.servlets.helpers.API;
 
-@WebServlet("/getStudent")
 public final class GetStudentServlet extends HttpServlet {
 
     private static String GET_STUDENT_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/students/{userId}";
