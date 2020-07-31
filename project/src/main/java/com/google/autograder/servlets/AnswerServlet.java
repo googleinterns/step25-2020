@@ -36,18 +36,13 @@ public final class AnswerServlet extends HttpServlet {
 
     String json = Database.getAllAnswersJSON(assignmentKey, questionKey);
     System.out.println(json);
-    //response.setContentType("application/json;");
-    //response.getWriter().println(json);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
   }
 
   public String parseAnswer(String filePath) throws IOException {
       Detect d = new Detect();
       return d.detectDocumentText(filePath);
-    //   if (filePath.startsWith("images/e")) {
-    //       return "8";
-    //   }
-    //   else {
-    //       return "3";
-    //   }
+
   }
 }
