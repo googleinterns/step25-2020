@@ -3,7 +3,6 @@ var totalPages;
 var pdf_url = '/images/5-pages-submission.pdf';
 // initialize and load the PDF
 
-
 async function loadPDF(pdf_url) {
   var pdf_url = '/images/5-pages-submission.pdf'; 
   // hard coded -- i dont know how to get the parameter url down into a url to use in the try block wtf??

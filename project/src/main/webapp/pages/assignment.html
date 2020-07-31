@@ -9,6 +9,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <!-- JS  -->
+    <script src="/scripts/getAssignmentDetails.js"></script>
+    <script src="/scripts/assignmentMenu.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 </head>
 
 <body>
@@ -29,15 +37,31 @@
     </nav>
     
     <div class="container page-container">
-        <div id="assignment-title-container"></div>
-        <div id="assignment-description-container"></div>
+        <div id="assignment-title-container"> <h1>Assignment Title </h1></div>
+        <div id="assignment-description-container"> <h3>Assignment Description</h3></div>
         <br>
-        <div id="question-functions"></div>
+        <div id="question-functions">
+        </div>
+        <br>
+
+        Assignment Preview:
+        <br>
+        <img src="../images/assignment_preview.png" height="500" alt="Assignment Preview" style="border:5px solid black">
+
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large red click-to-toggle" onclick="getQuestionFunctions();">
+                <i class="large material-icons">menu</i>
+            </a>
+            <ul>
+                <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
+                <i class="material-icons">mode_edit</i></a></li>
+                <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">pageview</i></a></li>
+                <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating green"><i class="material-icons">insert_chart</i></a></li>
+                <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
+            </ul>
+        </div>
+
     </div>
 </body>
-
-<!-- JS  -->
-<script src="/scripts/getAssignmentDetails.js"></script>
-<script src="/scripts/assignment.js"></script>
 
 </html>
