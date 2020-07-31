@@ -12,6 +12,7 @@
 
     <!-- JS  -->
     <script src="/scripts/gradeSubmissions.js"></script>
+    <script src="/scripts/assignmentMenu.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
@@ -50,7 +51,11 @@
 
     <div class="container page-container">
         <h1>Grading Options</h1>
-        <div id="grading-options"><script>getOptions();</script></div>
+        <div id="grading-options">
+            <a id="gradeIndividualSubmissions" href="/pages/gradeIndividualSubmissions.html">Grade Individual Submissions </a>
+            <br><br>
+            <a id="questionGroups" href="/pages/questionGroups.html">Grade Question Groups </a>            
+        </div>
     </div>
 </body>
 
