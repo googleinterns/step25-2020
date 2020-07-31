@@ -167,8 +167,8 @@ public final class Database {
 
         // TODO: Compare Datastore contents with the submissions data from Google Classroom
 
-        for (Entity submission : Database.query(submissionsQuery)) {
-            Database.delete(submission);
+        for (Entity submission : query(submissionsQuery)) {
+            delete(submission);
         }
 
         JSONObject submissionsJSONObject = null;
@@ -186,6 +186,7 @@ public final class Database {
         }
 
         Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
+        String drivePreviewLink = "https://drive.google.com/file/d/{fileId}/preview";
 
         while (studentSubmissionsIterator.hasNext()) {
             JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
@@ -207,11 +208,11 @@ public final class Database {
             JSONObject attachment = (JSONObject) attachmentsIterator.next();
             JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
             String driveFileID = driveFileObject.get("id").toString();
-            String driveFileLink = DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID);
+            String driveFileLink = drivePreviewLink.replace("{fileId}", driveFileID);
 
             Submission submission = new Submission(null, null, studentUserID, courseID, assignmentID, submissionID, assignmentKey, driveFileLink);
 
-            Database.addSubmission(submission);
+            addSubmission(submission);
         }
     }
 
@@ -223,7 +224,7 @@ public final class Database {
 
         List<Submission> submissions = new ArrayList<>();
 
-        for (Entity submissionEntity : Database.query(submissionsQuery)) {
+        for (Entity submissionEntity : query(submissionsQuery)) {
             Submission submission = new Submission(
                 submissionEntity.getKey().toString(),
                 submissionEntity.getProperty("graded").toString(),

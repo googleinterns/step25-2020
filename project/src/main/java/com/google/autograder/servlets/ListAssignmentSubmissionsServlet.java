@@ -32,8 +32,7 @@ import java.util.Enumeration;
 public final class ListAssignmentSubmissionsServlet extends HttpServlet {
 
     private static String CLASSROOM_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/courseWork/{courseWorkId}/studentSubmissions";
-    private static String STUDENT_INFO_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/students/{userId}";    
-    private static String DRIVE_PREVIEW_LINK = "https://drive.google.com/file/d/{fileId}/preview";
+    private static String STUDENT_INFO_END_POINT = "https://classroom.googleapis.com/v1/courses/{courseId}/students/{userId}";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -67,80 +66,17 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         
         String json = API.getJSON(classroomConnection);
 
-        storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
-        // Database.storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
+        Database.storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
 
-        String submissionsJSON = getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
-        // Database.getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
+        String submissionsJSON = Database.getAssignmentSubmissionsData(courseID, assignmentID, assignmentKey);
 
         List<String> studentNames = new ArrayList<>();
         List<String> studentEmails = new ArrayList<>();
         List<String> studentUserIDs = new ArrayList<>();
         List<String> studentSubmissionDriveFileLinks = new ArrayList<>();
-
-        parseStudentSubmissionInfo(json, studentNames, studentUserIDs, studentSubmissionDriveFileLinks);
-        parseStudentInfo(authorization, courseID, studentUserIDs, studentNames, studentEmails);
-
-        JSONArray jsonArray = new JSONArray();
-
-        for (int index = 0; index < studentSubmissionDriveFileLinks.size(); index++) {
-            String studentName = studentNames.get(index);
-            String studentEmail = studentEmails.get(index);
-            String studentSubmissionDriveFileLink = studentSubmissionDriveFileLinks.get(index);
-
-            JSONObject studentSubmissionData = new JSONObject();
-
-            studentSubmissionData.put("name", studentName);
-            studentSubmissionData.put("email", studentEmail);
-            studentSubmissionData.put("link", studentSubmissionDriveFileLink);
-
-            jsonArray.add(studentSubmissionData);
-        }
                 
         response.setContentType("application/json");
         response.getWriter().println(submissionsJSON);
-    }
-
-    private void parseStudentSubmissionInfo(String json, List<String> studentNames, List<String> studentUserIDs, List<String> studentSubmissionDriveFileLinks) {
-        JSONObject jsonObject = null;
-        
-        try {
-            jsonObject = (JSONObject) new JSONParser().parse(json);
-        } catch (Exception e) {
-            return;
-        }
-
-        JSONArray studentSubmissionsArray = (JSONArray) jsonObject.get("studentSubmissions");
-
-        if (studentSubmissionsArray.iterator() == null) {
-            return;
-        }
-        
-        Iterator studentSubmissionsIterator = studentSubmissionsArray.iterator();
-
-        while (studentSubmissionsIterator.hasNext()) {
-            JSONObject studentSubmission = (JSONObject) studentSubmissionsIterator.next();
-            JSONObject assignmentSubmission = (JSONObject) studentSubmission.get("assignmentSubmission");
-            JSONArray attachmentsArray = (JSONArray) assignmentSubmission.get("attachments");
-            String studentUserID = studentSubmission.get("userId").toString();
-
-            if (attachmentsArray == null) {
-                continue;
-            }
-
-            Iterator attachmentsIterator = attachmentsArray.iterator();
-
-            if (!attachmentsIterator.hasNext()) {
-                continue;
-            }
-                
-            JSONObject attachment = (JSONObject) attachmentsIterator.next();
-            JSONObject driveFileObject = (JSONObject) attachment.get("driveFile");
-            String driveFileID = driveFileObject.get("id").toString();
-
-            studentUserIDs.add(studentUserID);
-            studentSubmissionDriveFileLinks.add(DRIVE_PREVIEW_LINK.replace("{fileId}", driveFileID));
-        }
     }
 
     private void parseStudentInfo(String authorization, String courseID, List<String> studentUserIDs, List<String> studentNames, List<String> studentEmails) {
