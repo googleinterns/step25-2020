@@ -17,6 +17,7 @@ async function addAnswers() {
     var servletURL = "/addAnswers?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
     const response = await fetch(servletURL);
     const answers = await response.json(); 
+    console.log(answers)
 }
 
 async function getAnswers() {
@@ -25,6 +26,18 @@ async function getAnswers() {
     const response = await fetch(servletURL);
     const answers = await response.json(); 
     // show them on the page
+
+    var myDiv = document.getElementById("group-container");
+    answers.forEach(answer => {
+        var filePath = "../" + answer.filePath;
+        console.log(filePath);
+        var image = document.createElement("img");
+        image.src = "../" + filePath;
+        image.setAttribute("height", "500");
+        image.setAttribute("width", "500");
+        image.setAttribute("alt", "answer");
+        myDiv.appendChild(image);
+    });
 
 }
 
