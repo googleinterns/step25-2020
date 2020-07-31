@@ -1,13 +1,17 @@
 package com.google.autograder.servlets.helpers;
 
+import java.io.File;
 import java.util.Iterator;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.net.URLEncoder;
 import java.io.IOException;
-import java.net.URLEncoder;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
 import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
@@ -15,7 +19,6 @@ import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.autograder.servlets.auth.AccessTokenResponse;
@@ -23,9 +26,27 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public final class API {
 
-    public static String API_KEY = "AIzaSyBIaLkphMl31DiaklesnnZNdNJ_ailldto";
-    public static String UTF_8 = StandardCharsets.UTF_8.name();
-    public static Gson GSON = new Gson();
+    private static final String RESOURCES_PATH = "../../../project/src/main/resources"; // "../classes"
+    private static final String API_KEY_PATH = "/auth/api_key.json";
+    private static final Gson GSON = new Gson();
+
+    public static final String API_KEY = getAPIKey();
+    public static final String UTF_8 = StandardCharsets.UTF_8.name();
+
+    private static String getAPIKey() {
+        String api_key = null;
+
+        try {
+            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + API_KEY_PATH)));
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+            JSONObject apiKeyObject = (JSONObject) new JSONParser().parse(jsonObject.get("api_key").toString());
+            api_key = apiKeyObject.get("api_key").toString();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return api_key;
+    }
 
     public static String getCurrentUserAPIAuthorization() {
         String userEmail = UserHandler.getCurrentUserEmail();
