@@ -1,9 +1,16 @@
+// horizonal fixed action button
 document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.fixed-action-btn');
     var instances = M.FloatingActionButton.init(elems, {
       direction: 'left',
       hoverEnabled: false
     });
+});
+
+// tooltips for horizontal fixed action button
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems, options);
 });
 
 async function getQuestionFunctions() {
@@ -13,8 +20,6 @@ async function getQuestionFunctions() {
     const assignmentKey = urlParameters.get("assignment-key");
     
     const assignmentParameters = `?courseID=${courseID}&assignmentID=${assignmentID}&assignment-key=${assignmentKey}`;
-
-    var myDiv = document.getElementById('question-functions');
 
     var editOutline = document.getElementById('editOutline');
     editOutline.href = `/pages/editOutline.html${assignmentParameters}`;
@@ -27,7 +32,6 @@ async function getQuestionFunctions() {
 
     var reviewGrades = document.getElementById('reviewGrades');
     reviewGrades.href = `/pages/reviewGrades.html${assignmentParameters}`;
-
 }
 
 getQuestionFunctions();
