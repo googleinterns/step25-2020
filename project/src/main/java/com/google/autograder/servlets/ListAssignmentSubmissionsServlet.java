@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import com.google.gson.reflect.TypeToken;
 import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
+import com.google.autograder.data.Submission;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.data.UserHandler;

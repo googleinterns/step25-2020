@@ -325,12 +325,15 @@ public final class Database {
     return json;
   }
 
-
-    public static void addSubmission(Entity assignmentEntity, String blobKey) {
+    public static void addSubmission(Submission submission) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
-        submissionEntity.setProperty("assignmentKey", assignmentEntity.getKey());
-        submissionEntity.setProperty("blobKey", blobKey);
+        submissionEntity.setProperty("userID", submission.userID);
+        submissionEntity.setProperty("courseID", submission.courseID);
+        submissionEntity.setProperty("assignmentID", submission.assignmentID);
+        submissionEntity.setProperty("submissionID", submission.submissionID);
+        submissionEntity.setProperty("assignmentKey", submission.assignmentKey);
+        submissionEntity.setProperty("driveFileLink", submission.driveFileLink);
         save(submissionEntity);
     }
 
