@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import com.google.autograder.data.Submission;
 import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
 import com.google.autograder.data.UserHandler;
