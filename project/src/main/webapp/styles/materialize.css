@@ -5152,7 +5152,7 @@ small {
   top: 0;
   pointer-events: none;
   visibility: hidden;
-  background-color: #323232;
+  /* background-color: #323232; */
 }
 
 .backdrop {
@@ -5348,7 +5348,7 @@ button.btn-floating {
 
 .fixed-action-btn {
   position: fixed;
-  right: auto;
+  right: 30px;
   bottom: 23px;
   padding-top: 15px;
   margin-bottom: 10px;

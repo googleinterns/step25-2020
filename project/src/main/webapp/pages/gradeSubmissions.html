@@ -12,6 +12,8 @@
 
     <!-- JS  -->
     <script src="/scripts/gradeSubmissions.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
 <body>
@@ -33,6 +35,19 @@
         <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
+
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large red click-to-toggle">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
+            <i class="material-icons">mode_edit</i></a></li>
+            <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">pageview</i></a></li>
+            <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating green"><i class="material-icons">insert_chart</i></a></li>
+            <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
+        </ul>
+    </div>
 
     <div class="container page-container">
         <h1>Grading Options</h1>
