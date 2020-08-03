@@ -318,7 +318,6 @@ public final class Database {
             Key answerKey = answer.getKey();
             Answer currAnswer = new Answer(filePath, parsedAnswer, answerScore, assignmentKey, questionKey, answerKey);
             currAnswer.addGroup(groupKey);
-            System.out.println(currAnswer.getGroupKey());
             answer.setProperty("groupKey", currAnswer.getGroupKey());
             save(answer);
             answerList.add(currAnswer);

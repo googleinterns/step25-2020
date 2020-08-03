@@ -25,19 +25,43 @@ async function getAnswers() {
 
     const response = await fetch(servletURL);
     const answers = await response.json(); 
-    // show them on the page
 
     var myDiv = document.getElementById("group-container");
+
+    let groups = new Map();
+
+    //create group => answers hash
     answers.forEach(answer => {
         var filePath = "../" + answer.filePath;
-        console.log(filePath);
+        var groupKey = answer.groupKey;
+        
         var image = document.createElement("img");
         image.src = "../" + filePath;
+        image.setAttribute("overflow", "hidden");
+        image.setAttribute("object-fit", "cover");
         image.setAttribute("height", "500");
         image.setAttribute("width", "500");
         image.setAttribute("alt", "answer");
-        myDiv.appendChild(image);
+
+        if (groups.has(groupKey) == false) {
+            groups.set(groupKey, []);
+        }
+        var prev = groups.get(groupKey);
+        prev.push(image);
+        groups.set(groupKey, prev);
+        
     });
+
+    //for each group, create new div and add appropriate objects into it
+    for (let [key, values] of groups) {
+        var group = document.createElement("div"); 
+        group.setAttribute("border", "thick solid #0000FF");
+        for (value of values) {
+            group.appendChild(value);
+        }
+        myDiv.appendChild(group);
+        
+    }
 
 }
 
@@ -46,7 +70,6 @@ async function computerGenerateGroups() {
     const response = await fetch(servletURL);
     const answers = await response.json();  
     console.log(answers);
-
 }
 
 function getUrlVars() {
@@ -56,3 +79,5 @@ function getUrlVars() {
   });
   return vars;
 }
+
+
