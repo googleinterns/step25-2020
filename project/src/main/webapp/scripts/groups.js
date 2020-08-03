@@ -76,12 +76,13 @@ async function getGroupImage() {
     // get image from ungraded group
 }
 
+
 async function goToNextPage() {
     var servletURL = "/getUngradedGroupKeys" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
     const response = await fetch(servletURL);
     const json = await response.json();
     if (len(json) > 0) {
-        window.location = "/pages/grading.html" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"] + json[0];
+        window.location = "/pages/grading.html" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"] + "&groupKey=" + json[0];
     }
     else {
         window.location = "/pages/groups.html";

@@ -420,5 +420,11 @@ public final class Database {
     String json = new Gson().toJson(groupKeys);
     return json;
   }
+
+  public static void gradeGroup(String groupKey) {
+      Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
+      groupEntity.setProperty("graded", "GRADED");
+      save(groupEntity);
+  }
 }
 
