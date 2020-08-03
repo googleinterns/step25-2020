@@ -447,7 +447,8 @@ public final class Database {
           String filePath = (String) answer.getProperty("filePath");
           return new Gson().toJson(filePath);
       }
-       
+      return new Gson().toJson("");
+    
   }
 }
 

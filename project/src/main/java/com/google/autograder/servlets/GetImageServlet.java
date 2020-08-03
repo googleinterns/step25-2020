@@ -23,7 +23,7 @@ public final class GetImageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String groupKey = request.getParameter("groupKey");
-    return Database.getAnswerFilePath(groupKey);
+    String json = Database.getAnswerFilePath(groupKey);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
