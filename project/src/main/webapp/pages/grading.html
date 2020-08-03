@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+    <script src="/scripts/groups.js"></script>
+</head>
+
+<body>
+    <h1>Assignment 1 Group 3</h1>
+        <div id="img"><script>getGroupImage()</script>;</div>
+        <form action="/grade" method="POST">
+            <p>Total points:</p>
+            <input type="number" id="total-points" required name="total-points" min="1" default="10"><br><br>
+            <p>Comments:</p>
+            <input type="text" id="name" name="name" required minlength="4" size="20"><br><br>
+            <input type="submit" onclick="goToNextPage()">
+        </form>
+    <a href="groups2.html">Next</a>
+</body>
+
+</html>

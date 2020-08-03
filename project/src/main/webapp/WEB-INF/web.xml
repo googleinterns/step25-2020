@@ -150,6 +150,17 @@
         <url-pattern>/group</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetUngradedGroupKeys</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetUngradedGroupKeys</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetUngradedGroupKeys</servlet-name>
+        <url-pattern>/getUngradedGroupKeys</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Manage Box (Outlines) -->
     
     <servlet>

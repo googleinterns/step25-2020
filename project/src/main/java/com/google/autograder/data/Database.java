@@ -406,14 +406,19 @@ public final class Database {
     return blobKeyJson;
   }
 
-  //get all submissions for an assignment
-
-    // Get all answers for a question
-
-    // Set/edit location for a question
-
-    // Get all groups for a question
-
-    // Change answer's group
+  public static String getUngradedGroupKeys(String questionKey) {
+    Filter propertyFilter = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+    Query query = new Query("Group").setFilter(propertyFilter);
+    List<String> groupKeys = new ArrayList<String>();
+    for (Entity group : query(query)) {
+        if (group.getProperty("graded") != "GRADED") {
+            Key key = group.getKey();
+            String stringKey = KeyFactory.keyToString(key);
+            groupKeys.add(stringKey); 
+            }
+        }
+    String json = new Gson().toJson(groupKeys);
+    return json;
+  }
 }
 
