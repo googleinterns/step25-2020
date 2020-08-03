@@ -1,5 +1,6 @@
 package com.google.autograder.servlets.helpers;
 
+import java.net.URL;
 import java.io.File;
 import java.util.Iterator;
 import java.nio.file.Files;
@@ -11,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import org.json.simple.JSONObject;
+import java.net.ProtocolException;
+import java.net.MalformedURLException;
 import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
 import com.google.autograder.data.Database;
@@ -66,6 +69,27 @@ public final class API {
         }
         
         return authorization;
+    }
+
+    public static HttpURLConnection getAuthenticatedRequest(String method, String endpoint) {
+        try {
+            String authorization = getCurrentUserAPIAuthorization();
+
+            if (authorization == null) {
+                return null;
+            }
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
+
+            connection.setRequestMethod(method);
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", authorization);
+
+            return connection;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getJSON(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {

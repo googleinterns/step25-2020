@@ -1,6 +1,5 @@
 package com.google.autograder.servlets;
 
-import java.net.URL;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
@@ -19,29 +18,17 @@ public final class GetStudentServlet extends HttpServlet {
             response.setHeader("redirect", "/index.html");
         }
 
-        String authorization = API.getCurrentUserAPIAuthorization();
-
-        if (authorization == null) {
-            response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
-        }
-
-        String json = null;
         String courseID = request.getParameter("courseID");
         String studentID = request.getParameter("studentID");
         String endpoint = GET_STUDENT_END_POINT.replace("{courseId}", courseID).replace("{userId}", studentID).concat("?key=" + API.API_KEY);
 
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
-                
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Authorization", authorization);
-                
-            json = API.getJSON(connection);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return;
+        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint);
+
+        if (connection == null) {
+            response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
+
+        String json = API.getJSON(connection);
 
         response.setContentType("application/json");
         response.getWriter().println(json);
