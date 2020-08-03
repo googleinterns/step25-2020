@@ -26,23 +26,9 @@ public final class AnswerServlet extends HttpServlet {
     String assignmentKey = request.getParameter("assignment-key");
     String questionKey = request.getParameter("question-key");
 
-    File folder = new File("images/answers");
-    File[] listOfFiles = folder.listFiles();
-
-    for (File file : listOfFiles) {
-        String path = "images/answers/" + file.getName();
-        Database.addAnswer(path, parseAnswer(path), 0, assignmentKey, questionKey);
-    }
-
     String json = Database.getAllAnswersJSON(assignmentKey, questionKey);
     System.out.println(json);
     response.setContentType("application/json;");
     response.getWriter().println(json);
-  }
-
-  public String parseAnswer(String filePath) throws IOException {
-      Detect d = new Detect();
-      return d.detectDocumentText(filePath);
-
   }
 }

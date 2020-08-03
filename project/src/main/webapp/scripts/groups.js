@@ -13,6 +13,12 @@ function drop(ev) {
   ev.target.appendChild(document.getElementById(data));
 }
 
+async function addAnswers() {
+    var servletURL = "/addAnswers?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
+    const response = await fetch(servletURL);
+    const answers = await response.json(); 
+}
+
 async function getAnswers() {
     var servletURL = "/answer?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
 
