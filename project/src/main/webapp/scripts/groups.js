@@ -60,9 +60,7 @@ async function getAnswers() {
             group.appendChild(value);
         }
         myDiv.appendChild(group);
-        
     }
-
 }
 
 async function computerGenerateGroups() {
@@ -73,7 +71,21 @@ async function computerGenerateGroups() {
 }
 
 async function getGroupImage() {
-    // get image from ungraded group
+    // get image using groupKey
+    var servletURL = "/getImage?groupKey=" + getUrlVars()['groupKey'];
+    const response = await fetch(servletURL);
+    const imgFilePath = await response.json();  
+    const filePath = imgFilePath[0];
+
+    //add image to div
+    var imageDiv = document.getElementById("imgDiv");
+    var image = document.createElement("img");
+    image.src = "../" + filePath;
+    image.setAttribute("overflow", "hidden");
+    image.setAttribute("object-fit", "cover");
+    image.setAttribute("height", "500");
+    image.setAttribute("width", "500");
+    image.setAttribute("alt", "answer");
 }
 
 
