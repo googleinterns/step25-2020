@@ -23,7 +23,7 @@
     <nav class="green" role="navigation">
         <div class="nav-wrapper container">
         <img src="../images/GC_logo.png" class="nav-wrapper">
-        <a id="logo-container" href="#" class="white-text brand-logo">  gClassroom AutoGrader</a>
+        <a id="logo-container" href="#" class="white-text brand-logo">   gClassroom AutoGrader</a>
         <ul class="right hide-on-med-and-down">
             <li><a class="white-text" href="/pages/courses.html">Your Courses</a></li>
             <li><a class="white-text" href="/pages/assignments.html">Assignments</a></li>
@@ -35,20 +35,6 @@
         <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
-
-    <div class="fixed-action-btn">
-        <a class="btn-floating btn-large red click-to-toggle" onclick="getQuestionFunctions();">
-            <i class="large material-icons">menu</i>
-        </a>
-        <ul>
-            <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
-            <i class="material-icons">mode_edit</i></a></li>
-            <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">insert_chart</i></a></li>
-            <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating green"><i class="material-icons">pageview</i></a></li>
-            <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
-        </ul>
-    </div>
-
     
     <div class="container page-container">
         <div id="assignment-title-container"> <h1>Demo Midterm </h1></div>
@@ -61,6 +47,19 @@
         Assignment Preview:
         <br>
         <img src="../images/assignment_preview.png" height="500" alt="Assignment Preview" style="border:5px solid black">
+
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large red click-to-toggle" onclick="getQuestionFunctions();">
+                <i class="large material-icons">menu</i>
+            </a>
+            <ul>
+                <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
+                <i class="material-icons">mode_edit</i></a></li>
+                <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">pageview</i></a></li>
+                <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating green"><i class="material-icons">insert_chart</i></a></li>
+                <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
+            </ul>
+        </div>
 
     </div>
 </body>
