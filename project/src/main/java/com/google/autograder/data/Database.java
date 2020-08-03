@@ -439,5 +439,15 @@ public final class Database {
         e.printStackTrace(System.out);
       }
   }
+
+  public static String getAnswerFilePath(String groupKey) {
+      Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+      Query query = new Query("Answer").setFilter(groupFilter);
+      for (Entity answer : query(query)) {
+          String filePath = (String) answer.getProperty("filePath");
+          return new Gson().toJson(filePath);
+      }
+       
+  }
 }
 

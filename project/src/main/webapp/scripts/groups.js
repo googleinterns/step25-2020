@@ -86,6 +86,7 @@ async function getGroupImage() {
     image.setAttribute("height", "500");
     image.setAttribute("width", "500");
     image.setAttribute("alt", "answer");
+    imageDiv.appendChild(image);
 }
 
 

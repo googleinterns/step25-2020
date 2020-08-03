@@ -185,4 +185,14 @@
         <url-pattern>/grade</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetImageServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetImageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetImageServlet</servlet-name>
+        <url-pattern>/getImage</url-pattern>
+    </servlet-mapping>
+
 </web-app>
