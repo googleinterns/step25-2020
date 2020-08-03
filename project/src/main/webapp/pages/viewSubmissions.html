@@ -10,9 +10,31 @@
     <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="/scripts/assignmentMenu.js"></script>
+    <script src="/scripts/listAssignmentSubmissions.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 </head>
 
 <body>
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+        <img src="../images/GC_logo.png" class="nav-wrapper">
+        <a id="logo-container" href="#" class="white-text brand-logo"> gClassroom AutoGrader</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a class="white-text" href="/pages/courses.html">Your Courses</a></li>
+            <li><a class="white-text" href="/pages/assignments.html">Assignments</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large red click-to-toggle" onclick="getQuestionFunctions();">
             <i class="large material-icons">menu</i>
@@ -20,21 +42,37 @@
         <ul>
             <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
             <i class="material-icons">mode_edit</i></a></li>
-            <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">pageview</i></a></li>
-            <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating green"><i class="material-icons">insert_chart</i></a></li>
+            <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">insert_chart</i></a></li>
+            <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating green"><i class="material-icons">pageview</i></a></li>
             <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
         </ul>
     </div>
 
-    <h1>View Submissions</h1>
+    <div class="container page-container">
 
-    <table id="submissions-table"></table>
+        <h1>View Submissions</h1>
+
+        <p>
+            <h3>Ben's Submissions</h3>
+            <br>
+            <embed src="/images/Question-1-Student.pdf" height="400px" width="100%">
+        </p>
+
+        <p>
+            <h3>Mahima's Submissions</h3>
+            <br>
+            <embed src="/images/Question-1-Student.pdf" height="400px" width="100%">
+        </p>
+
+        <p>
+            <h3>Sampson's Submission</h3>
+            <br>
+            <embed src="/images/Question-1-Student.pdf" height="400px" width="100%">
+        </p>
+
+        <table id="submissions-table"></table>
+    </div>
 
 </body>
-
-<!-- JS -->
-<script src="/scripts/assignmentMenu.js"></script>
-<script src="/scripts/listAssignmentSubmissions.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 </html>
