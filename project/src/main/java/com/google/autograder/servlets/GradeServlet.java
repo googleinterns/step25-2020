@@ -22,7 +22,9 @@ public final class GradeServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String score = request.getParameter("score");
+    String comments = request.getParameter("comments");
     String groupKey = request.getParameter("groupKey");
-    Database.gradeGroup(groupKey);
+    Database.gradeGroup(groupKey, score, comments);
   }
 }

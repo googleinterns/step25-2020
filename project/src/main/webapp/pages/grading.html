@@ -11,9 +11,9 @@
         <div id="img"><script>getGroupImage()</script>;</div>
         <form action="/grade" method="POST">
             <p>Total points:</p>
-            <input type="number" id="total-points" required name="total-points" min="1" default="10"><br><br>
+            <input type="number" id="score" required name="score" min="1" default="10"><br><br>
             <p>Comments:</p>
-            <input type="text" id="name" name="name" required minlength="4" size="20"><br><br>
+            <input type="text" id="comments" name="comments" required minlength="1" size="20"><br><br>
             <input type="submit" onclick="goToNextPage()">
         </form>
     <a href="groups2.html">Next</a>

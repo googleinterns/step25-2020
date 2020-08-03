@@ -173,4 +173,16 @@
         <url-pattern>/ManageBox</url-pattern>
     </servlet-mapping>
 
+    <!-- Grade -->
+    
+    <servlet>
+        <servlet-name>GradeServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GradeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GradeServlet</servlet-name>
+        <url-pattern>/grade</url-pattern>
+    </servlet-mapping>
+
 </web-app>

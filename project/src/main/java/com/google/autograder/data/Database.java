@@ -421,10 +421,23 @@ public final class Database {
     return json;
   }
 
-  public static void gradeGroup(String groupKey) {
-      Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
-      groupEntity.setProperty("graded", "GRADED");
-      save(groupEntity);
+  public static void gradeGroup(String groupKey, String score, String comment) {
+      try {
+        Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
+        groupEntity.setProperty("graded", "GRADED");
+        // update all answers with this groupKey to have this grade
+        Filter propertyFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+        Query query = new Query("Answer").setFilter(propertyFilter);
+        for (Entity answer : query(query)) {
+            answer.setProperty("score", score);
+            answer.setProperty("comment", comment);
+            save(answer);
+            }
+        save(groupEntity);}
+      catch (Exception e) {
+        System.out.println("error, group entity not found.");
+        e.printStackTrace(System.out);
+      }
   }
 }
 
