@@ -21,6 +21,7 @@ import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
 import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
+import org.json.simple.parser.ParseException;
 import com.google.autograder.data.UserHandler;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
@@ -41,23 +42,27 @@ public final class API {
     public static final String API_KEY;
 
     static {
-        API_KEY = getAPIKey();
+        API_KEY = retrieveAPIKey().orElse(null);
     }
 
-    private static String getAPIKey() {
+    private static Optional<String> retrieveAPIKey() {
         String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
-        String api_key = null;
+        String apiKey = null;
 
         try {
             String json = new String(Files.readAllBytes(Paths.get(apiKeyPath)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
             JSONObject apiKeyObject = (JSONObject) new JSONParser().parse(jsonObject.get("api_key").toString());
-            api_key = apiKeyObject.get("api_key").toString();
-        } catch(Exception e) {
-            LOGGER.log(Level.SEVERE, "Error retrieving API Key from the file system at:" + apiKeyPath, e);
+            apiKey = apiKeyObject.get("api_key").toString();
+        } catch(IOException exception) {
+            LOGGER.log(Level.SEVERE, "Error retrieving API Key from the file system at:" + apiKeyPath, exception);
+            return Optional.empty();
+        } catch(ParseException exception) {
+            LOGGER.log(Level.SEVERE, "Error parsing API Key from api_key.json at:" + apiKeyPath, exception);
+            return Optional.empty();
         }
         
-        return api_key;
+        return Optional.of(apiKey);
     }
 
     public static String getCurrentUserAPIAuthorization() {
