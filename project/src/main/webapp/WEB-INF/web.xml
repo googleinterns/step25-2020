@@ -151,12 +151,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>GetUngradedGroupKeys</servlet-name>
-        <servlet-class>com.google.autograder.servlets.GetUngradedGroupKeys</servlet-class>
+        <servlet-name>GetUngradedGroupKeysServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetUngradedGroupKeysServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>GetUngradedGroupKeys</servlet-name>
+        <servlet-name>GetUngradedGroupKeysServlet</servlet-name>
         <url-pattern>/getUngradedGroupKeys</url-pattern>
     </servlet-mapping>
 
