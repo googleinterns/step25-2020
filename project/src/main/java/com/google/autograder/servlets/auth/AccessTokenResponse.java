@@ -4,11 +4,12 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.Entity;
 
 public final class AccessTokenResponse {
-    private String access_token;
-    private String token_type;
-    private long expires_in;
-    private String scope;
 
+    private String scope;
+    private long expires_in;
+    private String token_type;
+    private String access_token;
+    
     public AccessTokenResponse(String access_token, String token_type, String scope, long expires_in) {
         this.access_token = access_token;
         this.token_type = token_type;
@@ -78,4 +79,5 @@ public final class AccessTokenResponse {
     public String toString() {
         return "AccessTokenResponse [access_token=" + access_token + ", expires_in=" + expires_in + ", scope=" + scope + ", token_type=" + token_type + "]";
     }
+
 }
