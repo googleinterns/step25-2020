@@ -65,3 +65,10 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.imgClass {
+    overflow: hidden;
+    object-fit: cover;
+    height: 500px;
+    width: 500px;
+}

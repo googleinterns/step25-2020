@@ -22,15 +22,13 @@ async function addAnswers() {
 
 async function getAnswers() {
     var servletURL = "/answer?assignment-key=" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
-
     const response = await fetch(servletURL);
     const answers = await response.json(); 
 
     var myDiv = document.getElementById("group-container");
 
-    let groups = new Map();
-
     //create group => answers hash
+    let groups = new Map();
     answers.forEach(answer => {
         var filePath = "../" + answer.filePath;
         var groupKey = answer.groupKey;
@@ -80,18 +78,14 @@ async function getGroupImage() {
     //add image to div
     var imageDiv = document.getElementById("imgDiv");
     var image = document.createElement("img");
+    imgDiv.classList.add("imgClass");
     image.src = "../" + filePath;
-    image.setAttribute("overflow", "hidden");
-    image.setAttribute("object-fit", "cover");
-    image.setAttribute("height", "500");
-    image.setAttribute("width", "500");
-    image.setAttribute("alt", "answer");
     imageDiv.appendChild(image);
 }
 
 
 async function goToNextPage() {
-    var servletURL = "/getUngradedGroupKeys" + getUrlVars()['assignment-key'] + "&question-key=" + getUrlVars()["question-key"];
+    var servletURL = "/getUngradedGroupKeys?assignmentKey=" + getUrlVars()['assignment-key'] + "&questionKey=" + getUrlVars()["question-key"];
     const response = await fetch(servletURL);
     const json = await response.json();
     if (len(json) > 0) {

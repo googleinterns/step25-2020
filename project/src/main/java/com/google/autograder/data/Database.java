@@ -411,7 +411,7 @@ public final class Database {
     Query query = new Query("Group").setFilter(propertyFilter);
     List<String> groupKeys = new ArrayList<String>();
     for (Entity group : query(query)) {
-        if (group.getProperty("graded") != "GRADED") {
+        if (!"GRADED".equals(group.getProperty("graded"))) {
             Key key = group.getKey();
             String stringKey = KeyFactory.keyToString(key);
             groupKeys.add(stringKey); 

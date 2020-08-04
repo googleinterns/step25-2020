@@ -40,8 +40,7 @@ public final class AddAnswersServlet extends HttpServlet {
   }
 
   public String parseAnswer(String filePath) throws IOException {
-      Detect d = new Detect();
-      return d.detectDocumentText(filePath);
+      return Detect.detectDocumentText(filePath);
 
   }
 }

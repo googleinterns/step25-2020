@@ -20,8 +20,8 @@ public final class GetUngradedGroupKeysServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String assignmentKey = request.getParameter("assignment-key");
-    String questionKey = request.getParameter("question-key");
+    String assignmentKey = request.getParameter("assignmentKey");
+    String questionKey = request.getParameter("questionKey");
 
     String json = Database.getUngradedGroupKeys(questionKey);
     System.out.println(json);
