@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 import java.io.IOException;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import org.json.simple.JSONObject;
@@ -29,23 +31,29 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public final class API {
 
-    private static final String RESOURCES_PATH = "../../../project/src/main/resources"; // "../classes"
+    private static final String RESOURCES_PATH  = "../../../project/src/main/resources"; // "../classes"
+    private static final Logger LOGGER = Logger.getLogger(API.class.getName());
     private static final String API_KEY_PATH = "/auth/api_key.json";
     private static final Gson GSON = new Gson();
 
-    public static final String API_KEY = getAPIKey();
     public static final String UTF_8 = StandardCharsets.UTF_8.name();
+    public static final String API_KEY;
 
+    static {
+        API_KEY = getAPIKey();
+    }
+    
     private static String getAPIKey() {
+        String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
         String api_key = null;
 
         try {
-            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + API_KEY_PATH)));
+            String json = new String(Files.readAllBytes(Paths.get(apiKeyPath)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
             JSONObject apiKeyObject = (JSONObject) new JSONParser().parse(jsonObject.get("api_key").toString());
             api_key = apiKeyObject.get("api_key").toString();
         } catch(Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error retrieving API Key from the file system at:" + apiKeyPath, e);
         }
         
         return api_key;
@@ -83,7 +91,7 @@ public final class API {
         try {
             connection = (HttpURLConnection) new URL(endpoint).openConnection();
         } catch(IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error opening connection to given endpoint: " + endpoint, e);
             return null;
         }
 
@@ -92,7 +100,7 @@ public final class API {
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Authorization", authorization);
         } catch(ProtocolException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error setting request properties on the http endpoint connection.", e);
             return null;
         }    
 
