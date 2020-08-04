@@ -9,6 +9,7 @@ import java.net.ProtocolException;
 import javax.servlet.http.HttpServlet;
 import java.net.MalformedURLException;
 import org.json.simple.parser.JSONParser;
+import java.nio.charset.StandardCharsets;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
         int responseCode = 200;
 
         try {
-            byte[] postBodyData = buildPostBody(request).getBytes(API.UTF_8);
+            byte[] postBodyData = buildPostBody(request).getBytes(StandardCharsets.UTF_8);
             connection = buildHttpURLConnection(courseID, authorization, postBodyData.length);
             connection.getOutputStream().write(postBodyData);
 
