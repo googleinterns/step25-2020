@@ -72,24 +72,31 @@ public final class API {
     }
 
     public static HttpURLConnection getAuthenticatedRequest(String method, String endpoint) {
+        String authorization = getCurrentUserAPIAuthorization();
+        
+        if (authorization == null) {
+            return null;
+        }
+
+        HttpURLConnection connection = null;
+
         try {
-            String authorization = getCurrentUserAPIAuthorization();
-
-            if (authorization == null) {
-                return null;
-            }
-
-            HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
-
-            connection.setRequestMethod(method);
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Authorization", authorization);
-
-            return connection;
-        } catch(Exception e) {
+            connection = (HttpURLConnection) new URL(endpoint).openConnection();
+        } catch(IOException e) {
             e.printStackTrace();
             return null;
         }
+
+        try {
+            connection.setRequestMethod(method);
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", authorization);
+        } catch(ProtocolException e) {
+            e.printStackTrace();
+            return null;
+        }    
+
+        return connection;
     }
 
     public static String getJSON(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
