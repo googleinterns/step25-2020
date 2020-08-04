@@ -22,7 +22,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
         String courseID = request.getParameter("courseID");
         String endpoint = END_POINT.replace("{courseId}", courseID) + "?courseWorkStates=PUBLISHED&courseWorkStates=DRAFT&key=" + API.API_KEY;
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint);
+        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint).orElse(null);
 
         if (connection == null) {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");

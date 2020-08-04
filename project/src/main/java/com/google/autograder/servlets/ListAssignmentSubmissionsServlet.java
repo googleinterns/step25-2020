@@ -25,7 +25,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String assignmentKey = request.getParameter("assignmentKey");
         String endpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID).replace("{courseWorkId}", assignmentID).concat("?key=" + API.API_KEY);
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint);
+        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint).orElse(null);
         
         if (connection == null) {
             // TODO: Send the redirect url to the OAuth handler to resume user flow after authentication.

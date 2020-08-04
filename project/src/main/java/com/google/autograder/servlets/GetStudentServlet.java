@@ -22,7 +22,7 @@ public final class GetStudentServlet extends HttpServlet {
         String studentID = request.getParameter("studentID");
         String endpoint = GET_STUDENT_END_POINT.replace("{courseId}", courseID).replace("{userId}", studentID).concat("?key=" + API.API_KEY);
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint);
+        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint).orElse(null);
 
         if (connection == null) {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");

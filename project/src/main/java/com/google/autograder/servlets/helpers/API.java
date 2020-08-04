@@ -2,6 +2,7 @@ package com.google.autograder.servlets.helpers;
 
 import java.net.URL;
 import java.io.File;
+import java.util.Optional;
 import java.util.Iterator;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -42,7 +43,7 @@ public final class API {
     static {
         API_KEY = getAPIKey();
     }
-    
+
     private static String getAPIKey() {
         String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
         String api_key = null;
@@ -79,20 +80,19 @@ public final class API {
         return authorization;
     }
 
-    public static HttpURLConnection getAuthenticatedRequest(String method, String endpoint) {
+    public static Optional<HttpURLConnection> getAuthenticatedRequest(String method, String endpoint) {
         String authorization = getCurrentUserAPIAuthorization();
+        HttpURLConnection connection = null;
         
         if (authorization == null) {
-            return null;
+            return Optional.empty();
         }
-
-        HttpURLConnection connection = null;
 
         try {
             connection = (HttpURLConnection) new URL(endpoint).openConnection();
         } catch(IOException e) {
             LOGGER.log(Level.SEVERE, "Error opening connection to given endpoint: " + endpoint, e);
-            return null;
+            return Optional.empty();
         }
 
         try {
@@ -101,10 +101,10 @@ public final class API {
             connection.setRequestProperty("Authorization", authorization);
         } catch(ProtocolException e) {
             LOGGER.log(Level.SEVERE, "Error setting request properties on the http endpoint connection.", e);
-            return null;
+            return Optional.empty();
         }    
 
-        return connection;
+        return Optional.of(connection);
     }
 
     public static String getJSON(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {

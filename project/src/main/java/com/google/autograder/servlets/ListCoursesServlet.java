@@ -21,7 +21,7 @@ public final class ListCoursesServlet extends HttpServlet {
             return;
         }
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", END_POINT.concat("?key=" + API.API_KEY));
+        HttpURLConnection connection = API.getAuthenticatedRequest("GET", END_POINT.concat("?key=" + API.API_KEY)).orElse(null);
         
         if (connection == null) {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
