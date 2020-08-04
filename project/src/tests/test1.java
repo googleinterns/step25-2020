@@ -43,10 +43,7 @@ package com.google.sps;
 // @RunWith(MockitoJUnitRunner.class)
 public final class FavoriteServletTest {
     
-    private LocalServiceTestHelper helper;
-
-    private final LocalServiceTestHelper helper = 
-        new LocalServiceTestHelper(new )
+  private LocalServiceTestHelper helper;
 
   private DatastoreService addEntitiesAndGetDatastore() {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
