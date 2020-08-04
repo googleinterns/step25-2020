@@ -6,15 +6,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.lang.Iterable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.io.IOException;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
 import org.json.simple.parser.JSONParser;
+import com.google.cloud.storage.BlobInfo;
 import com.google.autograder.data.Submission;
 import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.Key;
 import com.google.autograder.data.UserHandler;
+import com.google.cloud.storage.StorageOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -27,15 +34,6 @@ import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
-
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /** Class containing basic database functionalities. */
 public final class Database {
@@ -254,76 +252,74 @@ public final class Database {
 
         return new Gson().toJson(submissions);
     }
-  
-  public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
-      Entity questionEntity = new Entity("Question");
-      questionEntity.setProperty("name", questionName);
-      questionEntity.setProperty("type", questionType);
-      questionEntity.setProperty("points", questionPoints);
-      questionEntity.setProperty("assignmentKey", assignmentKey);
-      save(questionEntity);
-      System.out.println("question " + questionName + " has been added");
-      return questionEntity;
-  }
-  
-  
-  // sample add Answer, will change in future
-  public static void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
-      Entity answerEntity = new Entity("Answer");
-      answerEntity.setProperty("parsedAnswer", parsedAnswer);
-      answerEntity.setProperty("score", score);
-      answerEntity.setProperty("filePath", filePath);
-      answerEntity.setProperty("questionKey", questionKey);
-      answerEntity.setProperty("assignmentKey", assignmentKey);
-      save(answerEntity);
-  }
-  
-  public static Entity addGroup(int score, String questionKey) {
-      Entity groupEntity = new Entity("Group");
-      groupEntity.setProperty("score", score);
-      groupEntity.setProperty("questionKey", questionKey);
-      save(groupEntity);
-      return groupEntity;
-  }
-  
-  //unused right now
-  public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
-      answerEntity.setProperty("groupKey", groupEntity.getKey());
-      save(answerEntity);
-  }
-  
-  //unused right now
-  public static void updateScoreForAnswer(Entity groupEntity, int score) {
-      groupEntity.setProperty("score", score);
-      save(groupEntity);
-  }
-  
-  public static String getAllQuestionsJSON(String key) {
-    // query all questions with this key at assignment_id key
-    try {
-        Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
-        Query query = new Query("Question").setFilter(propertyFilter);
-        List<Question> questions = new ArrayList<>();
-        for (Entity entity : query(query)) {
-            String name = (String) entity.getProperty("name");
-            Long pointsLong = (Long) entity.getProperty("points");
-            int points = Math.toIntExact(pointsLong);
-            String status = (String) entity.getProperty("status");
-            String assignmentKey = (String) entity.getProperty("assignmentKey");
-            Key questionKey = entity.getKey();
-            Question currQuestion = new Question(name, points, status, assignmentKey, questionKey);
-            questions.add(currQuestion); }
-        String json = new Gson().toJson(questions);
-        System.out.println(json);
-        return json;   
-        
-    }
-    catch (Exception e) {
-        System.out.println("assignment wasn't found");
-        return "error";
-    }
-  }
     
+    public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
+        Entity questionEntity = new Entity("Question");
+        questionEntity.setProperty("name", questionName);
+        questionEntity.setProperty("type", questionType);
+        questionEntity.setProperty("points", questionPoints);
+        questionEntity.setProperty("assignmentKey", assignmentKey);
+        save(questionEntity);
+        return questionEntity;
+    }
+    
+    // sample add Answer, will change in future
+    public static void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
+        Entity answerEntity = new Entity("Answer");
+        answerEntity.setProperty("parsedAnswer", parsedAnswer);
+        answerEntity.setProperty("score", score);
+        answerEntity.setProperty("filePath", filePath);
+        answerEntity.setProperty("questionKey", questionKey);
+        answerEntity.setProperty("assignmentKey", assignmentKey);
+        save(answerEntity);
+    }
+    
+    public static Entity addGroup(int score, String questionKey) {
+        Entity groupEntity = new Entity("Group");
+        groupEntity.setProperty("score", score);
+        groupEntity.setProperty("questionKey", questionKey);
+        save(groupEntity);
+        return groupEntity;
+    }
+    
+    // unused right now
+    public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
+        answerEntity.setProperty("groupKey", groupEntity.getKey());
+        save(answerEntity);
+    }
+    
+    //unused right now
+    public static void updateScoreForAnswer(Entity groupEntity, int score) {
+        groupEntity.setProperty("score", score);
+        save(groupEntity);
+    }
+    
+    public static String getAllQuestionsJSON(String key) {
+        // query all questions with this key at assignment_id key
+        try {
+            Filter propertyFilter = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, key);
+            Query query = new Query("Question").setFilter(propertyFilter);
+            List<Question> questions = new ArrayList<>();
+            
+            for (Entity entity : query(query)) {
+                String name = (String) entity.getProperty("name");
+                Long pointsLong = (Long) entity.getProperty("points");
+                int points = Math.toIntExact(pointsLong);
+                String status = (String) entity.getProperty("status");
+                String assignmentKey = (String) entity.getProperty("assignmentKey");
+                Key questionKey = entity.getKey();
+                Question currQuestion = new Question(name, points, status, assignmentKey, questionKey);
+                questions.add(currQuestion);
+            }
+            
+            String json = new Gson().toJson(questions);
+            System.out.println(json);
+            return json;
+        } catch (Exception e) {
+            System.out.println("assignment wasn't found");
+            return "error";
+        }
+    }
 
     // Retrives the current user's assignments for a course data as JSON.
 
@@ -332,6 +328,7 @@ public final class Database {
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
 
         List<Assignment> assignments = new ArrayList<>();
+        
         for (Entity assignment : query(assignmentsQuery)) {
             String title = (String) assignment.getProperty("title");
             String id = (String) assignment.getProperty("id");
@@ -346,81 +343,88 @@ public final class Database {
         String json = new Gson().toJson(assignments);
         return json;
     }
-
-  public static String getAllAnswersJSON(String assignmentKey, String questionKey) {
-    // query all answers with these keys
-    try {
+    
+    public static String getAllAnswersJSON(String assignmentKey, String questionKey) {
+        // query all answers with these keys
+        try {
+            Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
+            Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+            CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
+            Query query = new Query("Answer").setFilter(propertyFilter);
+            List<Answer> answers = new ArrayList<>();
+        
+            for (Entity entity : query(query)) {
+                String filePath = (String) entity.getProperty("filePath");
+                String parsedAnswer = (String) entity.getProperty("parsedAnswer");
+                Long scoreLong = (Long) entity.getProperty("score");
+                int score = Math.toIntExact(scoreLong);
+                Key answerKey = entity.getKey();
+                Answer currAnswer = new Answer(filePath, parsedAnswer, score, assignmentKey, questionKey, answerKey);
+                answers.add(currAnswer);
+            }
+            
+            String json = new Gson().toJson(answers);
+            return json;
+        } catch (Exception e) {
+            System.out.println("answers weren't found");
+            e.printStackTrace(System.out);
+            return "error";
+        }
+    }
+    
+    public static String createGroups(String assignmentKey, String questionKey) {
         Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
         Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
         CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
         Query query = new Query("Answer").setFilter(propertyFilter);
-        List<Answer> answers = new ArrayList<>();
-        for (Entity entity : query(query)) {
-            String filePath = (String) entity.getProperty("filePath");
-            String parsedAnswer = (String) entity.getProperty("parsedAnswer");
-            Long scoreLong = (Long) entity.getProperty("score");
-            int score = Math.toIntExact(scoreLong);
-            Key answerKey = entity.getKey();
-            Answer currAnswer = new Answer(filePath, parsedAnswer, score, assignmentKey, questionKey, answerKey);
-            answers.add(currAnswer);
+        HashMap<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
+        
+        // loop through answers and see if parsed answer already exists. if so, add answer entity to arraylist. if not exists, init new array and add
+        for (Entity answer : query(query)) {
+            String parsedAnswer = (String) answer.getProperty("parsedAnswer");
+            
+            if (parsedAnswerGroups.get(parsedAnswer) == null) {
+                ArrayList<Entity> temp = new ArrayList<Entity>();
+                temp.add(answer);
+                parsedAnswerGroups.put(parsedAnswer, temp);
+            } else {
+                parsedAnswerGroups.get(parsedAnswer).add(answer);
+            }
         }
-        String json = new Gson().toJson(answers);
+        
+        HashMap<Group, ArrayList<Answer>> groups = new HashMap<Group, ArrayList<Answer>>();
+        
+        for (HashMap.Entry<String, ArrayList<Entity>> entry : parsedAnswerGroups.entrySet()) {
+            Entity groupEntity = addGroup((int) 0, questionKey);
+            int score = (int) groupEntity.getProperty("score");
+            Key groupKey = groupEntity.getKey();
+            Group group = new Group(score, questionKey, groupKey);
+            ArrayList<Answer> answerList = new ArrayList<Answer>();
+            
+            // created group entity and class @ this point
+            // now we loop through all the answers and map them to a group
+            for (Entity answer : entry.getValue()) {
+                String filePath = (String) answer.getProperty("filePath");
+                String parsedAnswer = (String) answer.getProperty("parsedAnswer");
+                Long answerScoreLong = (Long) answer.getProperty("score");
+                int answerScore = Math.toIntExact(answerScoreLong);
+                Key answerKey = answer.getKey();
+                Answer currAnswer = new Answer(filePath, parsedAnswer, answerScore, assignmentKey, questionKey, answerKey);
+                currAnswer.addGroup(groupKey);
+                System.out.println(currAnswer.getGroupKey());
+                answer.setProperty("groupKey", currAnswer.getGroupKey());
+                save(answer);
+                answerList.add(currAnswer);
+            }
+            
+            groups.put(group, answerList);
+        }
+        
+        String json = new Gson().toJson(groups);
+        System.out.println(json);
         return json;
     }
-    catch (Exception e) {
-        System.out.println("answers weren't found");
-        e.printStackTrace(System.out);
-        return "error";
-    }
-  }
-
-  public static String createGroups(String assignmentKey, String questionKey) {
-    Filter propertyFilterAssignment = new FilterPredicate("assignmentKey", FilterOperator.EQUAL, assignmentKey);
-    Filter propertyFilterQuestion = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
-    CompositeFilter propertyFilter = CompositeFilterOperator.and(propertyFilterAssignment, propertyFilterQuestion);
-    Query query = new Query("Answer").setFilter(propertyFilter);
-    HashMap<String, ArrayList<Entity>> parsedAnswerGroups = new HashMap<String, ArrayList<Entity>>();
-    // loop through answers and see if parsed answer already exists. if so, add answer entity to arraylist. if not exists, init new array and add
-    for (Entity answer : query(query)) {
-        String parsedAnswer = (String) answer.getProperty("parsedAnswer");
-        if (parsedAnswerGroups.get(parsedAnswer) == null) {
-            ArrayList<Entity> temp = new ArrayList<Entity>();
-            temp.add(answer);
-            parsedAnswerGroups.put(parsedAnswer, temp);
-        }
-        else {
-            parsedAnswerGroups.get(parsedAnswer).add(answer);
-        }
-    }
-    HashMap<Group, ArrayList<Answer>> groups = new HashMap<Group, ArrayList<Answer>>();
-    for (HashMap.Entry<String, ArrayList<Entity>> entry : parsedAnswerGroups.entrySet()) {
-        Entity groupEntity = addGroup((int) 0, questionKey);
-        int score = (int) groupEntity.getProperty("score");
-        Key groupKey = groupEntity.getKey();
-        Group group = new Group(score, questionKey, groupKey);
-        ArrayList<Answer> answerList = new ArrayList<Answer>();
-        // created group entity and class @ this point
-        // now we loop through all the answers and map them to a group
-        for (Entity answer : entry.getValue()) {
-            String filePath = (String) answer.getProperty("filePath");
-            String parsedAnswer = (String) answer.getProperty("parsedAnswer");
-            Long answerScoreLong = (Long) answer.getProperty("score");
-            int answerScore = Math.toIntExact(answerScoreLong);
-            Key answerKey = answer.getKey();
-            Answer currAnswer = new Answer(filePath, parsedAnswer, answerScore, assignmentKey, questionKey, answerKey);
-            currAnswer.addGroup(groupKey);
-            System.out.println(currAnswer.getGroupKey());
-            answer.setProperty("groupKey", currAnswer.getGroupKey());
-            save(answer);
-            answerList.add(currAnswer);
-        }
-        groups.put(group, answerList);
-    }
-    String json = new Gson().toJson(groups);
-    System.out.println(json);
-    return json;
-  }
-
+    
     public static void addSubmission(Submission submission) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
@@ -434,10 +438,10 @@ public final class Database {
         save(submissionEntity);
     }
 
-/** upload a file to the submission_bucket 
-  * objectName will be the ID of the GCS object
-  * filePath is absolute
-  */
+    /** upload a file to the submission_bucket 
+    *   objectName will be the ID of the GCS object
+    *   filePath is absolute
+    */
     public static void uploadObject(String objectName, String filePath) {    
         try {
             Storage storage = StorageOptions.newBuilder().setProjectId("step25-2020").build().getService();
@@ -482,42 +486,41 @@ public final class Database {
         }
     }
 
-/** 
- * this function takes the assignment Key and answer group key as parameters
- * returns list of blobKeys to submissions that fit in specified answer group for specific question
- */ 
-  public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
-
-    // query answer entities filtered only in group from parameter
-    Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
-    Query answersQuery = new Query("Answer").setFilter(groupFilter);    
+    /** this function takes the assignment Key and answer group key as parameters
+    *   returns list of blobKeys to submissions that fit in specified answer group for specific question
+    */ 
+    public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
+        // query answer entities filtered only in group from parameter
+        Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+        Query answersQuery = new Query("Answer").setFilter(groupFilter);    
     
-    // generate list of submissionKeys for the group
-    List<String> submissionKeys = new ArrayList<>();
-    for (Entity entity : query(answersQuery)) {
-        String submissionKey = (String) entity.getProperty("submissionKey");
-        submissionKeys.add(submissionKey);
-    }  
-
-    // query submissions filtered to the assignment
-    Query submissionsQuery = new Query("Submission");
-
-    // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
-    // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
-    Map<Key, String> blobKeyMap = new HashMap<>();
-    for (Entity submissionEntity : query(submissionsQuery)) {
-        if (submissionKeys.contains(submissionEntity.getKey())) {
-            String blobKey = (String) submissionEntity.getProperty("blobKey");
-            Key submissionKey = submissionEntity.getKey();
-            blobKeyMap.put(submissionKey, blobKey);
+        // generate list of submissionKeys for the group
+        List<String> submissionKeys = new ArrayList<>();
+        for (Entity entity : query(answersQuery)) {
+            String submissionKey = (String) entity.getProperty("submissionKey");
+            submissionKeys.add(submissionKey);
         }
+        
+        // query submissions filtered to the assignment
+        Query submissionsQuery = new Query("Submission");
+
+        // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
+        // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
+        Map<Key, String> blobKeyMap = new HashMap<>();
+        
+        for (Entity submissionEntity : query(submissionsQuery)) {
+            if (submissionKeys.contains(submissionEntity.getKey())) {
+                String blobKey = (String) submissionEntity.getProperty("blobKey");
+                Key submissionKey = submissionEntity.getKey();
+                blobKeyMap.put(submissionKey, blobKey);
+            }
+        }
+
+        String blobKeyJson = new Gson().toJson(blobKeyMap);
+        return blobKeyJson;
     }
-
-    String blobKeyJson = new Gson().toJson(blobKeyMap);
-    return blobKeyJson;
-  }
-
-  //get all submissions for an assignment
+    
+    // Get all submissions for an assignment
 
     // Get all answers for a question
 
@@ -527,4 +530,3 @@ public final class Database {
 
     // Change answer's group
 }
-
