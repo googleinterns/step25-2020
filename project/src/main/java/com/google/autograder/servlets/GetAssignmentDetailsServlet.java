@@ -4,14 +4,12 @@ import java.net.URL;
 import java.util.Iterator;
 import java.io.IOException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
