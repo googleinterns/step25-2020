@@ -4,8 +4,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /** Class containing answer data. */
-public class Answer {
-    
+public final class Answer {
+
     public int score;
     public String key;
     public String filePath;
