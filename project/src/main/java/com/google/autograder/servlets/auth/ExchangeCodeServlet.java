@@ -3,16 +3,13 @@ package com.google.autograder.servlets.auth;
 import java.net.URL;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.io.BufferedReader;
 import java.net.URLConnection;
 import java.lang.StringBuilder;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.MalformedURLException;
 import javax.servlet.http.HttpServlet;
 import java.nio.charset.StandardCharsets;
-import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +19,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.autograder.servlets.helpers.API;
 import com.google.autograder.servlets.helpers.Client;
 
-// @WebServlet("/exchangeAuthCode")
 public final class ExchangeCodeServlet extends HttpServlet {
     
     private static String ACCESS_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";

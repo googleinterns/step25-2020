@@ -2,23 +2,13 @@ package com.google.autograder.servlets.auth;
 
 import java.net.URL;
 import java.io.IOException;
-import java.io.BufferedReader;
-import java.net.URLConnection;
 import java.lang.StringBuilder;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.MalformedURLException;
 import javax.servlet.http.HttpServlet;
-import java.nio.charset.StandardCharsets;
-import javax.servlet.annotation.WebServlet;
-import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.autograder.servlets.helpers.API;
 import com.google.autograder.servlets.helpers.Client;
 
-// @WebServlet("/requestAccessToken")
 public final class RequestTokenServlet extends HttpServlet {
 
     private static String AUTH_CODE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
