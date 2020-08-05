@@ -1,6 +1,7 @@
 package com.google.autograder.servlets;
 
 import java.net.URL;
+import java.util.Optional;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import javax.servlet.http.HttpServlet;
@@ -25,14 +26,14 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         String assignmentKey = request.getParameter("assignmentKey");
         String endpoint = CLASSROOM_END_POINT.replace("{courseId}", courseID).replace("{courseWorkId}", assignmentID).concat("?key=" + API.API_KEY);
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", endpoint).orElse(null);
+        Optional<HttpURLConnection> connection = API.getAuthenticatedRequest("GET", endpoint);
         
-        if (connection == null) {
+        if (!connection.isPresent()) {
             // TODO: Send the redirect url to the OAuth handler to resume user flow after authentication.
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
         }
         
-        String json = API.getJSON(connection);
+        String json = API.getJSON(connection.get());
 
         Database.storeAssignmentSubmissionsData(json, courseID, assignmentID, assignmentKey);
 

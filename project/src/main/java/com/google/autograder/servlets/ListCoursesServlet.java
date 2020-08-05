@@ -1,5 +1,6 @@
 package com.google.autograder.servlets;
 
+import java.util.Optional;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import org.json.simple.JSONObject;
@@ -21,12 +22,14 @@ public final class ListCoursesServlet extends HttpServlet {
             return;
         }
 
-        HttpURLConnection connection = API.getAuthenticatedRequest("GET", END_POINT.concat("?key=" + API.API_KEY)).orElse(null);
+        Optional<HttpURLConnection> optionalConnection = API.getAuthenticatedRequest("GET", END_POINT.concat("?key=" + API.API_KEY));
         
-        if (connection == null) {
+        if (!optionalConnection.isPresent()) {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
             return;
         }
+
+        HttpURLConnection connection = optionalConnection.get();
 
         connection.setRequestProperty("courseStates", "ACTIVE");
         
