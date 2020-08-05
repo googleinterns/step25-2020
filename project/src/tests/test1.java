@@ -42,7 +42,7 @@ package com.google.sps;
 
 // @RunWith(MockitoJUnitRunner.class)
 public final class FavoriteServletTest {
-    
+
   private LocalServiceTestHelper helper;
 
   private DatastoreService addEntitiesAndGetDatastore() {
@@ -72,6 +72,51 @@ public final class FavoriteServletTest {
   @After
   public void tearDown() {
     helper.tearDown();
+  }
+
+  /**
+  * insert error discription
+  */
+  @Test
+  public void testSomething() {
+    LocalUserServiceTestConfig userServiceConfig = new LocalUserServiceTestConfig();
+    userServiceConfig.setOAuthEmail("email1@company.com");
+    userServiceConfig.setOAuthUserId("9876543210"); //idk if this is right
+    userServiceConfig.setOAuthAuthDomain("company.com");
+
+    LocalDatastoreServiceTestConfig datastoreConfig = new LocalDatastoreServiceTestConfig();
+
+    helper = new LocalServiceTestHelper(userServiceConfig, datastoreConfig);
+
+    helper.setEnvIsLoggedIn(true);
+    helper.setEnvEmail("email1@company.com");
+    helper.setEnvAuthDomain("company.com");
+
+    Map<String,Object> envAttributeMap = new HashMap<String,Object>();
+    envAttributeMap.put("com.google.appengine.api.users.UserService.user_id_key", "User1");
+    helper.setEnvAttributes(envAttributeMap);
+    helper.setUp();
+
+    HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+    HttpServletResponse mockResponse = mock(HttpServletResponse.class);
+
+    when(mockRequest.getParameter("userEmail")).thenReturn("email1@company.com");
+
+    Logger logger = Logger.getLogger("Servlet Test Logger");
+
+    // <ServletName>Servlet servlet = new <ServletName>Servlet();
+    
+    try {
+      servlet.doPost(mockRequest, mockResponse);
+    } catch(IOException exception) {
+      logger.log(Level.SEVERE, "The doPost method in NameOfServlet has failed.");
+    }
+
+    try {
+      verify(mockResponse).sendError(HttpServletResponse.SC_NOT_FOUND);
+    } catch (IOException exception) {
+      logger.log(Level.SEVERE, "The servlet <insert message here>");
+    }
   }
 
 
