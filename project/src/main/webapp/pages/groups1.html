@@ -4,19 +4,60 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/styles/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/styles/style.css" type="text/styles//styles//styls" rel="stylesheet" media="screen,projection"/>
+
+    <!-- JS  -->
+    <script src="/scripts/assignmentMenu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
 <body>
-    <h1>Assignment 1 Groups</h1>
-    <h2>Group 1: 10/10</h2>
-        <img src="/images/eight1.jpeg" height="100" width="auto">
-        <img src="/images/eight2.jpeg" height="100" width="auto">
-        <img src="/images/eight3.jpeg" height="100" width="auto">
-    <h2>Group 2: Not Graded Yet</h2>
-        <img src="/images/three1.jpeg" height="100" width="auto">
-        <img src="/images/three2.jpeg" height="100" width="auto">
-        <img src="/images/three3.jpeg" height="100" width="auto"><br>
-    <a href="grade.html">Grade Groups</a>
+    <nav class="green" role="navigation">
+        <div class="nav-wrapper container">
+        <img src="../images/GC_logo.png" class="nav-wrapper">
+        <a id="logo-container" href="#" class="white-text brand-logo"> gClassroom AutoGrader</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a class="white-text" href="/pages/courses.html">Your Courses</a></li>
+            <li><a class="white-text" href="/pages/assignments.html">Assignments</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="/pages/courses.html">Your Courses</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+    
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large red click-to-toggle" onclick="getQuestionFunctions();">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li><a id="editOutline" href="/pages/editOutline.html" class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Tooltip">
+            <i class="material-icons">mode_edit</i></a></li>
+            <li><a id="gradeSubmissions" href="/pages/gradeSubmissions.html" class="btn-floating yellow darken-1"><i class="material-icons">insert_chart</i></a></li>
+            <li><a id="viewSubmissions" href="/pages/viewSubmissions.html" class="btn-floating green"><i class="material-icons">pageview</i></a></li>
+            <li><a id="reviewGrades" href="/pages/reviewGrades.html" class="btn-floating blue"><i class="material-icons">rate_review</i></a></li>
+        </ul>
+    </div>
+
+    <div class="container page-container">
+        <h1>Assignment 1 Groups</h1>
+        <h4>Group 1: 10/10</h4>
+            <img src="/images/eight1.jpeg" height="100" width="auto">
+            <img src="/images/eight2.jpeg" height="100" width="auto">
+            <img src="/images/eight3.jpeg" height="100" width="auto">
+        <h4>Group 2: Not Graded Yet</h4>
+            <img src="/images/three1.jpeg" height="100" width="auto">
+            <img src="/images/three2.jpeg" height="100" width="auto">
+            <img src="/images/three3.jpeg" height="100" width="auto"><br>
+        <a href="grade.html">Grade Groups</a>
+    </div>
 
 </body>
 
