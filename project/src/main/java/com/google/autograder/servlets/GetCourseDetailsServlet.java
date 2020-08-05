@@ -3,6 +3,7 @@ package com.google.autograder.servlets;
 import java.net.URL;
 import java.util.Iterator;
 import java.io.IOException;
+import org.json.simple.JSONObject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
@@ -32,13 +33,19 @@ public final class GetCourseDetailsServlet extends HttpServlet {
         Query query = new Query("Course").setFilter(userEmailFilter).setFilter(courseIDFilter);
         Iterator<Entity> results = Database.query(query).iterator(); 
         Entity course = results.next();
-        
+
         String name = (String) course.getProperty("name");
         String description = (String) course.getProperty("description");
-        String courseDetails = "{ \"course\" : { \"name\": \"" + name + "\" , \"description\": \"" + description + "\" }}";
+
+        JSONObject courseDetailsObject = new JSONObject();
+        JSONObject courseObject = new JSONObject();
+
+        courseObject.put("name", name);
+        courseObject.put("description", description);
+        courseDetailsObject.put("course", courseObject);
 
         response.setContentType("application/json");
-        response.getWriter().println(courseDetails);
+        response.getWriter().println(courseDetailsObject.toString());
     }
 
 }
