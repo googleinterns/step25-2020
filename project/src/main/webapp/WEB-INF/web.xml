@@ -162,6 +162,17 @@
         <url-pattern>/group</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetUngradedGroupKeysServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetUngradedGroupKeysServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetUngradedGroupKeysServlet</servlet-name>
+        <url-pattern>/getUngradedGroupKeys</url-pattern>
+    </servlet-mapping>
+
+
     <!-- Manage Box (Outlines) -->
     
     <servlet>
@@ -172,6 +183,28 @@
     <servlet-mapping>
         <servlet-name>ManageBoxServlet</servlet-name>
         <url-pattern>/ManageBox</url-pattern>
+    </servlet-mapping>
+
+    <!-- Grade -->
+    
+    <servlet>
+        <servlet-name>GradeServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GradeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GradeServlet</servlet-name>
+        <url-pattern>/grade</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetImageServlet</servlet-name>
+        <servlet-class>com.google.autograder.servlets.GetImageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetImageServlet</servlet-name>
+        <url-pattern>/getImage</url-pattern>
     </servlet-mapping>
 
 </web-app>
