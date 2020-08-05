@@ -47,13 +47,12 @@ public final class API {
 
     private static Optional<String> retrieveAPIKey() {
         String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
-        String apiKey = null;
 
         try {
             String json = new String(Files.readAllBytes(Paths.get(apiKeyPath)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject apiKeyObject = (JSONObject) new JSONParser().parse(jsonObject.get("api_key").toString());
-            apiKey = apiKeyObject.get("api_key").toString();
+            JSONObject apiKeyObject = (JSONObject) jsonObject.get("api_key");
+            return Optional.of(apiKeyObject.get("api_key").toString());
         } catch(IOException exception) {
             LOGGER.log(Level.SEVERE, "Error retrieving API Key from the file system at:" + apiKeyPath, exception);
             return Optional.empty();
@@ -61,8 +60,6 @@ public final class API {
             LOGGER.log(Level.SEVERE, "Error parsing API Key from api_key.json at:" + apiKeyPath, exception);
             return Optional.empty();
         }
-        
-        return Optional.of(apiKey);
     }
 
     public static String getCurrentUserAPIAuthorization() {
