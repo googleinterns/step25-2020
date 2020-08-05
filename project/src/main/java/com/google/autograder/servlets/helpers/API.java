@@ -39,11 +39,7 @@ public final class API {
     private static final Gson GSON = new Gson();
 
     public static final String UTF_8 = StandardCharsets.UTF_8.name();
-    public static final String API_KEY;
-
-    static {
-        API_KEY = retrieveAPIKey().orElse(null);
-    }
+    public static final String API_KEY = retrieveAPIKey().get();
 
     private static Optional<String> retrieveAPIKey() {
         String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
@@ -84,7 +80,7 @@ public final class API {
 
     public static Optional<HttpURLConnection> getAuthenticatedRequest(String method, String endpoint) {
         String authorization = getCurrentUserAPIAuthorization();
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
         
         if (authorization == null) {
             return Optional.empty();
