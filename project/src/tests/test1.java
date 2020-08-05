@@ -93,7 +93,7 @@ public final class FavoriteServletTest {
     helper.setEnvAuthDomain("company.com");
 
     Map<String,Object> envAttributeMap = new HashMap<String,Object>();
-    envAttributeMap.put("com.google.appengine.api.users.UserService.user_id_key", "User1");
+    envAttributeMap.put("com.google.appengine.api.users.UserService.user_id_key", "9876543210");
     helper.setEnvAttributes(envAttributeMap);
     helper.setUp();
 
