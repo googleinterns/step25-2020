@@ -102,7 +102,31 @@ public final class DatabaseTest {
   */
   @Test
   public void addAnswerTest() {
+    int count = 0;
+    // long settingScore = 
     Database.addAnswer("filePath1", "parsedAnswer1", 5, "assignmentKey1", "questionKey1");
+    
+    String filepath = "";
+    String parsedAns = "";
+    String score = "-1";
+    String assignmentKey = "";
+    String questionKey = "";
+
+    Iterable<Entity> query = Database.query(new Query("Answer"));
+    for (Entity entity : query) {
+        count++;
+        filepath = (String) entity.getProperty("filePath");
+        parsedAns = (String) entity.getProperty("parsedAnswer");
+        score = entity.getProperty("score").toString();
+        assignmentKey = (String) entity.getProperty("assignmentKey");
+        questionKey = (String) entity.getProperty("questionKey");
+    }
+    Assert.assertEquals(count, 1);
+    Assert.assertEquals(filepath, "filePath1");
+    Assert.assertEquals(parsedAns, "parsedAnswer1");
+    Assert.assertEquals(score, "5");
+    Assert.assertEquals(assignmentKey, "assignmentKey1");
+    Assert.assertEquals(questionKey, "questionKey1");
   }
 
 }
