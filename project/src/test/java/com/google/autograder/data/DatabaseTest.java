@@ -103,7 +103,6 @@ public final class DatabaseTest {
   @Test
   public void addAnswerTest() {
     int count = 0;
-    // long settingScore = 
     Database.addAnswer("filePath1", "parsedAnswer1", 5, "assignmentKey1", "questionKey1");
     
     String filepath = "";
@@ -128,5 +127,7 @@ public final class DatabaseTest {
     Assert.assertEquals(assignmentKey, "assignmentKey1");
     Assert.assertEquals(questionKey, "questionKey1");
   }
+
+
 
 }
