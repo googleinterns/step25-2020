@@ -60,6 +60,18 @@ public final class DatabaseTest {
       helper.tearDown();
   }
 
+  private static Entity getOnlyEntity(Query query) {
+    Iterator<Entity> entities = Database.query(query).iterator();
+    if (!entities.hasNext()) {
+        Assert.fail("No entities in datastore");
+    }
+    Entity entity = entities.next();
+    if (entities.hasNext()) {
+        Assert.fail("More than 1 entity"); 
+    }
+    return entity;
+  }
+
   @Test
   public void saveASingleEntity() {
     int courseCountBeforeSaving = 0;
@@ -132,7 +144,6 @@ public final class DatabaseTest {
     }
 
     Assert.assertEquals(expectedAnswers, actualAnswers);
-    
   }
 
 }
