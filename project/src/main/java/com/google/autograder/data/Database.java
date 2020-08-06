@@ -520,8 +520,6 @@ public final class Database {
     return blobKeyJson;
   }
 
-<<<<<<< HEAD
-=======
   public static String getUngradedGroupKeys(String questionKey) {
     Filter propertyFilter = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
     Query query = new Query("Group").setFilter(propertyFilter);
@@ -566,6 +564,5 @@ public final class Database {
       return new Gson().toJson("");
     
   }
->>>>>>> 7750db72846ff804eb84edfcf35ca709f053aa8e
 }
 
