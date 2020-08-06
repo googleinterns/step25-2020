@@ -21,3 +21,10 @@ indexes:
     direction: asc  
   - name: creationTime
     direction: desc
+
+- kind: Assignment
+  ancestor: no
+  properties:
+  - name: courseID
+  - name: creationTime
+    direction: desc

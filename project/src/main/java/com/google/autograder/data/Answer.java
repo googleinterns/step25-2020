@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /** Class containing answer data. */
-public class Answer {
+public final class Answer {
 
   public String filePath;
   public String parsedAnswer;
