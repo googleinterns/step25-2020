@@ -1,12 +1,11 @@
 package com.google.autograder.servlets.helpers;
 
-import java.io.File;
 import java.util.Optional;
 import java.io.InputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.io.BufferedReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.InputStreamReader;
 import org.json.simple.JSONObject;
 import java.util.stream.Collectors;
@@ -16,44 +15,31 @@ import org.json.simple.parser.ParseException;
 
 public final class Client {
 
+    public static final String CLIENT_ID;
+    public static final String CLIENT_SECRET;
+
     private static final String CREDENTIALS_PATH = "auth/credentials.json";
-    private static final JSONObject CREDENTIALS_WEB_JSON_CONTENT = retrieveCredentialsWebContent().get();
+    private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 
-    public static final String CLIENT_ID = retrieveClientID().get();
-    public static final String CLIENT_SECRET = retrieveClientSecret().get();
-
-    private static Optional<JSONObject> retrieveCredentialsWebContent() {
+    static {
         InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(CREDENTIALS_PATH);
 
         String json = new BufferedReader(
             new InputStreamReader(inputStream, StandardCharsets.UTF_8)
         ).lines().collect(Collectors.joining("\n"));
 
+        JSONObject web;
+
         try {
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject web = (JSONObject) jsonObject.get("web");
-            return Optional.of(web);
-        } catch(ParseException e) {
-            return Optional.empty();
+            web = (JSONObject) jsonObject.get("web");
+        } catch(ParseException exception) {
+            LOGGER.log(Level.SEVERE, "Error retrieving credentials from the resources folder at: " + CREDENTIALS_PATH, exception);
+            throw new RuntimeException(exception);
         }
-    }
 
-    private static Optional<String> retrieveClientID() {
-        try {
-            return Optional.of(CREDENTIALS_WEB_JSON_CONTENT.get("client_id").toString());
-        } catch(Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }
-
-    private static Optional<String> retrieveClientSecret() {
-        try {
-            return  Optional.of(CREDENTIALS_WEB_JSON_CONTENT.get("client_secret").toString());
-        } catch(Exception e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
+        CLIENT_ID = web.get("client_id").toString();
+        CLIENT_SECRET = web.get("client_secret").toString();
     }
 
 }
