@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /** Class containing assignment data. */
-public class Assignment {
+public final class Assignment {
 
   public String title;
   public String id;

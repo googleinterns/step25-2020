@@ -58,7 +58,6 @@ public final class Database {
     }
 
     // Takes in a courses array in JSON format and then stores that courses data for the current user.
-
     public static void storeCoursesData(String coursesJSON) {
         String userEmail = UserHandler.getCurrentUserEmail();
         String userID = UserHandler.getCurrentUserID();
@@ -99,7 +98,6 @@ public final class Database {
     }
 
     // Retrives the current user's courses data as JSON.
-
     public static String getCoursesData() {
         String userEmail = UserHandler.getCurrentUserEmail();
 
@@ -126,7 +124,6 @@ public final class Database {
     }
 
     // Takes in a course work array in JSON format and then stores the assignments data for the current user.
-
     public static void storeAssignmentsData(String courseWorkJSON, String courseID) {        
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter);
@@ -267,8 +264,7 @@ public final class Database {
   }
   
   
-  // sample add Answer, will change in future
-  public static void addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
+  public static Entity addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
       Entity answerEntity = new Entity("Answer");
       answerEntity.setProperty("parsedAnswer", parsedAnswer);
       answerEntity.setProperty("score", score);
@@ -276,6 +272,7 @@ public final class Database {
       answerEntity.setProperty("questionKey", questionKey);
       answerEntity.setProperty("assignmentKey", assignmentKey);
       save(answerEntity);
+      return answerEntity;
   }
   
   public static Entity addGroup(int score, String questionKey) {
@@ -287,15 +284,17 @@ public final class Database {
   }
   
   //unused right now
-  public static void updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
+  public static Entity updateGroupForAnswer(Entity answerEntity, Entity groupEntity) {
       answerEntity.setProperty("groupKey", groupEntity.getKey());
       save(answerEntity);
+      return answerEntity;
   }
   
   //unused right now
-  public static void updateScoreForAnswer(Entity groupEntity, int score) {
+  public static Entity updateScoreForAnswer(Entity groupEntity, int score) {
       groupEntity.setProperty("score", score);
       save(groupEntity);
+      return groupEntity;
   }
   
   public static String getAllQuestionsJSON(String key) {
@@ -421,7 +420,7 @@ public final class Database {
     return json;
   }
 
-    public static void addSubmission(Submission submission) {
+    public static Entity addSubmission(Submission submission) {
         Entity submissionEntity = new Entity("Submission");
         submissionEntity.setProperty("graded", "NOT_GRADED");
         submissionEntity.setProperty("userID", submission.userID);
@@ -432,6 +431,7 @@ public final class Database {
         submissionEntity.setProperty("driveFilePreviewLink", submission.driveFilePreviewLink);
         submissionEntity.setProperty("driveFileDownloadLink", submission.driveFileDownloadLink);
         save(submissionEntity);
+        return submissionEntity;
     }
 
 /** upload a file to the submission_bucket 
@@ -449,7 +449,7 @@ public final class Database {
         }
     }
 
-    public static void addLocation(Entity questionEntity, int leftXCoord, int topYCoord, int rightXCoord, int lowerYCoord) {
+    public static Entity addLocation(Entity questionEntity, int leftXCoord, int topYCoord, int rightXCoord, int lowerYCoord) {
         Entity locationEntity = new Entity("Location");
         locationEntity.setProperty("leftXCoord", leftXCoord);
         locationEntity.setProperty("topYCoord", topYCoord);
@@ -457,9 +457,10 @@ public final class Database {
         locationEntity.setProperty("lowerYCoord", lowerYCoord);
         locationEntity.setProperty("questionKey", questionEntity.getKey()); 
         save(locationEntity);
+        return locationEntity;
     }
 
-    public static void addAnswer(Entity questionEntity, Entity submissionEntity, String parsedAnswer, int points) {
+    public static Entity addAnswer(Entity questionEntity, Entity submissionEntity, String parsedAnswer, int points) {
         Entity answerEntity = new Entity("Answer");
         answerEntity.setProperty("parsedAnswer", parsedAnswer);
         answerEntity.setProperty("points", points);
@@ -467,19 +468,22 @@ public final class Database {
         answerEntity.setProperty("questionKey", questionEntity.getKey());
         answerEntity.setProperty("submissionKey", submissionEntity.getKey());
         save(answerEntity);
+        return answerEntity;
     }
 
-    public static void addGroup(Entity questionEntity) {
+    public static Entity addGroup(Entity questionEntity) {
         Entity groupEntity = new Entity("Group");
         groupEntity.setProperty("questionKey", questionEntity.getKey());
         save(groupEntity);
+        return groupEntity;
     }
     
-    public static void updateGradedForAnswer(Entity answerEntity, String status) {
+    public static Entity updateGradedForAnswer(Entity answerEntity, String status) {
         if (ANSWER_GRADING_STATUSES.contains(status)) {
             answerEntity.setProperty("graded", status);
             save(answerEntity);
         }
+        return answerEntity;
     }
 
 /** 
@@ -517,14 +521,5 @@ public final class Database {
     return blobKeyJson;
   }
 
-  //get all submissions for an assignment
-
-    // Get all answers for a question
-
-    // Set/edit location for a question
-
-    // Get all groups for a question
-
-    // Change answer's group
 }
 
