@@ -91,27 +91,18 @@ public final class DatabaseTest {
     int count = 0;
     Database.addAnswer("filePath1", "parsedAnswer1", 5, "assignmentKey1", "questionKey1");
     
-    String filepath = "";
-    String parsedAns = "";
-    String score = "-1";
-    String assignmentKey = "";
-    String questionKey = "";
-
+    Entity entity = new Entity("Answer");
     Iterable<Entity> query = Database.query(new Query("Answer"));
-    for (Entity entity : query) {
+    for (Entity e : query) {
         count++;
-        filepath = (String) entity.getProperty("filePath");
-        parsedAns = (String) entity.getProperty("parsedAnswer");
-        score = entity.getProperty("score").toString();
-        assignmentKey = (String) entity.getProperty("assignmentKey");
-        questionKey = (String) entity.getProperty("questionKey");
+        entity = e;
     }
-    Assert.assertEquals(count, 1);
-    Assert.assertEquals(filepath, "filePath1");
-    Assert.assertEquals(parsedAns, "parsedAnswer1");
-    Assert.assertEquals(score, "5");
-    Assert.assertEquals(assignmentKey, "assignmentKey1");
-    Assert.assertEquals(questionKey, "questionKey1");
+    Assert.assertEquals(1, count);
+    Assert.assertEquals("filePath1", entity.getProperty("filePath").toString());
+    Assert.assertEquals("parsedAnswer1", entity.getProperty("parsedAnswer").toString());
+    Assert.assertEquals("5", entity.getProperty("score").toString());
+    Assert.assertEquals("assignmentKey1", entity.getProperty("assignmentKey").toString());
+    Assert.assertEquals("questionKey1", entity.getProperty("questionKey").toString());
   }
 
  /**
