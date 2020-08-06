@@ -1,14 +1,11 @@
 package com.google.autograder.servlets.helpers;
 
 import java.net.URL;
-import java.io.File;
 import java.util.Optional;
 import java.util.Iterator;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.net.URLEncoder;
 import java.io.IOException;
-import com.google.gson.Gson;
+import java.io.InputStream;
 import java.io.BufferedReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import org.json.simple.JSONObject;
 import java.net.ProtocolException;
+import java.util.stream.Collectors;
 import java.net.MalformedURLException;
 import org.json.simple.parser.JSONParser;
 import java.nio.charset.StandardCharsets;
@@ -33,27 +31,25 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public final class API {
 
-    private static final String RESOURCES_PATH  = "../../../project/src/main/resources"; // "../classes"
     private static final Logger LOGGER = Logger.getLogger(API.class.getName());
-    private static final String API_KEY_PATH = "/auth/api_key.json";
-    private static final Gson GSON = new Gson();
+    private static final String API_KEY_PATH = "auth/api_key.json";
 
     public static final String UTF_8 = StandardCharsets.UTF_8.name();
     public static final String API_KEY = retrieveAPIKey().get();
 
     private static Optional<String> retrieveAPIKey() {
-        String apiKeyPath = RESOURCES_PATH + API_KEY_PATH;
+        InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(API_KEY_PATH);
+            
+        String json = new BufferedReader(
+            new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        ).lines().collect(Collectors.joining("\n"));
 
         try {
-            String json = new String(Files.readAllBytes(Paths.get(apiKeyPath)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
             JSONObject apiKeyObject = (JSONObject) jsonObject.get("api_key");
             return Optional.of(apiKeyObject.get("api_key").toString());
-        } catch(IOException exception) {
-            LOGGER.log(Level.SEVERE, "Error retrieving API Key from the file system at:" + apiKeyPath, exception);
-            return Optional.empty();
         } catch(ParseException exception) {
-            LOGGER.log(Level.SEVERE, "Error parsing API Key from api_key.json at:" + apiKeyPath, exception);
+            LOGGER.log(Level.SEVERE, "Error parsing API Key from api_key.json at:" + API_KEY_PATH, exception);
             return Optional.empty();
         }
     }
