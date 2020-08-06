@@ -98,7 +98,7 @@ public final class DatabaseTest {
   }
 
  /**
-  * Test addAnswer Method 
+  * Test addAnswer Method to test single answer submitted correctly
   */
   @Test
   public void addAnswerTest() {
