@@ -31,27 +31,30 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public final class API {
 
-    private static final Logger LOGGER = Logger.getLogger(API.class.getName());
-    private static final String API_KEY_PATH = "auth/api_key.json";
-
+    public static final String API_KEY;
     public static final String UTF_8 = StandardCharsets.UTF_8.name();
-    public static final String API_KEY = retrieveAPIKey().get();
 
-    private static Optional<String> retrieveAPIKey() {
-        InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(API_KEY_PATH);
+    private static final String API_KEY_PATH = "auth/api_key.json";
+    private static final Logger LOGGER = Logger.getLogger(API.class.getName());
+
+    static {
+        InputStream inputStream = API.class.getClassLoader().getResourceAsStream(API_KEY_PATH);
             
         String json = new BufferedReader(
             new InputStreamReader(inputStream, StandardCharsets.UTF_8)
         ).lines().collect(Collectors.joining("\n"));
 
+        JSONObject apiKeyObject;
+
         try {
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject apiKeyObject = (JSONObject) jsonObject.get("api_key");
-            return Optional.of(apiKeyObject.get("api_key").toString());
+            apiKeyObject = (JSONObject) jsonObject.get("api_key");
         } catch(ParseException exception) {
             LOGGER.log(Level.SEVERE, "Error parsing API Key from api_key.json at:" + API_KEY_PATH, exception);
-            return Optional.empty();
+            throw new RuntimeException(exception);
         }
+
+        API_KEY = apiKeyObject.get("api_key").toString();
     }
 
     public static String getCurrentUserAPIAuthorization() {
