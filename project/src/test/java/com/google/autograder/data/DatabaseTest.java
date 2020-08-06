@@ -101,5 +101,8 @@ public final class DatabaseTest {
   * Test addAnswer Method 
   */
   @Test
+  public void addAnswerTest() {
+    Database.addAnswer("filePath1", "parsedAnswer1", 5, "assignmentKey1", "questionKey1");
+  }
 
 }

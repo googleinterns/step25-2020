@@ -198,6 +198,18 @@
             <version>1.9.81</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-labs</artifactId>
+            <version>1.9.81</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-stubs</artifactId>
+            <version>1.9.81</version>
+        </dependency>
+
     </dependencies>
 
     <build>
