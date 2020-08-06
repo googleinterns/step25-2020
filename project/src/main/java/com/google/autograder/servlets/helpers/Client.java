@@ -1,48 +1,59 @@
 package com.google.autograder.servlets.helpers;
 
 import java.io.File;
+import java.util.Optional;
+import java.io.InputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.json.simple.JSONObject;
+import java.util.stream.Collectors;
 import org.json.simple.parser.JSONParser;
+import java.nio.charset.StandardCharsets;
+import org.json.simple.parser.ParseException;
 
 public final class Client {
 
-    public static final String CLIENT_ID = getClientID();
-    public static final String CLIENT_SECRET = getClientSecret();
+    private static final String CREDENTIALS_PATH = "auth/credentials.json";
+    private static final JSONObject CREDENTIALS_WEB_JSON_CONTENT = retrieveCredentialsWebContent().get();
 
-    private static final String RESOURCES_PATH = "../../../project/src/main/resources"; // "../classes"
-    private static final String CREDENTIALS_PATH = "/auth/credentials.json";
+    public static final String CLIENT_ID = retrieveClientID().get();
+    public static final String CLIENT_SECRET = retrieveClientSecret().get();
 
-    private static String getClientID() {
-        String client_id = null;
+    private static Optional<JSONObject> retrieveCredentialsWebContent() {
+        InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(CREDENTIALS_PATH);
+
+        String json = new BufferedReader(
+            new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        ).lines().collect(Collectors.joining("\n"));
 
         try {
-            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
-            client_id = web.get("client_id").toString();
-        } catch(Exception e) {
-            e.printStackTrace();
+            JSONObject web = (JSONObject) jsonObject.get("web");
+            return Optional.of(web);
+        } catch(ParseException e) {
+            return Optional.empty();
         }
-        
-        return client_id;
     }
 
-    private static String getClientSecret() {
-        String client_secret = null;
-
+    private static Optional<String> retrieveClientID() {
         try {
-            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
-            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
-            client_secret = web.get("client_secret").toString();
+            return Optional.of(CREDENTIALS_WEB_JSON_CONTENT.get("client_id").toString());
         } catch(Exception e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        
-        return client_secret;
+    }
+
+    private static Optional<String> retrieveClientSecret() {
+        try {
+            return  Optional.of(CREDENTIALS_WEB_JSON_CONTENT.get("client_secret").toString());
+        } catch(Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
 }
