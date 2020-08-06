@@ -332,6 +332,7 @@ public final class Database {
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
 
         List<Assignment> assignments = new ArrayList<>();
+        
         for (Entity assignment : query(assignmentsQuery)) {
             String title = (String) assignment.getProperty("title");
             String id = (String) assignment.getProperty("id");
