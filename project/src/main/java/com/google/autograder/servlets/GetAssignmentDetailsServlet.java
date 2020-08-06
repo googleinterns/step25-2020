@@ -3,6 +3,7 @@ package com.google.autograder.servlets;
 import java.net.URL;
 import java.util.Iterator;
 import java.io.IOException;
+import org.json.simple.JSONObject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
 import com.google.autograder.data.Database;
@@ -32,10 +33,16 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
 
         String title = (String) assignment.getProperty("title");
         String description = (String) assignment.getProperty("description");
-        String assignmentDetails = "{ \"assignment\" : { \"title\": \"" + title + "\" , \"description\": \"" + description + "\" }}";
+
+        JSONObject assignmentDetailsObject = new JSONObject();
+        JSONObject assignmentObject = new JSONObject();
+        
+        assignmentObject.put("title", title);
+        assignmentObject.put("description", description);
+        assignmentDetailsObject.put("assignment", assignment);
 
         response.setContentType("application/json");
-        response.getWriter().println(assignmentDetails);
+        response.getWriter().println(assignmentDetailsObject.toString());
     }
 
 }

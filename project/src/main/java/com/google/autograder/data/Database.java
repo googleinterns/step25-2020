@@ -408,7 +408,6 @@ public final class Database {
             Key answerKey = answer.getKey();
             Answer currAnswer = new Answer(filePath, parsedAnswer, answerScore, assignmentKey, questionKey, answerKey);
             currAnswer.addGroup(groupKey);
-            System.out.println(currAnswer.getGroupKey());
             answer.setProperty("groupKey", currAnswer.getGroupKey());
             save(answer);
             answerList.add(currAnswer);
@@ -521,5 +520,52 @@ public final class Database {
     return blobKeyJson;
   }
 
+<<<<<<< HEAD
+=======
+  public static String getUngradedGroupKeys(String questionKey) {
+    Filter propertyFilter = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+    Query query = new Query("Group").setFilter(propertyFilter);
+    List<String> groupKeys = new ArrayList<String>();
+    for (Entity group : query(query)) {
+        if (!"GRADED".equals(group.getProperty("graded"))) {
+            Key key = group.getKey();
+            String stringKey = KeyFactory.keyToString(key);
+            groupKeys.add(stringKey); 
+            }
+        }
+    String json = new Gson().toJson(groupKeys);
+    return json;
+  }
+
+  public static void gradeGroup(String groupKey, String score, String comment) {
+      try {
+        Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
+        groupEntity.setProperty("graded", "GRADED");
+        // update all answers with this groupKey to have this grade
+        Filter propertyFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+        Query query = new Query("Answer").setFilter(propertyFilter);
+        for (Entity answer : query(query)) {
+            answer.setProperty("score", score);
+            answer.setProperty("comment", comment);
+            save(answer);
+            }
+        save(groupEntity);}
+      catch (Exception e) {
+        System.out.println("error, group entity not found.");
+        e.printStackTrace(System.out);
+      }
+  }
+
+  public static String getAnswerFilePath(String groupKey) {
+      Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+      Query query = new Query("Answer").setFilter(groupFilter);
+      for (Entity answer : query(query)) {
+          String filePath = (String) answer.getProperty("filePath");
+          return new Gson().toJson(filePath);
+      }
+      return new Gson().toJson("");
+    
+  }
+>>>>>>> 7750db72846ff804eb84edfcf35ca709f053aa8e
 }
 

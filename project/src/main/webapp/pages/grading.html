@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+    <script src="/scripts/groups.js"></script>
+    <link href="/styles/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+
+<body>
+        <div id="imgDiv"><script>getGroupImage()</script>;</div>
+        <form action="/grade" method="POST">
+            <p>Total points:</p>
+            <input type="number" id="score" required name="score" min="1" default="10"><br><br>
+            <p>Comments:</p>
+            <input type="text" id="comments" name="comments" required minlength="1" size="20"><br><br>
+            <input type="submit" onclick="goToNextPage()">
+        </form>
+    <a href="groups2.html">Next</a>
+</body>
+
+</html>
