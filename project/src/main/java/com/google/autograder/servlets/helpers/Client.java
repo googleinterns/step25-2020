@@ -1,48 +1,45 @@
 package com.google.autograder.servlets.helpers;
 
-import java.io.File;
+import java.util.Optional;
+import java.io.InputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.io.InputStreamReader;
 import org.json.simple.JSONObject;
+import java.util.stream.Collectors;
 import org.json.simple.parser.JSONParser;
+import java.nio.charset.StandardCharsets;
+import org.json.simple.parser.ParseException;
 
 public final class Client {
 
-    public static final String CLIENT_ID = getClientID();
-    public static final String CLIENT_SECRET = getClientSecret();
+    public static final String CLIENT_ID;
+    public static final String CLIENT_SECRET;
 
-    private static final String RESOURCES_PATH = "../../../project/src/main/resources"; // "../classes"
-    private static final String CREDENTIALS_PATH = "/auth/credentials.json";
+    private static final String CREDENTIALS_PATH = "auth/credentials.json";
+    private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 
-    private static String getClientID() {
-        String client_id = null;
+    static {
+        InputStream inputStream = Client.class.getClassLoader().getResourceAsStream(CREDENTIALS_PATH);
 
-        try {
-            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
-            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
-            client_id = web.get("client_id").toString();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        return client_id;
-    }
+        String json = new BufferedReader(
+            new InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        ).lines().collect(Collectors.joining("\n"));
 
-    private static String getClientSecret() {
-        String client_secret = null;
+        JSONObject web;
 
         try {
-            String json = new String(Files.readAllBytes(Paths.get(RESOURCES_PATH + CREDENTIALS_PATH)));
             JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-            JSONObject web = (JSONObject) new JSONParser().parse(jsonObject.get("web").toString());
-            client_secret = web.get("client_secret").toString();
-        } catch(Exception e) {
-            e.printStackTrace();
+            web = (JSONObject) jsonObject.get("web");
+        } catch(ParseException exception) {
+            LOGGER.log(Level.SEVERE, "Error retrieving credentials from the resources folder at: " + CREDENTIALS_PATH, exception);
+            throw new RuntimeException(exception);
         }
-        
-        return client_secret;
+
+        CLIENT_ID = web.get("client_id").toString();
+        CLIENT_SECRET = web.get("client_secret").toString();
     }
 
 }

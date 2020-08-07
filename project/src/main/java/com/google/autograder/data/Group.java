@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 /** Class containing group data. */
-public class Group {
+public final class Group {
 
   public int score;
   public String questionKey;
