@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.lang.Iterable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,39 +62,30 @@ public final class DatabaseTest {
       helper.tearDown();
   }
 
-  private static Entity getOnlyEntity(Query query) {
-    Iterator<Entity> entities = Database.query(query).iterator();
-    if (!entities.hasNext()) {
+  private static Entity getOnlyEntity(Iterable<Entity> entities) {
+    Iterator<Entity> iterator = entities.iterator();
+    if (!iterator.hasNext()) {
         Assert.fail("No entities in datastore");
     }
-    Entity entity = entities.next();
-    if (entities.hasNext()) {
-        Assert.fail("More than 1 entity"); 
-    }
+    Entity entity = iterator.next();
+    Assert.assertFalse(iterator.hasNext());
     return entity;
+  }
+
+  private void assertNoEntities(Iterable<Entity> entities){
+    Assert.assertFalse(entities.iterator().hasNext());
+    return;
   }
 
   @Test
   public void saveASingleEntity() {
-    int courseCountBeforeSaving = 0;
-    int courseCountAfterSaving = 0;
-
-    Iterable<Entity> before = Database.query(new Query("Course"));
-    for (Entity entity : before) {
-        courseCountBeforeSaving++;
-    }
-
-    Assert.assertEquals(0, courseCountBeforeSaving);
+    Iterable<Entity> iterable = Database.query(new Query("Course"));
+    assertNoEntities(iterable); 
 
     Database.save(new Entity("Course"));
 
-    Iterable<Entity> after = Database.query(new Query("Course"));
-
-    for (Entity entity : after) {
-        courseCountAfterSaving++;
-    }
-
-    Assert.assertEquals(1, courseCountAfterSaving);
+    iterable = Database.query(new Query("Course"));
+    getOnlyEntity(iterable);
   }
 
  /**
