@@ -100,8 +100,9 @@ public final class DatabaseTest {
     Iterable<Entity> query = Database.query(new Query("Answer"));
     for (Entity e : query) {
         count++;
-        entity = e;
     }
+    
+    entity = getOnlyEntity(query);
     Assert.assertEquals(1, count);
     Assert.assertEquals("filePath1", entity.getProperty("filePath").toString());
     Assert.assertEquals("parsedAnswer1", entity.getProperty("parsedAnswer").toString());
