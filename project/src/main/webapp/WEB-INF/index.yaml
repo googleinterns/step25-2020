@@ -11,7 +11,7 @@ indexes:
   properties:
   - name: user_email
     direction: asc
-  - name: expires_in
+  - name: expires
     direction: desc
 
 - kind: Course

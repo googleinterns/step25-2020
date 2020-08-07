@@ -31,6 +31,7 @@ public final class ListAssignmentSubmissionsServlet extends HttpServlet {
         if (!connection.isPresent()) {
             // TODO: Send the redirect url to the OAuth handler to resume user flow after authentication.
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
+            return;
         }
         
         String json = API.getJSON(connection.get());
