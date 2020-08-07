@@ -504,84 +504,84 @@ public final class Database {
         return answerEntity;
     }
 
-/** 
- * this function takes the assignment Key and answer group key as parameters
- * returns list of blobKeys to submissions that fit in specified answer group for specific question
- */ 
-  public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
+    /** 
+    * this function takes the assignment Key and answer group key as parameters
+    * returns list of blobKeys to submissions that fit in specified answer group for specific question
+    */ 
+    public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
 
-    // query answer entities filtered only in group from parameter
-    Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
-    Query answersQuery = new Query("Answer").setFilter(groupFilter);    
-    
-    // generate list of submissionKeys for the group
-    List<String> submissionKeys = new ArrayList<>();
-    for (Entity entity : query(answersQuery)) {
-        String submissionKey = (String) entity.getProperty("submissionKey");
-        submissionKeys.add(submissionKey);
-    }  
+        // query answer entities filtered only in group from parameter
+        Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+        Query answersQuery = new Query("Answer").setFilter(groupFilter);    
+        
+        // generate list of submissionKeys for the group
+        List<String> submissionKeys = new ArrayList<>();
+        for (Entity entity : query(answersQuery)) {
+            String submissionKey = (String) entity.getProperty("submissionKey");
+            submissionKeys.add(submissionKey);
+        }  
 
-    // query submissions filtered to the assignment
-    Query submissionsQuery = new Query("Submission");
+        // query submissions filtered to the assignment
+        Query submissionsQuery = new Query("Submission");
 
-    // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
-    // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
-    Map<Key, String> blobKeyMap = new HashMap<>();
-    for (Entity submissionEntity : query(submissionsQuery)) {
-        if (submissionKeys.contains(submissionEntity.getKey())) {
-            String blobKey = (String) submissionEntity.getProperty("blobKey");
-            Key submissionKey = submissionEntity.getKey();
-            blobKeyMap.put(submissionKey, blobKey);
+        // iterate through submissions. if the submission's key is in the list of submissionKeys from the answer bucket,
+        // add the submission's blobKet to blobKeyMap (submissionKey, blobKey)
+        Map<Key, String> blobKeyMap = new HashMap<>();
+        for (Entity submissionEntity : query(submissionsQuery)) {
+            if (submissionKeys.contains(submissionEntity.getKey())) {
+                String blobKey = (String) submissionEntity.getProperty("blobKey");
+                Key submissionKey = submissionEntity.getKey();
+                blobKeyMap.put(submissionKey, blobKey);
+            }
+        }
+
+        String blobKeyJson = new Gson().toJson(blobKeyMap);
+        return blobKeyJson;
+    }
+
+    public static String getUngradedGroupKeys(String questionKey) {
+        Filter propertyFilter = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
+        Query query = new Query("Group").setFilter(propertyFilter);
+        List<String> groupKeys = new ArrayList<String>();
+        for (Entity group : query(query)) {
+            if (!"GRADED".equals(group.getProperty("graded"))) {
+                Key key = group.getKey();
+                String stringKey = KeyFactory.keyToString(key);
+                groupKeys.add(stringKey); 
+                }
+            }
+        String json = new Gson().toJson(groupKeys);
+        return json;
+    }
+
+    public static void gradeGroup(String groupKey, String score, String comment) {
+        try {
+            Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
+            groupEntity.setProperty("graded", "GRADED");
+            // update all answers with this groupKey to have this grade
+            Filter propertyFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+            Query query = new Query("Answer").setFilter(propertyFilter);
+            for (Entity answer : query(query)) {
+                answer.setProperty("score", score);
+                answer.setProperty("comment", comment);
+                save(answer);
+                }
+            save(groupEntity);}
+        catch (Exception e) {
+            System.out.println("error, group entity not found.");
+            e.printStackTrace(System.out);
         }
     }
 
-    String blobKeyJson = new Gson().toJson(blobKeyMap);
-    return blobKeyJson;
-  }
-
-  public static String getUngradedGroupKeys(String questionKey) {
-    Filter propertyFilter = new FilterPredicate("questionKey", FilterOperator.EQUAL, questionKey);
-    Query query = new Query("Group").setFilter(propertyFilter);
-    List<String> groupKeys = new ArrayList<String>();
-    for (Entity group : query(query)) {
-        if (!"GRADED".equals(group.getProperty("graded"))) {
-            Key key = group.getKey();
-            String stringKey = KeyFactory.keyToString(key);
-            groupKeys.add(stringKey); 
-            }
-        }
-    String json = new Gson().toJson(groupKeys);
-    return json;
-  }
-
-  public static void gradeGroup(String groupKey, String score, String comment) {
-      try {
-        Entity groupEntity = DATA_STORE.get(KeyFactory.stringToKey(groupKey));
-        groupEntity.setProperty("graded", "GRADED");
-        // update all answers with this groupKey to have this grade
-        Filter propertyFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
-        Query query = new Query("Answer").setFilter(propertyFilter);
+    public static String getAnswerFilePath(String groupKey) {
+        Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
+        Query query = new Query("Answer").setFilter(groupFilter);
         for (Entity answer : query(query)) {
-            answer.setProperty("score", score);
-            answer.setProperty("comment", comment);
-            save(answer);
-            }
-        save(groupEntity);}
-      catch (Exception e) {
-        System.out.println("error, group entity not found.");
-        e.printStackTrace(System.out);
-      }
-  }
-
-  public static String getAnswerFilePath(String groupKey) {
-      Filter groupFilter = new FilterPredicate("groupKey", FilterOperator.EQUAL, groupKey);
-      Query query = new Query("Answer").setFilter(groupFilter);
-      for (Entity answer : query(query)) {
-          String filePath = (String) answer.getProperty("filePath");
-          return new Gson().toJson(filePath);
-      }
-      return new Gson().toJson("");
-    
-  }
+            String filePath = (String) answer.getProperty("filePath");
+            return new Gson().toJson(filePath);
+        }
+        return new Gson().toJson("");
+        
+    }
 }
 
