@@ -325,7 +325,6 @@ public final class Database {
     
 
     // Retrives the current user's assignments for a course data as JSON.
-
     public static String getAssignmentsData (String courseID) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter).addSort("creationTime", SortDirection.DESCENDING);
