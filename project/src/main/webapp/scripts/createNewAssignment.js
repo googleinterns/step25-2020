@@ -20,12 +20,18 @@ async function createNewAssignment() {
         mode: "no-cors"
     });
 
-    let responseCode = response.headers.get("responseCode");
+    let redirect = response.headers.get("redirect");
 
-    if (responseCode == 200) {
-        location.reload();
+    if (redirect != null) {
+        window.location.replace(redirect);
     } else {
-        // TODO: Handle error response
+        let responseCode = response.headers.get("responseCode");
+
+        if (responseCode == 200) {
+            location.reload();
+        } else {
+            // TODO: Handle error response
+        }
     }
 }
 

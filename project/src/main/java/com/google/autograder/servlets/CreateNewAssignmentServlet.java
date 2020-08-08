@@ -29,7 +29,8 @@ public final class CreateNewAssignmentServlet extends HttpServlet {
 
         if (authorization == null) {
             // The user is not logged in. Redirect to login page.
-            response.sendRedirect("/index.html");
+            response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
+            return;
         }
 
         HttpURLConnection connection = null;

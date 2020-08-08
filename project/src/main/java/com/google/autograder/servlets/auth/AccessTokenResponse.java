@@ -1,6 +1,8 @@
 package com.google.autograder.servlets.auth;
 
+import java.time.Instant;
 import com.google.gson.Gson;
+import java.time.temporal.ChronoUnit;
 import com.google.appengine.api.datastore.Entity;
 
 public final class AccessTokenResponse {
@@ -55,11 +57,21 @@ public final class AccessTokenResponse {
         accessTokenResponseEntity.setProperty("expires_in", accessTokenResponse.expires_in);
         accessTokenResponseEntity.setProperty("scope", accessTokenResponse.scope);
         accessTokenResponseEntity.setProperty("user_email", userEmail);
+
+        Instant expires = Instant.now().plus(accessTokenResponse.expires_in, ChronoUnit.SECONDS);
+        accessTokenResponseEntity.setProperty("expires", expires.toString());
+        
         return accessTokenResponseEntity;
     }
     
     public static AccessTokenResponse buildAccessTokenResponseFromDatastoreEntity(Entity entity) {
         if (entity.getProperty("access_token") == null) {
+            return null;
+        }
+
+        Instant expires = Instant.parse((String) entity.getProperty("expires"));
+
+        if (Instant.now().isAfter(expires)) {
             return null;
         }
         
