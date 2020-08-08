@@ -1,5 +1,10 @@
 package com.google.autograder.data;
 
+import static org.junit.Assert.assertEquals;
+
+import com.google.autograder.data.Database;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.MockitoAnnotations;
@@ -64,7 +69,7 @@ public final class DatabaseTest {
 
   private static Entity getOnlyEntity(Iterable<Entity> entities) {
     Iterator<Entity> iterator = entities.iterator();
-    Assert.assertTrue(iterator.hasnext())
+    Assert.assertTrue(iterator.hasNext());
     Entity entity = iterator.next();
     Assert.assertFalse(iterator.hasNext());
     return entity;
@@ -73,17 +78,50 @@ public final class DatabaseTest {
   private void assertNoEntities(Iterable<Entity> entities){
     Assert.assertFalse(entities.iterator().hasNext());
   }
+  
+    private void assertNumberOfEntities(int numberOfEntities, Iterable<Entity> entities) {
+        int count = 0;
 
-  @Test
-  public void saveASingleEntity() {
-    Iterable<Entity> iterable = Database.query(new Query("Course"));
-    assertNoEntities(iterable); 
+        for (Entity entity : entities) {
+            count++;
+        }
 
-    Database.save(new Entity("Course"));
+        assertEquals(count, numberOfEntities);
+    }
 
-    iterable = Database.query(new Query("Course"));
-    getOnlyEntity(iterable);
-  }
+    @Test
+    public void saveASingleEntity() {
+        Iterable<Entity> before = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(0, before);
+
+        Database.save(new Entity("Entity"));
+
+        Iterable<Entity> after = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(1, after);
+    }
+
+    @Test
+    public void deleteASingleEntity() {
+        Iterable<Entity> beforeSaving = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(0, beforeSaving);
+
+        Database.save(new Entity("Entity"));
+
+        Iterable<Entity> afterSaving = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(1, afterSaving);
+
+        Entity tempEntity = Database.query(new Query("Entity")).iterator().next();
+
+        Database.delete(tempEntity);
+
+        Iterable<Entity> afterDeleting = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(0, afterDeleting);
+    }
 
  /**
   * Test addAnswer Method to test single answer submitted correctly
