@@ -23,7 +23,7 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
         String courseID = request.getParameter("courseID");
         String assignmentID = request.getParameter("assignmentID");
         Filter assignmentIDFilter = new FilterPredicate("id", FilterOperator.EQUAL, assignmentID);
-        Filter courseIDFilter = new FilterPredicate("courseId", FilterOperator.EQUAL, courseID);
+        Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
 
         Query query = new Query("Assignment").setFilter(courseIDFilter).setFilter(assignmentIDFilter);
         Iterator<Entity> results = Database.query(query).iterator();
@@ -39,7 +39,7 @@ public final class GetAssignmentDetailsServlet extends HttpServlet {
         
         assignmentObject.put("title", title);
         assignmentObject.put("description", description);
-        assignmentDetailsObject.put("assignment", assignment);
+        assignmentDetailsObject.put("assignment", assignmentObject);
 
         response.setContentType("application/json");
         response.getWriter().println(assignmentDetailsObject.toString());

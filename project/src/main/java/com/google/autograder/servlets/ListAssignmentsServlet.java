@@ -27,6 +27,7 @@ public final class ListAssignmentsServlet extends HttpServlet {
 
         if (!connection.isPresent()) {
             response.setHeader("redirect", "/pages/auth/googleAuthenticator.html");
+            return;
         }
 
         String json = API.getJSON(connection.get());

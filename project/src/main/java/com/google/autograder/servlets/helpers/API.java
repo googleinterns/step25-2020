@@ -60,21 +60,22 @@ public final class API {
     public static String getCurrentUserAPIAuthorization() {
         String userEmail = UserHandler.getCurrentUserEmail();
         Filter userEmailFilter = new FilterPredicate("user_email", FilterOperator.EQUAL, userEmail);
-        Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires_in", SortDirection.DESCENDING);
+        Query query = new Query("AccessTokenResponse").setFilter(userEmailFilter).addSort("expires", SortDirection.DESCENDING);
 
         Iterator<Entity> results = Database.query(query).iterator();
         AccessTokenResponse accessTokenResponse = null;
-        String authorization = null;
 
-        if (results.hasNext()) {
-            accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(results.next());
-        }
-
-        if (accessTokenResponse != null) {
-            authorization = (accessTokenResponse.getToken_Type() + " " + accessTokenResponse.getAccess_Token());
+        if (!results.hasNext()) {
+            return null;
         }
         
-        return authorization;
+        accessTokenResponse = AccessTokenResponse.buildAccessTokenResponseFromDatastoreEntity(results.next());
+
+        if (accessTokenResponse == null) {
+            return null;
+        }
+
+        return (accessTokenResponse.getToken_Type() + " " + accessTokenResponse.getAccess_Token());
     }
 
     public static Optional<HttpURLConnection> getAuthenticatedRequest(String method, String endpoint) {
