@@ -231,7 +231,7 @@ public final class Database {
     }
 
    /** @param parameters are the assignment information: courseID, assignmentID, assignmentKey 
-     * the method returns the submission information as a JSON String
+     * @return the submission information as a JSON String
      */
     public static String getAssignmentSubmissionsData(String courseID, String assignmentID, String assignmentKey) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
@@ -260,7 +260,7 @@ public final class Database {
     }
   
    /** @param inputs from the user on editOutline.html to store on datastore
-     * returns the "Question" Entity
+     * @return the "Question" Entity
      */
     public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
         Entity questionEntity = new Entity("Question");
@@ -275,7 +275,7 @@ public final class Database {
   
    /** This method's stores the parsed answer option in Datastore along with the score assigned and question metadata
      * @param parameters are inputs after submissions have been parsed for answers
-     * returns the "Answer" Entity
+     * @return the "Answer" Entity
      */
     public static Entity addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
         Entity answerEntity = new Entity("Answer");
@@ -290,7 +290,7 @@ public final class Database {
 
    /** This method's for multiple submissions to be associated with a single group and stores the group Entity in Datastore 
      * @param parameters are the score and questionKey for
-     * returns the saved "Group" Entity
+     * @return the saved "Group" Entity
      */
     public static Entity addGroup(int score, String questionKey) {
         Entity groupEntity = new Entity("Group");
@@ -315,7 +315,7 @@ public final class Database {
     }
   
    /** This method will query all questions with this assignmentKey
-     * returns String JSON of question Entities 
+     * @return String JSON of question Entities 
      */
     public static String getAllQuestionsJSON(String assignmentKey) {
         try {
@@ -343,7 +343,7 @@ public final class Database {
     }
     
 
-   /** This method returns string JSON of Assignment Entities 
+   /** This method retrieves string JSON of Assignment Entities 
      * @param takes courseID 
      */
     public static String getAssignmentsData (String courseID) {
