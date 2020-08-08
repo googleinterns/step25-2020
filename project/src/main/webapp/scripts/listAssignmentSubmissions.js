@@ -11,19 +11,25 @@ async function listAssignmentSubmissions() {
         mode: "no-cors"
     });
 
-    const json = await response.json();
+    let redirect = response.headers.get("redirect");
 
-    const table = document.getElementById("submissions-table");
-    json.forEach(
-        async function(studentSubmission) {
-            const student = await getStudent(courseID, studentSubmission.userID);
+    if (redirect != null) {
+        window.location.replace(redirect);
+    } else {
+        const json = await response.json();
 
-            const fullName = student.profile.name.fullName;
-            const emailAddress = student.profile.emailAddress;
+        const table = document.getElementById("submissions-table");
+        json.forEach(
+            async function(studentSubmission) {
+                const student = await getStudent(courseID, studentSubmission.userID);
+
+                const fullName = student.profile.name.fullName;
+                const emailAddress = student.profile.emailAddress;
             
-            addSubmissionToTable(table, studentSubmission, fullName, emailAddress);
-        }
-    );
+                addSubmissionToTable(table, studentSubmission, fullName, emailAddress);
+            }
+        );
+    }
 }
 
 async function getStudent(courseID, studentID) {
