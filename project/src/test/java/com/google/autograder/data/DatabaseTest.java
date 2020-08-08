@@ -31,53 +31,40 @@ public final class DatabaseTest {
         helper.tearDown();
     }
 
-    @Test
-    public void saveASingleEntity() {
-        int entityCountBeforeSaving = 0;
-        int entityCountAfterSaving = 0;
+    private void assertNumberOfEntities(int numberOfEntities, Iterable<Entity> entities) {
+        int count = 0;
 
-        Iterable<Entity> before = Database.query(new Query("Entity"));
-
-        for (Entity entity : before) {
-            entityCountBeforeSaving++;
+        for (Entity entity : entities) {
+            count++;
         }
 
-        assertEquals(0, entityCountBeforeSaving);
+        assertEquals(count, numberOfEntities);
+    }
+
+    @Test
+    public void saveASingleEntity() {
+        Iterable<Entity> before = Database.query(new Query("Entity"));
+
+        assertNumberOfEntities(0, before);
 
         Database.save(new Entity("Entity"));
 
         Iterable<Entity> after = Database.query(new Query("Entity"));
 
-        for (Entity entity : after) {
-            entityCountAfterSaving++;
-        }
-
-        assertEquals(1, entityCountAfterSaving);
+        assertNumberOfEntities(1, after);
     }
 
     @Test
     public void deleteASingleEntity() {
-        int entityCountAfterDeleting = 0;
-        int entityCountBeforeSaving = 0;
-        int entityCountAfterSaving = 0;
-
         Iterable<Entity> beforeSaving = Database.query(new Query("Entity"));
 
-        for (Entity entity : beforeSaving) {
-            entityCountBeforeSaving++;
-        }
-
-        assertEquals(0, entityCountBeforeSaving);
+        assertNumberOfEntities(0, beforeSaving);
 
         Database.save(new Entity("Entity"));
 
         Iterable<Entity> afterSaving = Database.query(new Query("Entity"));
 
-        for (Entity entity : afterSaving) {
-            entityCountAfterSaving++;
-        }
-
-        assertEquals(1, entityCountAfterSaving);
+        assertNumberOfEntities(1, afterSaving);
 
         Entity tempEntity = Database.query(new Query("Entity")).iterator().next();
 
@@ -85,11 +72,7 @@ public final class DatabaseTest {
 
         Iterable<Entity> afterDeleting = Database.query(new Query("Entity"));
 
-        for (Entity entity : afterDeleting) {
-            entityCountAfterDeleting++;
-        }
-
-        assertEquals(0, entityCountAfterDeleting);
+        assertNumberOfEntities(0, afterDeleting);
     }
 
 }
