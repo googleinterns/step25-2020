@@ -71,7 +71,7 @@ public final class AccessTokenResponse {
 
         Instant expires = Instant.parse((String) entity.getProperty("expires"));
 
-        if (expires.getEpochSecond() - Instant.now().getEpochSecond() <= 0) {
+        if (Instant.now().isAfter(expires)) {
             return null;
         }
         
