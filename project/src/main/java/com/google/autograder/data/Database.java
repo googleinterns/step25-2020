@@ -97,8 +97,8 @@ public final class Database {
         }        
     }
 
-    /* Retrives the current user's courses data as String JSON.
-     */
+    /** Retrives the current user's courses data as String JSON.
+      */
     public static String getCoursesData() {
         String userEmail = UserHandler.getCurrentUserEmail();
 
@@ -124,8 +124,8 @@ public final class Database {
         return coursesData.toString();
     }
 
-    /* Takes in a coursework array in JSON format and stores the assignments data for the current user.
-     */
+    /** Takes in a coursework array in JSON format and stores the assignments data for the current user.
+      */
     public static void storeAssignmentsData(String courseWorkJSON, String courseID) {        
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Query assignmentsQuery = new Query("Assignment").setFilter(courseIDFilter);
@@ -167,8 +167,9 @@ public final class Database {
         }
     }
 
-    /* this method stores a submission's metadata on datastore taking as parameters the submissions JSSON, courseID, assignmentID, and assignmentKey
-     */
+    /** this method stores a submission's metadata on datastore taking as 
+      * @param parameters the submissions JSSON, courseID, assignmentID, and assignmentKey
+      */
     public static void storeAssignmentSubmissionsData(String submissionsJSON, String courseID, String assignmentID, String assignmentKey) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
         Filter assignmentIDFilter = new FilterPredicate("assignmentID", FilterOperator.EQUAL, assignmentID);
@@ -229,7 +230,7 @@ public final class Database {
         }
     }
 
-    /* this method takes as parameters the assignment information: courseID, assignmentID, assignmentKey 
+   /** @param parameters are the assignment information: courseID, assignmentID, assignmentKey 
      * the method returns the submission information as a JSON String
      */
     public static String getAssignmentSubmissionsData(String courseID, String assignmentID, String assignmentKey) {
@@ -258,7 +259,7 @@ public final class Database {
         return new Gson().toJson(submissions);
     }
   
-    /* This method's parameters are inputs from the user on editOutline.html to store on datastore
+   /** @param inputs from the user on editOutline.html to store on datastore
      * returns the "Question" Entity
      */
     public static Entity addQuestion(String questionName, String questionType, int questionPoints, String assignmentKey) {
@@ -272,8 +273,8 @@ public final class Database {
         return questionEntity;
     }
   
-    /* This method's parameters are inputs after submissions have been parsed for answers 
-     * and stores the parsed answer option in Datastore along with the score assigned and question metadata
+   /** This method's stores the parsed answer option in Datastore along with the score assigned and question metadata
+     * @param parameters are inputs after submissions have been parsed for answers
      * returns the "Answer" Entity
      */
     public static Entity addAnswer(String filePath, String parsedAnswer, int score, String assignmentKey, String questionKey) {
@@ -287,8 +288,8 @@ public final class Database {
         return answerEntity;
     }
 
-    /* This method's parameters are the score and questionKey for multiple submissions to be associated with a single group
-     * and stores the group Entity in Datastore 
+   /** This method's for multiple submissions to be associated with a single group and stores the group Entity in Datastore 
+     * @param parameters are the score and questionKey for
      * returns the saved "Group" Entity
      */
     public static Entity addGroup(int score, String questionKey) {
@@ -313,7 +314,7 @@ public final class Database {
         return groupEntity;
     }
   
-    /* This method will query all questions with this assignmentKey
+   /** This method will query all questions with this assignmentKey
      * returns String JSON of question Entities 
      */
     public static String getAllQuestionsJSON(String assignmentKey) {
@@ -342,7 +343,8 @@ public final class Database {
     }
     
 
-    /* This method returns string JSON of Assignment Entities given courseID as parameter
+   /** This method returns string JSON of Assignment Entities 
+     * @param takes courseID 
      */
     public static String getAssignmentsData (String courseID) {
         Filter courseIDFilter = new FilterPredicate("courseID", FilterOperator.EQUAL, courseID);
@@ -364,7 +366,7 @@ public final class Database {
         return json;
     }
 
-    /* query all answers for a specific question and returns string JSON
+   /** query all answers for a specific question and returns string JSON
      */    
     public static String getAllAnswersJSON(String assignmentKey, String questionKey) {
         try {
@@ -505,7 +507,7 @@ public final class Database {
     }
 
     /** 
-    * this function takes the assignment Key and answer group key as parameters
+    * @param this function takes the assignment Key and answer group key 
     * returns list of blobKeys to submissions that fit in specified answer group for specific question
     */ 
     public String blobkeysFromAnswerGroupJson(String assignKey, String groupKey) {
