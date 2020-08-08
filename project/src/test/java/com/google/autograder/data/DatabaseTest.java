@@ -64,9 +64,7 @@ public final class DatabaseTest {
 
   private static Entity getOnlyEntity(Iterable<Entity> entities) {
     Iterator<Entity> iterator = entities.iterator();
-    if (!iterator.hasNext()) {
-        Assert.fail("No entities in datastore");
-    }
+    Assert.assertTrue(iterator.hasnext())
     Entity entity = iterator.next();
     Assert.assertFalse(iterator.hasNext());
     return entity;
@@ -74,7 +72,6 @@ public final class DatabaseTest {
 
   private void assertNoEntities(Iterable<Entity> entities){
     Assert.assertFalse(entities.iterator().hasNext());
-    return;
   }
 
   @Test
